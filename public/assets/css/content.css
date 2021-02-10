@@ -1,0 +1,71 @@
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+}
+
+.head-text {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: auto;
+    font-size: larger;
+    width: 100%;
+    border-bottom: 0.1rem;
+    border-style: none none dashed none;
+    border-color: var(--text-primary);
+}
+
+.reloadBtn {
+    margin: 1rem;
+}
+
+.status-container {
+    width: 90%;
+    margin: 1rem auto;
+    max-width: 1000px;
+    height: 100%;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit,minmax(100px,250px));
+    justify-content: space-evenly;
+    opacity: 0;
+    transition: opacity 1200ms ease-in;
+}
+
+.status {
+    display: flex;
+    flex-direction: row;
+    padding: 0.2rem 1rem;
+    background-color: #0303031f;
+    border-radius: 0.5rem;
+    transition: var(--transition-speed);
+}
+.status:hover {
+    background-color: var(--bg-secondary);
+}
+
+.status-icon {
+    font-size: 70px;
+    margin: auto;
+}
+.status-info {
+    text-align: right;
+    width: 100%;
+    margin: auto auto auto 1rem;
+}
+
+.Online .status-icon,
+.Online .status-info .status-state {
+    color: #62ba5c;
+}
+.Offline .status-icon,
+.Offline .status-info .status-state {
+    color: #a24d4d
+}
