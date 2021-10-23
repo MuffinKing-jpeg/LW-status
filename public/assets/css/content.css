@@ -59,6 +59,8 @@
     text-align: right;
     width: 100%;
     margin: auto auto auto 1rem;
+    font-style: italic;
+    font-weight: 800;
 }
 
 .Online .status-icon,

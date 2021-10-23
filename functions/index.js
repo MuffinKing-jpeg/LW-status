@@ -1,5 +1,6 @@
 const functions = require("firebase-functions");
 const isPortReachable = require('is-port-reachable');
+const ping = require('ping');
 
 const host2check = require("./host2check");
 
@@ -15,18 +16,33 @@ async function state() {
     } else {
       status[i].avalible = 'Offline'
     }
-
-
   }
   console.log(status);
   return status
 }
 
+async function png() {
+  var host_ping = new Array(host2check.length);
+  hosts.forEach(function(host2check){
+      ping.sys.probe(host, function(isAlive){
+      });
+  });
+}
+
 exports.status = functions.https.onRequest((request, response) => {
   response.set('Access-Control-Allow-Origin', '*');
-  state().then((out)=>{
+  state().then((stats) => {
+    return stats;
+  }).then((out) => {
+    functions.logger.info(out, { structuredData: true });
+    response.send(out);
+  })
+})
 
-  functions.logger.info(out, { structuredData: true });
-  response.send(out);
+exports.ping = functions.https.onRequest((request, response) => {
+  response.set('Access-Control-Allow-Origin', '*');
+  png().then((out) => {
+    functions.logger.info(out, { structuredData: true });
+    response.send(out);
   })
 })
