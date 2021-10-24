@@ -25,6 +25,10 @@
       {
         "source": "/api",
         "function": "status"
+      },
+      {
+        "source": "/api/ping",
+        "function": "ping"
       }
     ]
   },
