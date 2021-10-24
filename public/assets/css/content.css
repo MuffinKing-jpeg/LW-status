@@ -33,7 +33,7 @@
     height: 100%;
     display: grid;
     gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit,minmax(100px,250px));
+    grid-template-columns: repeat(auto-fit,minmax(100px,400px));
     justify-content: space-evenly;
     opacity: 0;
     transition: opacity 1200ms ease-in;
@@ -54,6 +54,7 @@
 .status-icon {
     font-size: 70px;
     margin: auto;
+    height: 70px;
 }
 .status-info {
     text-align: right;

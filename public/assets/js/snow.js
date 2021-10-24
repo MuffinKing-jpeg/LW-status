@@ -4,6 +4,7 @@ const snowMap = {
 };
 
 
+var month = (new Date().getMonth());
 
 const snow = localStorage.getItem('snow')
   || (tmp = Object.keys(snowMap)[0],
@@ -21,9 +22,10 @@ function toggleSnow() {
 
 document.getElementById('snowButton').onclick = toggleSnow;
 
-const month = (new Date().getMonth());
-if (![0, 1, 11].indexOf(month)) {
-  document.getElementById('snowButton').style.display = 'none';
-  bodyClassSnow.replace(localStorage.getItem('snow'), 'clear');
+function checkSnowDate() {
+  if ([0, 1, 2, 10, 11].indexOf(month) <= 0) {
+    document.getElementById('snowButton').style.display = 'none';
+    bodyClassSnow.replace(localStorage.getItem('snow'), 'clear');
+  }
 }
-
+checkSnowDate();

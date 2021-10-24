@@ -136,7 +136,6 @@ footer {
   filter: grayscale(90%) opacity(0.5);
   transition: var(--transition-speed);
   color: var(--text-secondary);
-  margin: auto;
 }
 .btn:hover {
   filter: grayscale(0%) opacity(1);
