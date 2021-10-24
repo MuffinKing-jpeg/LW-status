@@ -102,3 +102,7 @@ dist
 
 # TernJS port file
 .tern-port
+.firebase/hosting.cHVibGlj.cache
+functions/package-lock.json
+functions/package.json
+install_nvm.sh
