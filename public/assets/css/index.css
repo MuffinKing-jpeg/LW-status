@@ -35,7 +35,15 @@ body {
   position: fixed;
   transition: var(--transition-speed);
 }
-
+#bgr {
+  position: fixed;
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  opacity: 0.02;
+  background-image: url("/assets/img/bgr.svg");
+  background-size: 1000px;
+}
 .dark {
   --text-primary: #b6b6b6;
   --text-secondary: #ececec;

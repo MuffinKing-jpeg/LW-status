@@ -6,6 +6,7 @@
     margin: auto;
     width: 100%;
     height: 100%;
+    overflow: visible;
 }
 
 .head-text {
@@ -26,6 +27,23 @@
     margin: 1rem;
 }
 
+#spiner_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    height: 200px;
+    position: absolute;
+    right: 0;
+    overflow: visible;
+    width: 100%;
+    transition: opacity 400ms ease-in;
+}
+#loading_spiner{
+    font-size: 100px;
+    margin: auto;
+
+}
 .status-container {
     width: 90%;
     margin: 1rem auto;
@@ -36,7 +54,7 @@
     grid-template-columns: repeat(auto-fit,minmax(100px,400px));
     justify-content: space-evenly;
     opacity: 0;
-    transition: opacity 1200ms ease-in;
+    transition: opacity 800ms ease-in;
 }
 
 .status {

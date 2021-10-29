@@ -1,19 +1,17 @@
 const url = 'https://status.logicworld.ru/api'
 
-async function refresh_status() {
+async function refresh_status(state) {
     const container = document.getElementById('status-container');
-            container.innerHTML = '';
-            setTimeout(document.getElementById('status-container').style.opacity = 0,10)
+    setTimeout(document.getElementById('status-container').style.opacity = 0, 10)
+    setTimeout(document.getElementById('spiner_container').style.opacity = 1,800)
     fetch(url)
         .then(response => response.json())
         .then(data => {
             console.log(data);
             
-            
-            
+        
+            container.innerHTML="";
             for (let i = 0; i < data.length; i++) {
-     
-
 
                 container.appendChild(document.createElement('div')).className = 'status';
                 document.getElementsByClassName('status')[i].classList.add(data[i].avalible);
@@ -24,15 +22,23 @@ async function refresh_status() {
                 document.getElementsByClassName('status-info')[i].appendChild(document.createElement('div')).className = 'status-state';
                 document.getElementsByClassName('status-name')[i].innerHTML = data[i].name;
                 document.getElementsByClassName('status-state')[i].innerHTML = data[i].avalible;
-                
 
-                
             }
-        }).then(()=>setTimeout(document.getElementById('status-container').style.opacity = 1,10))
-        .catch();
+        }).then(() => {
+            if (state === 'first_call') {
+                document.getElementById('spiner_container').style.opacity = 0;
+                setInterval(document.getElementById('status-container').style.opacity = 1,400)
+            } else {
+                document.getElementById('spiner_container').style.opacity = 0;
+                setInterval(document.getElementById('status-container').style.opacity = 1,400)
+            }
+
+        }).catch();
 }
 
-refresh_status();
+
+
+refresh_status('first_call')
 
 
 

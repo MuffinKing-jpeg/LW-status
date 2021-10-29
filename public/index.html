@@ -5,8 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description"
-    content="Страница статуса для проекта LogicWorld">
+  <meta name="description" content="Страница статуса для проекта LogicWorld">
   <meta name="keywords" content="Minecraft, LogicWorld, HiTech, Magic, RPG, SkyTech">
   <meta name="google-site-verification" content="_YU1edc5JEO3Nem_o1bvTpSKgreJZ6X32Dd-h4TFzZ4">
   <meta name="yandex-verification" content="b0bc5c2ce421366d">
@@ -20,14 +19,14 @@
   <link rel="stylesheet" href="./assets/css/content.css">
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <script src="https://kit.fontawesome.com/95012a2d1e.js" crossorigin="anonymous"></script>
-  <link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css"
-/>
-<script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css" />
+  <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script> -->
 </head>
 
 <body>
+  <div id="bgr">
+
+  </div>
   <div style="height: 100%; width: 100%; position: fixed;z-index: -1;">
     <group id="snowContainer">
       <div id="snow1" class="snow snow1"></div>
@@ -35,14 +34,19 @@
       <div id="snow3" class="snow snow3"></div>
     </group>
   </div>
-   <main data-simplebar>
+  <main >
     <div class="wrapper">
       <a class="logo" href="https://logicworld.ru"><i class="fas fa-terminal"></i> LogicWorld</a>
-    <div id="test"></div>
-    <div class="content">
-      <div class="head-text">Статус серверов<i class="fas fa-sync-alt btn reloadBtn" id="reloadBtn"></i></div>
-      <div class="status-container" id="status-container">
-       <!-- <div class="status Online">
+      <div id="test"></div>
+      <div class="content">
+        <div class="head-text">Статус серверов<i class="fas fa-sync-alt btn reloadBtn" id="reloadBtn"></i></div>
+
+        <div id="status_wrapper">
+          <div id="spiner_container">
+            <i class="fas fa-sync-alt fa-spin" id="loading_spiner"></i>
+          </div>
+          <div class="status-container" id="status-container">
+            <!-- <div class="status Online">
           <span class="status-icon">
             <i class="fas fa-server"></i>
           </span>
@@ -72,40 +76,44 @@
           </span>
         </div>
       -->
+          </div>
+        </div>
       </div>
+
+
     </div>
-    
-    </div>
-    
+
 
 
   </main>
 
   <footer>
-    <div class="width-container"><div class="toggleBlock">
-      <div id="themeButton" class="toggleButton btn">
-        <span id="lightIcon" class="tgl-icon"><i class="fas fa-cloud-moon svg-fa"></i></span>
-        <span id="darkIcon" class="tgl-icon"><i class="fas fa-glasses svg-fa"></i></span>
-        <span class="link-text">Покрасить</span>
+    <div class="width-container">
+      <div class="toggleBlock">
+        <div id="themeButton" class="toggleButton btn">
+          <span id="lightIcon" class="tgl-icon"><i class="fas fa-cloud-moon svg-fa"></i></span>
+          <span id="darkIcon" class="tgl-icon"><i class="fas fa-glasses svg-fa"></i></span>
+          <span class="link-text">Покрасить</span>
+        </div>
+        <div id="snowButton" class="toggleButton btn" onclick="toggleSnow()">
+          <span id="snowOn" class="tgl-icon"><i class="far fa-snowflake svg-fa"></i></span>
+          <span id="snowOff" class="tgl-icon"><i class="fas fa-sun svg-fa"></i></span>
+          <span class="link-text">Снежок</span>
+        </div>
       </div>
-      <div id="snowButton" class="toggleButton btn" onclick="toggleSnow()">
-        <span id="snowOn" class="tgl-icon"><i class="far fa-snowflake svg-fa"></i></span>
-        <span id="snowOff" class="tgl-icon"><i class="fas fa-sun svg-fa"></i></span>
-        <span class="link-text">Снежок</span>
+
+      <div class="social">
+        <a href="https://discord.gg/CSASRtV" class="socialBtn btn"><i class="fab fa-discord svg-fa"></i></a>
+        <a href="https://vk.com/logic_world" class="socialBtn btn"><i class="fab fa-vk svg-fa"></i></a>
+        <a href="https://twitter.com/_logicworld" class="socialBtn btn"><i class="fab fa-twitter svg-fa"></i></a>
+        <a href="https://t.me/logicworld" class="socialBtn btn"><i class="fab fa-telegram-plane svg-fa"></i></a>
+        <a href="https://github.com/LogicWorlds" class="socialBtn btn"><i class="fab fa-github svg-fa"></i></a>
       </div>
     </div>
 
-    <div class="social">
-      <a href="https://discord.gg/CSASRtV" class="socialBtn btn"><i class="fab fa-discord svg-fa"></i></a>
-      <a href="https://vk.com/logic_world" class="socialBtn btn"><i class="fab fa-vk svg-fa"></i></a>
-      <a href="https://twitter.com/_logicworld" class="socialBtn btn"><i class="fab fa-twitter svg-fa"></i></a>
-      <a href="https://t.me/logicworld" class="socialBtn btn"><i class="fab fa-telegram-plane svg-fa"></i></a>
-      <a href="https://github.com/LogicWorlds" class="socialBtn btn"><i class="fab fa-github svg-fa"></i></a>
-    </div></div>
-    
   </footer>
- 
-  
+
+
   <script src="./assets/js/theme.js"></script>
   <script src="./assets/js/snow.js"></script>
   <script src="./assets/js/status-api.js"></script>
