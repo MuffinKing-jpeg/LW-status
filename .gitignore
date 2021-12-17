@@ -101,8 +101,11 @@ dist
 .dynamodb/
 
 # TernJS port file
-.tern-port
-.firebase/hosting.cHVibGlj.cache
+.tern-project
+
+
+
 functions/package-lock.json
 functions/package.json
 install_nvm.sh
+.firebase/*
