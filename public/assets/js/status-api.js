@@ -1,13 +1,13 @@
 const host_url = new URL(window.location.href);
-if (host_url.origin = 'localhost') {
+if (host_url.origin == 'localhost') {
     var url = 'http://localhost:5001/lw-status/us-central1/status';
     console.log("%cLOADED DEV MODE", "color:red; font-family:serif; font-size: 30px")
 
 } else {
     var url = 'https://status.logicworld.ru/api';
-    console.log("%cLOADED PROD MODE", "color:green ")
+    console.log("%cLOADED PROD MODE", "color:green; font-size: 30px")
 }
-console.log(`%cApi url is: \n ${url}`, "color:red; font-family:serif; font-size: 30px");
+console.log(`%cApi url is: \n ${url}`, "color:red; font-size: 20px");
 async function refresh_status(state) {
     const container = document.getElementById('status-container');
     setTimeout(document.getElementById('status-container').style.opacity = 0, 10)
