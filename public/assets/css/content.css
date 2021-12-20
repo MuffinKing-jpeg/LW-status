@@ -28,7 +28,8 @@
 }
 #status-wrapper {
     width: 100%;
-    min-height: 200px;
+    min-height: 400px;
+    height: auto;
 }
 #spiner_container {
     z-index: -1;
@@ -93,3 +94,4 @@
 .Offline .status-info .status-state {
     color: #a24d4d
 }
+

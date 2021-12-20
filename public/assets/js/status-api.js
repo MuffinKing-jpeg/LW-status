@@ -1,16 +1,25 @@
-const url = 'https://status.logicworld.ru/api'
+const host_url = new URL(window.location.href);
+if (host_url.origin = 'localhost') {
+    var url = 'http://localhost:5001/lw-status/us-central1/status';
+    console.log("%cLOADED DEV MODE", "color:red; font-family:serif; font-size: 30px")
 
+} else {
+    var url = 'https://status.logicworld.ru/api';
+    console.log("%cLOADED PROD MODE", "color:green ")
+}
+console.log(`%cApi url is: \n ${url}`, "color:red; font-family:serif; font-size: 30px");
 async function refresh_status(state) {
     const container = document.getElementById('status-container');
     setTimeout(document.getElementById('status-container').style.opacity = 0, 10)
-    setTimeout(document.getElementById('spiner_container').style.opacity = 1,800)
-    fetch(url)
+    setTimeout(document.getElementById('spiner_container').style.opacity = 1, 800)
+    fetch(url,{
+        })
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            
-        
-            container.innerHTML="";
+
+
+            container.innerHTML = "";
             for (let i = 0; i < data.length; i++) {
 
                 container.appendChild(document.createElement('div')).className = 'status';
@@ -24,16 +33,27 @@ async function refresh_status(state) {
                 document.getElementsByClassName('status-state')[i].innerHTML = data[i].avalible;
 
             }
-        }).then(() => {
+        })
+        .then(() => {
             if (state === 'first_call') {
                 document.getElementById('spiner_container').style.opacity = 0;
-                setInterval(document.getElementById('status-container').style.opacity = 1,400)
+                setInterval(document.getElementById('status-container').style.opacity = 1, 400)
             } else {
                 document.getElementById('spiner_container').style.opacity = 0;
-                setInterval(document.getElementById('status-container').style.opacity = 1,400)
+                setInterval(document.getElementById('status-container').style.opacity = 1, 400)
             }
 
-        }).catch();
+        })
+        .catch(
+            (err) => {
+                container.innerHTML = "";
+                container.appendChild(document.createElement('div')).id = 'error';
+                document.getElementById('error').innerHTML = 'Something went wrong: <div id=error_text>' + err + '</div>';
+                document.getElementById('spiner_container').style.opacity = 0;
+                setInterval(document.getElementById('status-container').style.opacity = 1, 400)
+
+            }
+        );
 }
 
 
