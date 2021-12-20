@@ -1,6 +1,5 @@
 const functions = require("firebase-functions");
 const isPortReachable = require('is-port-reachable');
-const ping = require('ping');
 
 const host2check = require("./host2check");
 
@@ -9,9 +8,16 @@ async function state() {
   for (let i = 0; i < status.length; i++) {
     status[i] = {
       name: host2check[i].name,
-      icon: host2check[i].icon
+      icon: host2check[i].icon,
+      host: host2check[i].host,
+      port: host2check[i].port
     }
-    if (await isPortReachable(host2check[i].port, { host: host2check[i].host }) === true) {
+    if (await isPortReachable(host2check[i].port,
+      {
+        host: host2check[i].host,
+        timeout: 2500
+      }
+    ) === true) {
       status[i].avalible = 'Online'
     } else {
       status[i].avalible = 'Offline'
@@ -23,9 +29,9 @@ async function state() {
 
 async function png() {
   var host_ping = new Array(host2check.length);
-  hosts.forEach(function(host2check){
-      ping.sys.probe(host, function(isAlive){
-      });
+  hosts.forEach(function (host2check) {
+    ping.sys.probe(host, function (isAlive) {
+    });
   });
 }
 
