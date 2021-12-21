@@ -1,26 +1,20 @@
 const sign = `
 𝕸𝖚𝖋𝖋𝖎𝖓𝕶𝖎𝖓𝖌
 
-
-
-
-
-
-
 `
 
 
 const host_url = new URL(window.location.href);
 
-if (host_url.origin = 'localhost') {
+if (host_url.origin == 'localhost') {
     var url = 'http://localhost:5001/lw-status/us-central1/status';
 } else {
     var url = 'https://status.logicworld.ru/api';
 }
 function build_console() {
-    console.clear();
+    
     if (url === 'https://status.logicworld.ru/api') {
-
+        console.clear();
         console.log("%cLOADED PROD MODE", "color:green; font-family:sans-serif; font-size: 30px;")
 
     } else {
