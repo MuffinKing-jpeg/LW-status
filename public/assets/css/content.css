@@ -95,3 +95,11 @@
     color: #a24d4d
 }
 
+.ping {
+    text-align: right;
+    width: 100%;
+}
+.ping-num{
+    font-style: normal;
+    font-weight: 400;
+}
