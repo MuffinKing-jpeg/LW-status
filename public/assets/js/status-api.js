@@ -2,31 +2,37 @@ const sign = `
 𝕸𝖚𝖋𝖋𝖎𝖓𝕶𝖎𝖓𝖌
 
 `
-var hosts = new Array(4);
+var dev_is_active = false;
+
 const host_url = new URL(window.location.href);
 
-if (host_url.origin == 'localhost') {
+if (host_url.hostname == 'localhost') {
     var url = 'http://localhost:5001/lw-status/us-central1/status';
 } else {
     var url = 'https://status.logicworld.ru/api';
 }
 function build_console() {
 
-    if (url === 'https://status.logicworld.ru/api') {
+    if (url == 'https://status.logicworld.ru/api' && dev_is_active == false) {
         console.clear();
         console.log("%cLOADED IN PROD MODE", "color:green; font-family:sans-serif; font-size: 30px;")
 
+        console.log(`%c\nThis service is build by:`, 'color:#fff; font-size:15px;');
+        console.log(`%c${sign}`, "font-size:45px;color:crimson;",)
     } else {
-        console.log("%cLOADED IN DEV MODE", "color:red; font-family:sans-serif; font-size: 30px;")
-
-        console.log(`%cApi url is: \n ${url}`, "color:red; font-family:sans-serif; font-size: 30px; font-size: 20px");
-    } console.log(`%c\nThis service is build by:`, 'color:#fff; font-size:15px;');
-    console.log(`%c${sign}`, "font-size:45px;color:crimson;",)
+        if (dev_is_active == false) {
+            dev_is_active = 1;
+            console.log("%cLOADED IN DEV MODE", "color:red; font-family:sans-serif; font-size: 30px;")
+            console.log(`%cAPI url is: \n ${url}`, "color:red; font-family:sans-serif; font-size: 30px; font-size: 20px");
+            console.log(`%c\nThis service is build by:`, 'color:#fff; font-size:15px;');
+            console.log(`%c${sign}`, "font-size:45px;color:crimson;",)
+        }
+    }
 }
 
 function pinging(hosts) {
     for (let i = 0; i < hosts.length; i++) {
-        ping(hosts[i].host + ":" + hosts[i].port).then(function (delta) {
+        ping(hosts[i].host + ":" + hosts[i].port, 7.2).then(function (delta) {
             document.getElementsByClassName("ping-num")[i].innerHTML = `${String(delta)}ms`;
         })
             .then(() => {
@@ -47,6 +53,7 @@ async function refresh_status(state) {
         .then(data => {
             console.log(data);
             container.innerHTML = "";
+            var hosts = new Array(data.length);
             for (let i = 0; i < data.length; i++) {
 
                 container.appendChild(document.createElement('div')).className = 'status';
@@ -68,15 +75,16 @@ async function refresh_status(state) {
                 };
             }
             console.log(hosts);
+            return hosts;
         })
-        .then(() => {
+        .then(hosts => {
             if (state === 'first_call') {
                 setInterval(() => {
                     pinging(hosts);
                 }, 5000);
             }
-                document.getElementById('spiner_container').style.opacity = 0;
-                setTimeout(document.getElementById('status-container').style.opacity = 1, 400)
+            document.getElementById('spiner_container').style.opacity = 0;
+            setTimeout(document.getElementById('status-container').style.opacity = 1, 400)
 
         })
         .catch(
