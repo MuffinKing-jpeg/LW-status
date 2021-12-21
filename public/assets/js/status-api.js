@@ -2,8 +2,7 @@ const sign = `
 𝕸𝖚𝖋𝖋𝖎𝖓𝕶𝖎𝖓𝖌
 
 `
-
-
+var hosts = new Array(4);
 const host_url = new URL(window.location.href);
 
 if (host_url.origin == 'localhost') {
@@ -12,17 +11,17 @@ if (host_url.origin == 'localhost') {
     var url = 'https://status.logicworld.ru/api';
 }
 function build_console() {
-    
+
     if (url === 'https://status.logicworld.ru/api') {
         console.clear();
-        console.log("%cLOADED PROD MODE", "color:green; font-family:sans-serif; font-size: 30px;")
+        console.log("%cLOADED IN PROD MODE", "color:green; font-family:sans-serif; font-size: 30px;")
 
     } else {
-        console.log("%cLOADED DEV MODE", "color:red; font-family:sans-serif; font-size: 30px;")
-    }
-    console.log(`%cApi url is: \n ${url}`, "color:red; font-family:sans-serif; font-size: 30px; font-size: 20px");
-    console.log(`%c\nThis service is build by:`, 'color:#fff; font-size:15px;');
-    console.log(`%c${sign}`,"font-size:45px;color:crimson;", )
+        console.log("%cLOADED IN DEV MODE", "color:red; font-family:sans-serif; font-size: 30px;")
+
+        console.log(`%cApi url is: \n ${url}`, "color:red; font-family:sans-serif; font-size: 30px; font-size: 20px");
+    } console.log(`%c\nThis service is build by:`, 'color:#fff; font-size:15px;');
+    console.log(`%c${sign}`, "font-size:45px;color:crimson;",)
 }
 
 function pinging(hosts) {
@@ -30,12 +29,12 @@ function pinging(hosts) {
         ping(hosts[i].host + ":" + hosts[i].port).then(function (delta) {
             document.getElementsByClassName("ping-num")[i].innerHTML = `${String(delta)}ms`;
         })
-        .then(()=>{
-            build_console();
-        })
-        .catch(function (err) {
-            console.error(err);
-        });
+            .then(() => {
+                build_console();
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
     }
 }
 async function refresh_status(state) {
@@ -47,9 +46,6 @@ async function refresh_status(state) {
         .then(response => response.json())
         .then(data => {
             console.log(data);
-
-
-            var hosts = [];
             container.innerHTML = "";
             for (let i = 0; i < data.length; i++) {
 
@@ -66,25 +62,21 @@ async function refresh_status(state) {
                 document.getElementsByClassName('ping-num')[i].innerHTML = "<i class=\"fas fa-sync-alt fa-spin\"></i>";
                 document.getElementsByClassName('status-name')[i].innerHTML = data[i].name;
                 document.getElementsByClassName('status-state')[i].innerHTML = data[i].avalible;
-                hosts.push({
+                hosts[i] = {
                     host: data[i].host,
                     port: data[i].port
-                });
+                };
             }
             console.log(hosts);
-            pinging(hosts);
-            setInterval(() => {
-                pinging(hosts);
-            }, 5000);
         })
         .then(() => {
             if (state === 'first_call') {
-                document.getElementById('spiner_container').style.opacity = 0;
-                setInterval(document.getElementById('status-container').style.opacity = 1, 400)
-            } else {
-                document.getElementById('spiner_container').style.opacity = 0;
-                setInterval(document.getElementById('status-container').style.opacity = 1, 400)
+                setInterval(() => {
+                    pinging(hosts);
+                }, 5000);
             }
+                document.getElementById('spiner_container').style.opacity = 0;
+                setTimeout(document.getElementById('status-container').style.opacity = 1, 400)
 
         })
         .catch(
@@ -93,7 +85,7 @@ async function refresh_status(state) {
                 container.appendChild(document.createElement('div')).id = 'error';
                 document.getElementById('error').innerHTML = 'Something went wrong: <div id=error_text>' + err + '</div>';
                 document.getElementById('spiner_container').style.opacity = 0;
-                setInterval(document.getElementById('status-container').style.opacity = 1, 400)
+                setTimeout(document.getElementById('status-container').style.opacity = 1, 400)
 
             }
         );
