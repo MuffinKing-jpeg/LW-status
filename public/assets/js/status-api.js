@@ -73,15 +73,17 @@ async function refresh_status(state) {
                     host: data[i].host,
                     port: data[i].port
                 };
+
             }
             console.log(hosts);
+            pinging(hosts);
             return hosts;
         })
         .then(hosts => {
             if (state === 'first_call') {
                 setInterval(() => {
                     pinging(hosts);
-                }, 5000);
+                }, 60000);
             }
             document.getElementById('spiner_container').style.opacity = 0;
             setTimeout(document.getElementById('status-container').style.opacity = 1, 400)
