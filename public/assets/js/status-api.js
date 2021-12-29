@@ -33,7 +33,7 @@ function build_console() {
 function pinging(hosts) {
     for (let i = 0; i < hosts.length; i++) {
         ping(hosts[i].host + ":" + hosts[i].port, 7.2).then(function (delta) {
-            document.getElementsByClassName("ping-num")[i].innerHTML = `${String(delta)}ms`;
+            document.getElementsByClassName("ping-num")[i].innerHTML = `${String(Math.floor(delta))}ms`;
         })
             .then(() => {
                 build_console();
