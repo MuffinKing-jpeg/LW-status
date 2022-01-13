@@ -107,6 +107,7 @@ body {
   padding: 0;
   transition: var(--transition-speed);
   --footer-h: 6rem;
+  --footer-switch-h: 40px;
 }
 
 .svg-fa {
@@ -248,10 +249,16 @@ footer {
   /* Footer toggler logic start */
   .footer-switch-button {
     display: block;
+    height: var(--footer-switch-h);
   }
 
-  #footer-switch:checked+footer .width-container {
-    display: none;
+  footer {
+    transform: translateY(0px);
+    transition: 0.5s;
+  }
+
+  #footer-switch:checked+footer {
+    transform: translateY(calc(100% - var(--footer-switch-h)));
   }
 
   /* Footer toggler logic end */
