@@ -98,4 +98,5 @@ refresh_status('first_call')
 
 
 document.getElementById('reloadBtn').onclick = refresh_status;
+build_console();
 
