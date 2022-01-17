@@ -23,7 +23,7 @@ function toggleSnow() {
 document.getElementById('snowButton').onclick = toggleSnow;
 
 function checkSnowDate() {
-  if ([0, 1, 2, 10, 11].indexOf(month) <= 0) {
+  if ([0, 1, 2, 10, 11].indexOf(month) < 0) {
     document.getElementById('snowButton').style.display = 'none';
     bodyClassSnow.replace(localStorage.getItem('snow'), 'clear');
   }
