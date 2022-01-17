@@ -277,4 +277,11 @@ footer {
   .width-container {
     flex-direction: column;
   }
+  .socialBtn{
+    font-size: 20px;
+  }
+  .btn{
+    font-size: 15px;
+    font-weight: 600;
+  }
 }
