@@ -43,10 +43,9 @@
     width: 100%;
     transition: opacity 400ms ease-in;
 }
-#loading_spiner{
+#loading_spiner {
     font-size: 100px;
     margin: auto;
-
 }
 .status-container {
     width: 90%;
@@ -54,8 +53,8 @@
     max-width: 1000px;
     height: 100%;
     display: grid;
-    gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit,minmax(100px,400px));
+    gap: 0.625rem;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 230px));
     justify-content: space-evenly;
     opacity: 0;
     transition: opacity 800ms ease-in;
@@ -64,7 +63,7 @@
 .status {
     display: flex;
     flex-direction: row;
-    padding: 1rem;
+    padding: 0.5rem;
     background-color: #0303031f;
     border-radius: 0.5rem;
     transition: var(--transition-speed);
@@ -74,14 +73,13 @@
 }
 
 .status-icon {
-    font-size: 70px;
+    font-size: 45px;
     margin: auto;
-    height: 70px;
 }
 .status-info {
     text-align: right;
     width: 100%;
-    margin: auto auto auto 1rem;
+    margin: auto auto auto 0.8rem;
     font-style: italic;
     font-weight: 800;
 }
@@ -92,14 +90,15 @@
 }
 .Offline .status-icon,
 .Offline .status-info .status-state {
-    color: #a24d4d
+    color: #a24d4d;
 }
-
-.ping {
-    text-align: right;
-    width: 100%;
+@media only screen and (max-width: 1100px) {
+    .status-container {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 45%));
+    }
 }
-.ping-num{
-    font-style: normal;
-    font-weight: 400;
+@media only screen and (max-width: 600px) {
+    .status-container {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 100%));
+    }
 }
