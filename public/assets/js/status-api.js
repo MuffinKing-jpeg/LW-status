@@ -1,8 +1,9 @@
 const sign = `
-𝕸𝖚𝖋𝖋𝖎𝖓𝕶𝖎𝖓𝖌
-
+          _   _      
+|\\/|    _|_ _|_ o ._  |/ o ._   _  
+|  | |_| |   |  | | | |\\ | | | (_| 
+                                _| 
 `
-var dev_is_active = false;
 
 const host_url = new URL(window.location.href);
 
@@ -13,36 +14,35 @@ if (host_url.hostname == 'localhost') {
 }
 function build_console() {
 
-    if (url == 'https://status.logicworld.ru/api' && dev_is_active == false) {
-        console.clear();
+    if (url == 'https://status.logicworld.ru/api') {
         console.log("%cLOADED IN PROD MODE", "color:green; font-family:sans-serif; font-size: 30px;")
 
         console.log(`%c\nThis service is build by:`, 'color:#fff; font-size:15px;');
-        console.log(`%c${sign}`, "font-size:45px;color:crimson;",)
+        console.log(`%c${sign}`, "font-size:14px;color:crimson;",)
     } else {
-        if (dev_is_active == false) {
-            dev_is_active = 1;
             console.log("%cLOADED IN DEV MODE", "color:red; font-family:sans-serif; font-size: 30px;")
             console.log(`%cAPI url is: \n ${url}`, "color:red; font-family:sans-serif; font-size: 30px; font-size: 20px");
             console.log(`%c\nThis service is build by:`, 'color:#fff; font-size:15px;');
-            console.log(`%c${sign}`, "font-size:45px;color:crimson;",)
-        }
+            console.log(`%c${sign}`, "font-size:14px;color:crimson;",)
+            dev.toggleDev(true);
     }
 }
 
-function pinging(hosts) {
-    for (let i = 0; i < hosts.length; i++) {
-        ping(hosts[i].host + ":" + hosts[i].port, 7.2).then(function (delta) {
-            document.getElementsByClassName("ping-num")[i].innerHTML = `${String(Math.floor(delta))}ms`;
-        })
-            .then(() => {
-                build_console();
-            })
-            .catch(function (err) {
-                console.error(err);
-            });
-    }
-}
+
+
+// function pinging(hosts) {
+//     for (let i = 0; i < hosts.length; i++) {
+//         ping(hosts[i].host + ":" + hosts[i].port, 7.2).then(function (delta) {
+//             document.getElementsByClassName("ping-num")[i].innerHTML = `${String(Math.floor(delta))}ms`;
+//         })
+//             .then(() => {
+//                 build_console();
+//             })
+//             .catch(function (err) {
+//                 console.error(err);
+//             });
+//     }
+// }
 async function refresh_status(state) {
     const container = document.getElementById('status-container');
     setTimeout(document.getElementById('status-container').style.opacity = 0, 10)
@@ -63,10 +63,6 @@ async function refresh_status(state) {
                 document.getElementsByClassName('status')[i].appendChild(document.createElement('span')).className = 'status-info';
                 document.getElementsByClassName('status-info')[i].appendChild(document.createElement('div')).className = 'status-name';
                 document.getElementsByClassName('status-info')[i].appendChild(document.createElement('div')).className = 'status-state';
-                document.getElementsByClassName('status-info')[i].appendChild(document.createElement('div')).className = 'ping';
-                document.getElementsByClassName('ping')[i].innerHTML = "Ping: ";
-                document.getElementsByClassName('ping')[i].appendChild(document.createElement('span')).className = 'ping-num';
-                document.getElementsByClassName('ping-num')[i].innerHTML = "<i class=\"fas fa-sync-alt fa-spin\"></i>";
                 document.getElementsByClassName('status-name')[i].innerHTML = data[i].name;
                 document.getElementsByClassName('status-state')[i].innerHTML = data[i].avalible;
                 hosts[i] = {
@@ -76,15 +72,9 @@ async function refresh_status(state) {
 
             }
             console.log(hosts);
-            pinging(hosts);
             return hosts;
         })
-        .then(hosts => {
-            if (state === 'first_call') {
-                setInterval(() => {
-                    pinging(hosts);
-                }, 60000);
-            }
+        .then(() => {
             document.getElementById('spiner_container').style.opacity = 0;
             setTimeout(document.getElementById('status-container').style.opacity = 1, 400)
 
@@ -108,4 +98,5 @@ refresh_status('first_call')
 
 
 document.getElementById('reloadBtn').onclick = refresh_status;
-console.error = () => { };
+build_console();
+
