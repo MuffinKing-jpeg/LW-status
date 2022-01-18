@@ -1,5 +1,5 @@
 let dev = {
-    refresh_css: function () {
+    refresh_css: () => {
         for (let i = 0; i < document.getElementsByClassName("css").length; i++) {
             let css_link = new URL(document.getElementsByClassName("css")[i].href);
             css_link.searchParams.set('refresh', new Date().getTime());
@@ -8,7 +8,7 @@ let dev = {
 
         } return "CSS reloaded"
     },
-    toggleDev: function (state) {
+    toggleDev: (state) => {
         if (state == true) {
             console.log(`%c\nDebug enabled`, 'color:red; font-size:15px;');
             document.body.classList.add("debug")
