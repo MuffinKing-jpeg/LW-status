@@ -190,6 +190,7 @@ footer {
 
 .socialBtn {
   margin: auto;
+  font-size: 35px;
 }
 
 .logo {
@@ -276,5 +277,12 @@ footer {
 
   .width-container {
     flex-direction: column;
+  }
+  .socialBtn{
+    font-size: 21px;
+  }
+  .btn{
+    font-size: 15px;
+    font-weight: 600;
   }
 }
