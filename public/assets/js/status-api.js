@@ -1,8 +1,9 @@
 const sign = `
-𝕸𝖚𝖋𝖋𝖎𝖓𝕶𝖎𝖓𝖌
-
+          _   _      
+|\\/|    _|_ _|_ o ._  |/ o ._   _  
+|  | |_| |   |  | | | |\\ | | | (_| 
+                                _| 
 `
-var dev_is_active = false;
 
 const host_url = new URL(window.location.href);
 
@@ -13,18 +14,17 @@ if (host_url.hostname == 'localhost') {
 }
 function build_console() {
 
-    if (url == 'https://status.logicworld.ru/api' && dev_is_active == false) {
+    if (url == 'https://status.logicworld.ru/api') {
         console.log("%cLOADED IN PROD MODE", "color:green; font-family:sans-serif; font-size: 30px;")
 
         console.log(`%c\nThis service is build by:`, 'color:#fff; font-size:15px;');
-        console.log(`%c${sign}`, "font-size:45px;color:crimson;",)
+        console.log(`%c${sign}`, "font-size:14px;color:crimson;",)
     } else {
-        if (dev_is_active == false) {
             console.log("%cLOADED IN DEV MODE", "color:red; font-family:sans-serif; font-size: 30px;")
             console.log(`%cAPI url is: \n ${url}`, "color:red; font-family:sans-serif; font-size: 30px; font-size: 20px");
             console.log(`%c\nThis service is build by:`, 'color:#fff; font-size:15px;');
-            console.log(`%c${sign}`, "font-size:45px;color:crimson;",)
-        }
+            console.log(`%c${sign}`, "font-size:14px;color:crimson;",)
+            dev.toggleDev(true);
     }
 }
 
