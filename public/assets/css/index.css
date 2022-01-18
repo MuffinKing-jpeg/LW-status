@@ -264,7 +264,7 @@ footer {
 
   /* Footer toggler logic end */
   main {
-    margin-bottom: calc(var(--footer-h)*2);
+    margin-bottom: var(--footer-switch-h);
   }
 
   .social {
