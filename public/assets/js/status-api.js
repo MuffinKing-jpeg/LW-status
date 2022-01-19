@@ -5,28 +5,22 @@ const sign = `
                                 _| 
 `
 
-const host_url = new URL(window.location.href);
-
-if (host_url.hostname == 'localhost') {
-    var url = 'http://localhost:5001/lw-status/us-central1/status';
-} else {
-    var url = 'https://status.logicworld.ru/api';
-}
 function build_console() {
-
-    if (url == 'https://status.logicworld.ru/api') {
+    if (debug.detectDev() == true) {
+        console.log("%cLOADED IN DEV MODE", "color:red; font-family:sans-serif; font-size: 30px;")
+        console.log(`%cAPI url is: \n ${url}`, "color:red; font-family:sans-serif; font-size: 30px; font-size: 20px");
+        console.log(`%c\nThis service is build by:`, 'color:#fff; font-size:15px;');
+        console.log(`%c${sign}`, "font-size:14px;color:crimson;",)
+    }
+    else {
         console.log("%cLOADED IN PROD MODE", "color:green; font-family:sans-serif; font-size: 30px;")
 
         console.log(`%c\nThis service is build by:`, 'color:#fff; font-size:15px;');
         console.log(`%c${sign}`, "font-size:14px;color:crimson;",)
-    } else {
-            console.log("%cLOADED IN DEV MODE", "color:red; font-family:sans-serif; font-size: 30px;")
-            console.log(`%cAPI url is: \n ${url}`, "color:red; font-family:sans-serif; font-size: 30px; font-size: 20px");
-            console.log(`%c\nThis service is build by:`, 'color:#fff; font-size:15px;');
-            console.log(`%c${sign}`, "font-size:14px;color:crimson;",)
-            dev.toggleDev(true);
     }
+
 }
+
 
 
 
@@ -43,7 +37,7 @@ function build_console() {
 //             });
 //     }
 // }
-async function refresh_status(state) {
+async function refresh_status() {
     const container = document.getElementById('status-container');
     setTimeout(document.getElementById('status-container').style.opacity = 0, 10)
     setTimeout(document.getElementById('spiner_container').style.opacity = 1, 800)
@@ -92,7 +86,7 @@ async function refresh_status(state) {
 }
 
 
-
+debug.detectDev();
 refresh_status('first_call')
 
 

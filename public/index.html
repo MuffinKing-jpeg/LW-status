@@ -28,11 +28,13 @@
 <body>
   <div id="debug_menu">
     <ul>
-      <li><a href="./#" onclick="dev.refresh_css()"> refresh_css</a></li>
+      <li><a href="./#" onclick="debug.refresh_css()"> refresh_css</a></li>
       <li><a href="./#" onclick="toggleSnow()"> toggleSnow</a></li>
       <li><a href="./#" onclick="toggleTheme()"> toggleTheme</a></li>
       <li><a href="./#" onclick="refresh_status()"> refresh_tatus</a></li>
-   
+      <br>
+      <li><a href="./#" onclick="debug.breakLink()">break API URL</a></li>
+      <li><a href="./#" onclick="debug.fixLink()">fix API URL</a></li>
     </ul>
     <br>
     <a href="./#" onclick="dev.toggleDev(false)">disable debug</a>
@@ -102,7 +104,7 @@
   <script class="js" src="./assets/js/theme.js"></script>
   <script class="js" src="./assets/js/snow.js"></script>
   <script class="js" src="./assets/js/debug.js"></script>
-  <script class="js" defer src="./assets/js/status-api.js"></script>
+  <script class="js" src="./assets/js/status-api.js"></script>
 </body>
 
 </html>
