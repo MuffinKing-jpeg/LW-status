@@ -234,6 +234,8 @@ footer {
   transition: var(--transition-speed);
   background-color: var(--bg-secondary);
   height: auto;
+  left: 50%;
+  transform: translate(-50%);
 }
 
 #error_text {
