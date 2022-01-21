@@ -10,6 +10,7 @@
   font-size: 16px;
   font-family: Rubik;
   --transition-speed: 400ms;
+  --border-r: 8px;
 }
 
 * {
@@ -55,7 +56,7 @@ body {
   --text-primary: #b6b6b6;
   --text-secondary: #ececec;
   --bg-primary: #23232e;
-  --bg-secondary: #141418af;
+  --bg-secondary: #14141880;
   --ico: crimson;
 }
 
@@ -119,7 +120,7 @@ body {
   justify-content: center;
   align-items: center;
   padding: 0.2rem;
-  border-radius: 1rem;
+  border-radius: var(--border-r);
   margin: 0 0.7rem auto;
 }
 
@@ -198,13 +199,13 @@ footer {
   width: auto;
   text-align: center;
   justify-content: center;
-  margin: auto;
+  margin: 50px auto auto;
   color: var(--text-primary);
   font-size: 50px;
   text-decoration: none;
   align-items: center;
   padding: 2rem;
-  border-radius: 1rem;
+  border-radius: var(--border-r);
   font-family: 'Hobo';
   transition: var(--transition-speed);
 }
@@ -225,22 +226,22 @@ footer {
 #error-i,
 #error-g {
   text-align: center;
-  font-size: 2rem;
+  font-size: 20px;
   position: absolute;
-  width: 80vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
-  border-radius: 0.5rem;
+  padding: 0.5rem;
+  border-radius: var(--border-r);
   transition: var(--transition-speed);
-  background-color: var(--bg-secondary);
+  /* background-color: var(--bg-secondary); */
   height: auto;
   left: 50%;
   transform: translate(-50%);
+  max-width: 998px;
 }
 
 .error_text {
-  font-size: 1.8rem;
   color: var(--ico);
 }
 
@@ -267,7 +268,7 @@ footer {
 
   /* Footer toggler logic end */
   main {
-    margin-bottom: var(--footer-switch-h);
+    margin-bottom: calc(3.5 * var(--footer-switch-h));
   }
 
   .social {
