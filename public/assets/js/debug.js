@@ -27,7 +27,7 @@ const debug = {
             return true;
         } else {
             url = 'https://status.logicworld.ru/api';
-            return true;
+            return false;
         }
     },
     link: {

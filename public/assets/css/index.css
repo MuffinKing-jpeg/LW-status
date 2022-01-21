@@ -190,7 +190,7 @@ footer {
 
 .socialBtn {
   margin: auto;
-  font-size: 35px;
+  font-size: 32px;
 }
 
 .logo {
@@ -222,7 +222,8 @@ footer {
   margin: auto;
 }
 
-#error {
+#error-i,
+#error-g {
   text-align: center;
   font-size: 2rem;
   position: absolute;
@@ -238,7 +239,7 @@ footer {
   transform: translate(-50%);
 }
 
-#error_text {
+.error_text {
   font-size: 1.8rem;
   color: var(--ico);
 }
@@ -281,10 +282,6 @@ footer {
     flex-direction: column;
   }
   .socialBtn{
-    font-size: 21px;
-  }
-  .btn{
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 20px;
   }
 }

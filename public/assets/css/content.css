@@ -16,7 +16,7 @@
     align-items: center;
     text-align: center;
     margin: auto;
-    font-size: larger;
+    font-size: 20px;
     width: 100%;
     border-bottom: 0.1rem;
     border-style: none none dashed none;
@@ -26,25 +26,26 @@
 .reloadBtn {
     margin: 1rem;
 }
-#status-wrapper {
+.status-wrapper {
     width: 100%;
-    min-height: 400px;
+    min-height: 100px;
     height: auto;
 }
-#spiner_container {
+#spiner_container-i,
+#spiner_container-g {
     z-index: -1;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 200px;
+    height: 30%;
     position: absolute;
     right: 0;
     overflow: visible;
     width: 100%;
     transition: opacity 400ms ease-in;
 }
-#loading_spiner {
-    font-size: 100px;
+.loading_spiner {
+    font-size: 65px;
     margin: auto;
 }
 .status-container {
@@ -60,7 +61,8 @@
     transition: opacity 800ms ease-in;
 }
 
-.status {
+.status-i,
+.status-g {
     display: flex;
     flex-direction: row;
     padding: 0.5rem;
@@ -68,15 +70,17 @@
     border-radius: 0.5rem;
     transition: var(--transition-speed);
 }
-.status:hover {
+.status-i:hover,
+.status-g:hover {
     background-color: var(--bg-secondary);
 }
 
-.status-icon {
+.status-icon-i,
+.status-icon-g {
     font-size: 45px;
     margin: auto;
 }
-.status-info {
+.status-info-i {
     text-align: right;
     width: 100%;
     margin: auto auto auto 0.8rem;
@@ -84,17 +88,23 @@
     font-weight: 800;
 }
 
-.Online .status-icon,
-.Online .status-info .status-state {
+.Online .status-icon-i,
+.Online .status-info-i .status-state-i {
     color: #62ba5c;
 }
-.Offline .status-icon,
-.Offline .status-info .status-state {
+.Offline .status-icon-i,
+.Offline .status-info-i .status-state-i {
     color: #a24d4d;
 }
 @media only screen and (max-width: 1100px) {
     .status-container {
         grid-template-columns: repeat(auto-fit, minmax(100px, 45%));
+    }
+    .status-wrapper {
+        min-height: 185px;
+    }
+    .loading_spiner {
+        font-size: 100px;
     }
 }
 @media only screen and (max-width: 600px) {
