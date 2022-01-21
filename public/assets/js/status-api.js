@@ -70,7 +70,7 @@ async function refresh_status_i() {
 
 async function qr_gen(content, bg, color, id) {
     var qrcode = new QRCode({
-        padding: 3,
+        padding: 0,
         background: bg,
         color: color,
         content: content,
@@ -101,7 +101,6 @@ async function refresh_status_g() {
             summ_cont[1].appendChild(document.createElement("div")).id = "summary-status-container-g"
             summ_cont[1].style = "width:100%;";
             document.getElementById("summary-status-container-g").appendChild(document.createElement("table")).id = "summary-status-g";
-            document.getElementById("summary-status-container-g").appendChild(document.createElement("div")).id = "summary-status-progressbar-g";
 
             for (let i = 0; i < 3; i++) {
                 document.getElementById("summary-status-g").appendChild(document.createElement("tr")).className = "summary-status-tr-g";
@@ -111,19 +110,26 @@ async function refresh_status_g() {
             }
             const summ_td = document.getElementsByClassName("summary-status-td-g");
             summ_td[0].innerHTML = "Игроков в сети:";
-            summ_td[1].innerHTML = data.online + "/" + data.slots
-            summ_td[2].innerHTML = `${time.toLocaleTimeString("ru-RU")}`
-            summ_td[3].innerHTML = "<i class=\"fas fa-user-friends\"></i>"
-            summ_td[4].innerHTML = "Рекорд за сегодня:"
-            summ_td[5].innerHTML = data.recordday
-            summ_td[6].innerHTML = data.timerecday
-            summ_td[7].innerHTML = "<i class=\"fas fa-trophy\"></i>"
-            summ_td[8].innerHTML = "Рекорд за всё время:"
-            summ_td[9].innerHTML = data.record
-            summ_td[10].innerHTML = data.timerec
-            summ_td[11].innerHTML = "<i class=\"fas fa-trophy\"></i>"
+            summ_td[1].innerHTML = data.online + "/" + data.slots;
+            summ_td[2].innerHTML = `${time.toLocaleTimeString("ru-RU")}`;
+            summ_td[3].innerHTML = "<i class=\"fas fa-user-friends\"></i>";
+            summ_td[4].innerHTML = "Рекорд за сегодня:";
+            summ_td[5].innerHTML = data.recordday;
+            summ_td[6].innerHTML = data.timerecday;
+            summ_td[7].innerHTML = "<i class=\"fas fa-trophy\"></i>";
+            summ_td[8].innerHTML = "Рекорд за всё время:";
+            summ_td[9].innerHTML = data.record;
+            summ_td[10].innerHTML = data.timerec;
+            summ_td[11].innerHTML = "<i class=\"fas fa-trophy\"></i>";
+            document.getElementById("summary-status-container-g").appendChild(document.createElement("div")).id = "summary-status-progressbar-g";
+            document.getElementById("summary-status-progressbar-g").appendChild(document.createElement("div")).id = "summary-progressbar-pad-g";
+            document.getElementById("summary-progressbar-pad-g").appendChild(document.createElement("div")).id = "progressbar-g";
+            document.getElementById("progressbar-g").style = `width: ${100-data.percent}%;`
 
 
+            Object.entries(data.servers).forEach(([key, value]) => {
+                console.log(`${key} ${value}`);
+              });
             qr_gen("https://logicworld.ru/", "none", "var(--text-secondary)", "qr");
         })
         .then(() => {

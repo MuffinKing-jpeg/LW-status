@@ -56,8 +56,13 @@ body {
   --text-primary: #b6b6b6;
   --text-secondary: #ececec;
   --bg-primary: #23232e;
-  --bg-secondary: #14141880;
+  --bg-secondary: #1414189a;
   --ico: crimson;
+  --shader-90: #141418e6;
+  --shader-70: #141418b3;
+  --shader-50: #14141880;
+  --shader-30: #1414184d;
+  --shader-10: #1414181a;
 }
 
 .light {
@@ -66,6 +71,11 @@ body {
   --bg-primary: #ffffff;
   --bg-secondary: #e4e4e4af;
   --ico: crimson;
+  --shader-90: #e4e4e4e6;
+  --shader-70: #e4e4e4b3;
+  --shader-50: #e4e4e480;
+  --shader-30: #e4e4e44d;
+  --shader-10: #e4e4e41a;
 }
 
 .wrapper {
