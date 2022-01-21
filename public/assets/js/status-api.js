@@ -110,15 +110,15 @@ async function refresh_status_g() {
                 }
             }
             const summ_td = document.getElementsByClassName("summary-status-td-g");
-            summ_td[0].innerHTML = "Online:";
+            summ_td[0].innerHTML = "Игроков в сети:";
             summ_td[1].innerHTML = data.online + "/" + data.slots
-            summ_td[2].innerHTML = `${time.toLocaleString("ru-RU")}`
+            summ_td[2].innerHTML = `${time.toLocaleTimeString("ru-RU")}`
             summ_td[3].innerHTML = "<i class=\"fas fa-user-friends\"></i>"
-            summ_td[4].innerHTML = "Рекорд дня"
+            summ_td[4].innerHTML = "Рекорд за сегодня:"
             summ_td[5].innerHTML = data.recordday
             summ_td[6].innerHTML = data.timerecday
             summ_td[7].innerHTML = "<i class=\"fas fa-trophy\"></i>"
-            summ_td[8].innerHTML = "Рекорд"
+            summ_td[8].innerHTML = "Рекорд за всё время:"
             summ_td[9].innerHTML = data.record
             summ_td[10].innerHTML = data.timerec
             summ_td[11].innerHTML = "<i class=\"fas fa-trophy\"></i>"

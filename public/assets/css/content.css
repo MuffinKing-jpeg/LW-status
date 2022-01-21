@@ -67,7 +67,7 @@
 .status-g {
     display: flex;
     flex-direction: row;
-    padding: 0.5rem;
+    padding: var(--border-r);
     background-color: var(--bg-secondary);
     border-radius: var(--border-r);
     transition: var(--transition-speed);
@@ -86,7 +86,6 @@
     text-align: right;
     width: 100%;
     margin: auto auto auto 0.8rem;
-    font-style: italic;
     font-weight: 800;
 }
 
@@ -107,6 +106,7 @@
     grid-column-start: span 4;
     border-radius: var(--border-r);
     background-color: var(--bg-secondary);
+    padding: var(--border-r);
 }
 #qr {
     width: 192px;
@@ -115,13 +115,15 @@
 .summary-container {
     height: 100%;
     margin: auto;
+    display: flex;
+    justify-content: flex-end;
+    
+    
 }
 #summary-status-container-g {
-    display: flex;
-    flex-direction: column;
     width: 100%;
     height: 100%;
-    justify-content: space-between;
+    max-width: 680px;
 }
 #summary-status-g{
     height: 70%;
@@ -137,8 +139,19 @@
 .summary-status-tr-g{
     margin: auto;
     
+}.summary-status-td-g{
+    margin: auto;
+    font-weight: 500;
 }
-.summary-status-td-g{
+
+.summary-status-td-g:nth-child(n+1){
+    text-align: left;
+}
+.summary-status-td-g:nth-child(even){
+    text-align: center;
+}
+.summary-status-td-g:nth-child(n+2){
+    text-align: center;
 }
 
 @media only screen and (max-width: 1125px) {
@@ -156,6 +169,14 @@
     .status-container {
         grid-template-columns: repeat(auto-fit, minmax(100px, 100%));
     }
+    #qr{
+        display: none;
+    }
+}
+@media only screen and (max-width: 725px) {
+    #qr{
+        display: none;
+    }
 }
 
 @media only screen and (max-width: 385px) {
@@ -163,5 +184,13 @@
         text-align: left;
         width: 85%;
         margin: auto;
+    }
+}
+@media only screen and (max-width: 350px) {
+    .status-container {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 100%));
+    }
+    #qr{
+        display: none;
     }
 }
