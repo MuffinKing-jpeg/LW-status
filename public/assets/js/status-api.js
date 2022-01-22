@@ -82,22 +82,34 @@ async function qr_gen(content, bg, color, id) {
     return 0;
 }
 
-async function refresh_status_g() {
-    const container = document.getElementById('status-container-g');
-    setTimeout(document.getElementById('status-container-g').style.opacity = 0, 10)
+const dummy_gs = "./assets/debug/gs-status-dummy.json"
+const normal_gs = "https://logicworld.ru/monAJAX/cache/cache.json"
+
+function refresh_status_g(recal) {
     setTimeout(document.getElementById('spiner_container-g').style.opacity = 1, 800)
-    fetch("https://logicworld.ru/monAJAX/cache/cache.json?nocache=" + new Date().getTime())
+    if (recal == true) {
+        document.getElementById("status-summary-g").parentNode.removeChild(document.getElementById("status-summary-g"))
+        document.getElementById("status-container-g").parentNode.removeChild(document.getElementById("status-container-g"))
+    }
+    fetch(`${normal_gs}?nocache=` + new Date().getTime())
         .then(response => response.json())
         .then(data => {
             console.log(data);
             let time = new Date()
+            document.getElementById("status-wrapper-g").appendChild(document.createElement("div")).id = "status-summary-g"
+            document.getElementById("status-wrapper-g").appendChild(document.createElement("div")).id = "status-container-g"
+            const container = document.getElementById('status-container-g');
+            document.getElementById("status-container-g").classList = "status-container";
             container.innerHTML = "";
-            container.appendChild(document.createElement("div")).id = "status-summary-g"
+            document.getElementById("status-summary-g").innerHTML = ""
+            setTimeout(document.getElementById('status-container-g').style.opacity = 0, 10)
+            setTimeout(document.getElementById('status-summary-g').style.opacity = 0, 10)
+
             for (let i = 0; i <= 1; i++) {
                 document.getElementById("status-summary-g").appendChild(document.createElement("div")).className = "summary-container";
             }
             const summ_cont = document.getElementsByClassName("summary-container");
-            summ_cont[0].appendChild(document.createElement("div")).id = "qr"
+            summ_cont[0].appendChild(document.createElement("a")).id = "qr"
             summ_cont[1].appendChild(document.createElement("div")).id = "summary-status-container-g"
             summ_cont[1].style = "width:100%;";
             document.getElementById("summary-status-container-g").appendChild(document.createElement("table")).id = "summary-status-g";
@@ -124,39 +136,82 @@ async function refresh_status_g() {
             document.getElementById("summary-status-container-g").appendChild(document.createElement("div")).id = "summary-status-progressbar-g";
             document.getElementById("summary-status-progressbar-g").appendChild(document.createElement("div")).id = "summary-progressbar-pad-g";
             document.getElementById("summary-progressbar-pad-g").appendChild(document.createElement("div")).id = "progressbar-g";
-            document.getElementById("progressbar-g").style = `width: ${100-data.percent}%;`
+            document.getElementById("progressbar-g").style = `width: ${100 - data.percent}%;`
 
 
-            Object.entries(data.servers).forEach(([key, value]) => {
-                console.log(`${key} ${value}`);
-              });
             qr_gen("https://logicworld.ru/", "none", "var(--text-secondary)", "qr");
+            document.getElementById("qr").href = "https://logicworld.ru/"
+
+
+            let stat_index = 0;
+            Object.entries(data.servers).forEach(([key, value]) => {
+                container.appendChild(document.createElement('div')).className = 'status-g';
+                document.getElementsByClassName("status-g")[stat_index].appendChild(document.createElement("a")).className = "status-icon-g";
+                document.getElementsByClassName("status-g")[stat_index].appendChild(document.createElement("div")).className = "status-info-g";
+                document.getElementsByClassName("status-icon-g")[stat_index].classList.add("status-icon-g-qr");
+                document.getElementsByClassName("status-icon-g")[stat_index].id = `${key}-icon`;
+                document.getElementsByClassName("status-icon-g")[stat_index].href = `https://logicworld.ru/description.html#${key}`;
+                qr_gen(`https://logicworld.ru/description.html#${key}`, "none", "var(--text-secondary)", `${key}-icon`);
+
+                document.getElementsByClassName("status-info-g")[stat_index].appendChild(document.createElement("div")).className = "status-info-name-g";
+                document.getElementsByClassName("status-info-name-g")[stat_index].appendChild(document.createElement("span")).className = "status-info-server-name-g";
+                document.getElementsByClassName("status-info-server-name-g")[stat_index].innerHTML = key;
+                document.getElementsByClassName("status-info-name-g")[stat_index].appendChild(document.createElement("span")).className = "status-info-server-status-g";
+                document.getElementsByClassName("status-info-server-status-g")[stat_index].innerHTML = data.servers[key].status;
+
+
+                document.getElementsByClassName("status-info-g")[stat_index].appendChild(document.createElement("div")).className = "status-info-online-g";
+
+                document.getElementsByClassName("status-info-g")[stat_index].appendChild(document.createElement("div")).className = "status-info-progressbar-g";
+                document.getElementsByClassName("status-info-progressbar-g")[stat_index].appendChild(document.createElement("div")).className = "status-info-progressbar-pad-g";
+
+                if (data.servers[key].status == "online" && data.servers[key].motd) {
+                    console.log(data.servers[key]);
+                    document.getElementsByClassName('status-g')[stat_index].classList.add("Online");
+                    document.getElementsByClassName("status-info-online-g")[stat_index].appendChild(document.createElement("span")).id = `status-info-online-text-${key}-g`;
+                    document.getElementsByClassName("status-info-online-g")[stat_index].appendChild(document.createElement("span")).id = `status-info-online-players-${key}-g`;
+
+                    document.getElementsByClassName("status-info-progressbar-pad-g")[stat_index].appendChild(document.createElement("div")).id = `status-info-progressbar-bar-${key}-g`;
+
+                    document.getElementById(`status-info-progressbar-bar-${key}-g`).style = `width: ${100 - data.servers[key].percent}%;`
+                    document.getElementById(`status-info-progressbar-bar-${key}-g`).className = `status-info-progressbar-bar-g`;
+
+                    document.getElementById(`status-info-online-text-${key}-g`).textContent = "В сети:";
+                    document.getElementById(`status-info-online-players-${key}-g`).textContent = `${data.servers[key].online}/${data.servers[key].slots}`
+                } else {
+                    document.getElementsByClassName('status-g')[stat_index].classList.add("Offline");
+                    document.getElementsByClassName("status-info-online-g")[stat_index].innerHTML = "<span style=\"margin: auto;\">НЕДОСТУПЕН</span>"
+
+                }
+
+                stat_index++;
+            });
         })
         .then(() => {
             document.getElementById('spiner_container-g').style.opacity = 0;
             setTimeout(document.getElementById('status-container-g').style.opacity = 1, 400)
+            setTimeout(document.getElementById('status-summary-g').style.opacity = 1, 400)
 
         })
-        // .catch(
-        //     (err) => {
-        //         console.error(err);
-        //         container.innerHTML = "";
-        //         container.appendChild(document.createElement('div')).id = 'error-g';
-        //         document.getElementById('error-g').innerHTML = 'Something went wrong: <div class=error_text>' + err + '</div>';
-        //         document.getElementById('spiner_container-g').style.opacity = 0;
-        //         setTimeout(document.getElementById('status-container-g').style.opacity = 1, 400)
+    // .catch(
+    //     (err) => {
+    //         console.error(err);
+    //         container.innerHTML = "";
+    //         container.appendChild(document.createElement('div')).id = 'error-g';
+    //         document.getElementById('error-g').innerHTML = 'Something went wrong: <div class=error_text>' + err + '</div>';
+    //         document.getElementById('spiner_container-g').style.opacity = 0;
+    //         setTimeout(document.getElementById('status-container-g').style.opacity = 1, 400)
 
-        //     }
-        // );
+    //     }
+    // );
 
 }
 
 debug.detectDev(); //detecting localhost
 
 refresh_status_i(); //loading status of infrastructure 
-refresh_status_g(); //loading game servers status
+refresh_status_g(false); //loading game servers status
 
-document.getElementById('reloadBtn-i').onclick = refresh_status_i;  //binding functions to refresh buttons 
-document.getElementById('reloadBtn-g').onclick = refresh_status_g;
+;
 
 build_console(); //drawwing console

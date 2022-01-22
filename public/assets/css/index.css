@@ -165,7 +165,7 @@ body {
   font-size: 2em;
   width: 100%;
   text-align: center;
-  background: #00000022;
+  background: var(--shader-90);
 }
 
 footer .footer-switch-button i {
@@ -183,7 +183,7 @@ footer {
   align-items: center;
   position: fixed;
   bottom: 0;
-  background-color: var(--bg-secondary);
+  background-color: var(--shader-70);
   width: 100%;
   height: var(--footer-h);
 }
