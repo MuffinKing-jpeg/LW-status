@@ -193,17 +193,17 @@ function refresh_status_g(recal) {
             setTimeout(document.getElementById('status-summary-g').style.opacity = 1, 400)
 
         })
-    // .catch(
-    //     (err) => {
-    //         console.error(err);
-    //         container.innerHTML = "";
-    //         container.appendChild(document.createElement('div')).id = 'error-g';
-    //         document.getElementById('error-g').innerHTML = 'Something went wrong: <div class=error_text>' + err + '</div>';
-    //         document.getElementById('spiner_container-g').style.opacity = 0;
-    //         setTimeout(document.getElementById('status-container-g').style.opacity = 1, 400)
+    .catch(
+        (err) => {
+            console.error(err);
+            container.innerHTML = "";
+            container.appendChild(document.createElement('div')).id = 'error-g';
+            document.getElementById('error-g').innerHTML = 'Something went wrong: <div class=error_text>' + err + '</div>';
+            document.getElementById('spiner_container-g').style.opacity = 0;
+            setTimeout(document.getElementById('status-container-g').style.opacity = 1, 400)
 
-    //     }
-    // );
+        }
+    );
 
 }
 
