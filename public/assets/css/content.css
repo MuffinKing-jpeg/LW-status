@@ -111,6 +111,7 @@
 }
 #qr {
     height: 160px;
+    width: 160px; /* FF-Fix */
     margin: auto;
     display: flex;
     justify-content: center;
@@ -176,8 +177,8 @@
 
 .status-icon-g-qr {
     height: 50px;
+    width: 50px; /* FF-Fix */
     display: flex;
-    width: auto;
     justify-content: center;
     padding: var(--border-r);
     margin-left: 0px;
