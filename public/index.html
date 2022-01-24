@@ -28,14 +28,18 @@
 <body>
   <div id="debug_menu">
     <ul>
-      <li><a href="./#" onclick="dev.refresh_css()"> refresh_css</a></li>
-      <li><a href="./#" onclick="toggleSnow()"> toggleSnow</a></li>
-      <li><a href="./#" onclick="toggleTheme()"> toggleTheme</a></li>
-      <li><a href="./#" onclick="refresh_status()"> refresh_tatus</a></li>
-   
+      <li><button onclick="debug.refresh_css()"> refresh_css</button></li>
+      <li><button onclick="toggleSnow()"> toggleSnow</button></li>
+      <li><button onclick="toggleTheme()"> toggleTheme</button></li>
+      <br>
+      <li><button onclick="refresh_status_i()"> refresh_status_i</button></li>
+      <li><button onclick="refresh_status_g()"> refresh_status_g</button></li>
+      <br>
+      <li><button onclick="debug.breakLink()">break API URL</button></li>
+      <li><button onclick="debug.fixLink()">fix API URL</button></li>
     </ul>
     <br>
-    <a href="./#" onclick="dev.toggleDev(false)">disable debug</a>
+    <button onclick="debug.toggleDev(false)">disable debug</button>
   </div>
   <div id="bgr">
 
@@ -49,21 +53,27 @@
   </div>
   <main data-simplebar>
     <div class="wrapper">
-      <a class="logo" href="https://logicworld.ru"><i class="fas fa-terminal"></i> LogicWorld</a>
+      <a class="logo" href="https://logicworld.ru/start.html"><i class="fas fa-terminal"></i> LogicWorld</a>
       <div class="content">
-        <div class="head-text">Статус серверов<i class="fas fa-sync-alt btn reloadBtn" id="reloadBtn"></i></div>
-
-        <div id="status-wrapper">
-          <div id="spiner_container">
-            <i class="fas fa-sync-alt fa-spin" id="loading_spiner"></i>
+        <div class="head-text">Статус инфраструктуры<i class="fas fa-sync-alt btn reloadBtn" onclick="refresh_status_i()" id="reloadBtn-i"></i></div>
+        <div class="status-wrapper">
+          <div  id="spiner_container-i">
+            <i class="fas fa-sync-alt fa-spin loading_spiner"></i>
           </div>
-          <div class="status-container" id="status-container">
+          <div class="status-container" id="status-container-i">
+          </div>
+        </div>
+        <div class="head-text">Статус игровых серверов<i class="fas fa-sync-alt btn reloadBtn" onclick="refresh_status_g(true)" id="reloadBtn-g"></i>
+        </div>
+        <div class="status-wrapper" id="status-wrapper-g">
+            <div id="spiner_container-g">
+              <i class="fas fa-sync-alt fa-spin loading_spiner"></i>
+            </div>
+          <!-- <div class="status-container" id="status-container-g"> -->
           </div>
         </div>
       </div>
-      <div class="content">
 
-      </div>
     </div>
 
 
@@ -98,11 +108,11 @@
 
   </footer>
 
-  <!-- <script src="./assets/js/ping.js" type="text/javascript"></script> -->
   <script class="js" src="./assets/js/theme.js"></script>
   <script class="js" src="./assets/js/snow.js"></script>
   <script class="js" src="./assets/js/debug.js"></script>
-  <script class="js" defer src="./assets/js/status-api.js"></script>
+  <script class="js" src="./assets/js/qr.js"></script>
+  <script class="js" src="./assets/js/status-api.js"></script>
 </body>
 
 </html>
