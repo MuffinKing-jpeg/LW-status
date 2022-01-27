@@ -32,6 +32,7 @@
     width: 100%;
     min-height: 100px;
     height: auto;
+    margin-bottom: 4rem;
 }
 #spiner_container-i,
 #spiner_container-g {
@@ -108,6 +109,8 @@
     margin: 1rem auto;
     max-width: 999px;
     height: 100%;
+    transition: opacity var(--transition-speed) ease-out;
+    opacity: 0;
 }
 #qr {
     height: 160px;
@@ -179,7 +182,6 @@
     display: flex;
     width: auto;
     justify-content: center;
-    padding: var(--border-r);
     margin-left: 0px;
 }
 
@@ -189,10 +191,11 @@
 }
 .status-info-g {
     margin-left: auto;
-    padding: var(--border-r) 0;
+    padding: 0 0 0 var(--border-r);
     width: 100%;
     display: flex;
     flex-direction: column;
+    font-size: 0.85em;
 }
 .status-info-name-g,
 .status-info-online-g {
