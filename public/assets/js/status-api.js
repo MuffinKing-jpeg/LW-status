@@ -1,8 +1,8 @@
 const sign = `
-          _   _      
-|\\/|    _|_ _|_ o ._  |/ o ._   _  
-|  | |_| |   |  | | | |\\ | | | (_| 
-                                _| 
+          _   _
+|\\/|    _|_ _|_ o ._  |/ o ._   _
+|  | |_| |   |  | | | |\\ | | | (_|
+                                _|
 `
 
 function build_console() {
@@ -151,7 +151,7 @@ function refresh_status_g(recal) {
                 document.getElementsByClassName("status-icon-g")[stat_index].classList.add("status-icon-g-qr");
                 document.getElementsByClassName("status-icon-g")[stat_index].id = `${key}-icon`;
                 document.getElementsByClassName("status-icon-g")[stat_index].href = `https://logicworld.ru/description.html#${key}`;
-                qr_gen(`https://logicworld.ru/description.html#${key}`, "none", "var(--text-secondary)", `${key}-icon`);
+                // qr_gen(`https://logicworld.ru/description.html#${key}`, "none", "var(--text-secondary)", `${key}-icon`);
 
                 document.getElementsByClassName("status-info-g")[stat_index].appendChild(document.createElement("div")).className = "status-info-name-g";
                 document.getElementsByClassName("status-info-name-g")[stat_index].appendChild(document.createElement("span")).className = "status-info-server-name-g";
@@ -165,8 +165,11 @@ function refresh_status_g(recal) {
                 document.getElementsByClassName("status-info-g")[stat_index].appendChild(document.createElement("div")).className = "status-info-progressbar-g";
                 document.getElementsByClassName("status-info-progressbar-g")[stat_index].appendChild(document.createElement("div")).className = "status-info-progressbar-pad-g";
 
-                if (data.servers[key].status == "online" && data.servers[key].motd) {
-                    console.log(data.servers[key]);
+                let iconArea = document.getElementById(`${key}-icon`);
+                let s_status = data.servers[key].status;
+                switch (s_status) {
+                  case "online":
+                    iconArea.innerHTML = '<div class="circle_area"><div class="circle online"><div class="sub_circle"></div></div></div>';
                     document.getElementsByClassName('status-g')[stat_index].classList.add("Online");
                     document.getElementsByClassName("status-info-online-g")[stat_index].appendChild(document.createElement("span")).id = `status-info-online-text-${key}-g`;
                     document.getElementsByClassName("status-info-online-g")[stat_index].appendChild(document.createElement("span")).id = `status-info-online-players-${key}-g`;
@@ -178,10 +181,17 @@ function refresh_status_g(recal) {
 
                     document.getElementById(`status-info-online-text-${key}-g`).textContent = "В сети:";
                     document.getElementById(`status-info-online-players-${key}-g`).textContent = `${data.servers[key].online}/${data.servers[key].slots}`
-                } else {
+                    break;
+                  case "Выключен":
+                    iconArea.innerHTML = '<div class="circle_area"><div class="circle offline"><div class="sub_circle"></div></div></div>';
                     document.getElementsByClassName('status-g')[stat_index].classList.add("Offline");
-                    document.getElementsByClassName("status-info-online-g")[stat_index].innerHTML = "<span style=\"margin: auto;\">НЕДОСТУПЕН</span>"
-
+                    document.getElementsByClassName("status-info-online-g")[stat_index].innerHTML = `<span style=\"margin: auto;\">НЕДОСТУПЕН</span>`
+                    break;
+                  default:
+                    document.getElementsByClassName('status-g')[stat_index].classList.add("Warning");
+                    document.getElementsByClassName("status-info-online-g")[stat_index].innerHTML = `<span style=\"margin: auto;\">НЕДОСТУПЕН</span>`
+                    iconArea.innerHTML = '<div class="circle_area"><div class="circle warning"><div class="sub_circle"></div></div></div>';
+                    break;
                 }
 
                 stat_index++;
@@ -209,7 +219,7 @@ function refresh_status_g(recal) {
 
 debug.detectDev(); //detecting localhost
 
-refresh_status_i(); //loading status of infrastructure 
+refresh_status_i(); //loading status of infrastructure
 refresh_status_g(false); //loading game servers status
 
 ;
