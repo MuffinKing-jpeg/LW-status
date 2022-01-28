@@ -92,11 +92,11 @@
 
 .Online .status-icon-i,
 .Online .status-info-i .status-state-i {
-    color: #62ba5c;
+    color: var(--color-online);
 }
 .Offline .status-icon-i,
 .Offline .status-info-i .status-state-i {
-    color: #a24d4d;
+    color: var(--color-offline);
 }
 #status-summary-g {
     display: flex;
@@ -167,7 +167,7 @@
     text-align: center;
 }
 #summary-progressbar-pad-g {
-    background: linear-gradient(90deg, #00ff0a 0%, #ff0000 100%);
+    background: linear-gradient(90deg, var(--color-online) 0%, var(--color-offline) 100%);
     width: 100%;
     height: 100%;
     border-radius: var(--border-r);
@@ -220,7 +220,7 @@
     height: 10%;
 }
 .status-info-progressbar-pad-g {
-    background: linear-gradient(90deg, #00ff0a 0%, #ff0000 100%);
+    background: linear-gradient(90deg, var(--color-online) 0%, var(--color-offline) 100%);
     width: 100%;
     height: 100%;
     border-radius: var(--border-r);
@@ -234,14 +234,14 @@
 
 .Online .status-icon-g path,
 .Online .status-info-g .status-info-server-status-g {
-    color: #62ba5c;
-    fill: #62ba5c !important;
+    color: var(--color-online);
+    fill: var(--color-online) !important;
 }
 .Offline .status-icon-g path,
 .Offline .status-info-g .status-info-server-status-g,
 .Offline .status-info-online-g {
-    color: #a24d4d;
-    fill: #a24d4d !important;
+    color: var(--color-offline);
+    fill: var(--color-offline) !important;
 }
 .Offline .status-info-online-g {
     text-align: center;
@@ -250,16 +250,16 @@
 }
 
 .Offline .status-info-progressbar-pad-g {
-    background: #ff0000;
+    background: var(--color-offline);;
 }
 .Warning .status-icon-g path,
 .Warning .status-info-g .status-info-server-status-g,
 .Warning .status-info-online-g {
-    color: #aaaa00;
-    fill: #aaaa00 !important;
+    color: var(--color-warning);
+    fill: var(--color-warning) !important;
 }
 .Warning .status-info-progressbar-pad-g {
-    background: #ffff00;
+    background: var(--color-warning);
 }
 
 .circle_area {
@@ -279,24 +279,24 @@
     border-radius: 50%;
 }
 .online > .sub_circle {
-    background: #0D0;
-    animation: ping 1.5s linear infinite;
+    background: var(--color-online);
+    animation: ping 1.5s linear infinite; 
 }
 .circle.online {
-    background: #0A0;
+    background: var(--color-online);
 }
 .warning > .sub_circle {
-    background: #FF0;
+    background: var(--color-warning);
     animation: unping 2s linear infinite;
 }
 .circle.warning {
-    background: #FF0;
+    background: var(--color-warning);
 }
 .offline > .sub_circle {
-    background: #CCCd;
+    background: var(--color-offline);
 }
 .circle.offline {
-    background: #CCCd;
+    background: var(--color-offline);
     animation: error 4s step-end infinite;
 }
 @keyframes ping {
@@ -315,7 +315,7 @@
     opacity: 0.2;
   }
   50% {
-    transform: scale(1.4);
+    transform: scale(1.2);
     opacity: 0.2;
   }
   100% {

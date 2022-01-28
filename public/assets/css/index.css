@@ -11,6 +11,9 @@
   font-family: Rubik;
   --transition-speed: 400ms;
   --border-r: 8px;
+  --color-online: #62ba4d;
+  --color-offline: #a24d4d;
+  --color-warning: #97a24d;
 }
 
 * {
