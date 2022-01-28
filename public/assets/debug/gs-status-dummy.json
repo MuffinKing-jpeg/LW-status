@@ -14,16 +14,16 @@
 		"SkyTech": {
 			"address": "play.logicworld.ru:3567",
 			"status": "online",
-			"online": 0,
+			"online": 78,
 			"motd": "SkyTech!",
 			"type": "§1",
 			"slots": 100,
-			"percent": 0,
+			"percent": 78,
 			"version": "1.7.10",
 			"ping": 1
 		},
 		"MagicRPG": {
-			"status": "Выключен",
+			"status": "Неизвестное ядро",
 			"address": "s2.logicworld.ru:3437"
 		},
 		"NewSky": {
@@ -59,7 +59,7 @@
 	},
 	"online": 20,
 	"slots": 400,
-	"percent": 5,
+	"percent": 90,
 	"timerec": "25 января в 23:09",
 	"record": 53,
 	"recordday": 20,

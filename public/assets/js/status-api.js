@@ -82,8 +82,10 @@ async function qr_gen(content, bg, color, id) {
     return 0;
 }
 
-const dummy_gs = "./assets/debug/gs-status-dummy.json"
+const test_gs = "./assets/debug/gs-status-dummy.json"
 const normal_gs = "https://logicworld.ru/monAJAX/cache/cache.json"
+
+var gs_api_link = normal_gs;
 
 function refresh_status_g(recal) {
     setTimeout(document.getElementById('spiner_container-g').style.opacity = 1, 800)
@@ -91,7 +93,7 @@ function refresh_status_g(recal) {
         document.getElementById("status-summary-g").parentNode.removeChild(document.getElementById("status-summary-g"))
         document.getElementById("status-container-g").parentNode.removeChild(document.getElementById("status-container-g"))
     }
-    fetch(`${normal_gs}?nocache=` + new Date().getTime())
+    fetch(`${gs_api_link}?nocache=` + new Date().getTime())
         .then(response => response.json())
         .then(data => {
             console.log(data);
@@ -206,9 +208,9 @@ function refresh_status_g(recal) {
     .catch(
         (err) => {
             console.error(err);
-            container.innerHTML = "";
-            container.appendChild(document.createElement('div')).id = 'error-g';
-            document.getElementById('error-g').innerHTML = 'Something went wrong: <div class=error_text>' + err + '</div>';
+            document.getElementById("status-wrapper-g").appendChild(document.createElement("div")).id = "status-container-g"
+            document.getElementById("status-container-g").appendChild(document.createElement('div')).id = 'error-g';
+            document.getElementById('error-g').innerHTML = `Что-то пошло не по плану: <div class=error_text>${err}</div>`;
             document.getElementById('spiner_container-g').style.opacity = 0;
             setTimeout(document.getElementById('status-container-g').style.opacity = 1, 400)
 
