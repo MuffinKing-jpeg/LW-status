@@ -17,7 +17,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase-admin": "^9.12.0",
-    "firebase-functions": "^3.11.0",
+    "firebase-functions": "^3.19.0",
     "is-port-reachable": "^3.0.0",
     "npm": "^7.5.2",
     "ping": "^0.4.0"
