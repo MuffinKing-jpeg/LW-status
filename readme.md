@@ -22,4 +22,4 @@ Lightweight, cloud-based utility for tracking state of [LogicWorld](https://logi
 - __24.02.2022__ __*__WAR IN UKRAINE__*__
 - __16.03.2022__ Implemented use of Firestore. *Update your server list and config faster!*
 
-###### See ya in peace
+###### See ya in peace \#nowar
