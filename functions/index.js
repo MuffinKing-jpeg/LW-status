@@ -67,8 +67,6 @@ async function state() {
       }
     });
 
-
-  console.log(status);
   return status
 }
 

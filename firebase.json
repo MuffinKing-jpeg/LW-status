@@ -23,6 +23,10 @@
         "destination": "/index.html"
       },
       {
+        "source":"/admin",
+        "destination":"/admin.html"
+      },
+      {
         "source": "/api",
         "function": "status"
       }
@@ -46,6 +50,12 @@
     },
     "database": {
       "port": 9000
+    },
+    "auth": {
+      "port": 9099
+    },
+    "storage": {
+      "port": 9199
     }
   }
 }

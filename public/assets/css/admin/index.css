@@ -1,0 +1,100 @@
+
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100px;
+    height: 100px;
+    border-radius: 0 var(--border-r) 0 0;
+}
+
+#login-form-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 500px;
+    min-width: 240px;
+    width: 85%;
+    height: 200px;
+    background-color: var(--shader-70);
+    border-radius: var(--border-r);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-content: center;
+}
+#login-form {
+    display: flex;
+    width: 90%;
+    margin: auto;
+    margin-top: 0;
+}
+
+#form-name {
+    font-size: 1.5rem;
+    margin: auto;
+    width: 90%;
+    /* margin-bottom: 0; */
+}
+#field-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+
+}
+
+.form-field {
+    background-color: transparent;
+    border-radius: 0;
+    border-width: 0 0 2px 0;
+    border-style: solid;
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    width: 100%;
+    transition: color var(--transition-speed);
+    transition: border-color var(--transition-speed);
+}
+.form-field:focus-visible {
+    background-color: var(--shader-10);
+    border-radius: 0;
+    border-width: 0 0 2px 0;
+    border-style: solid;
+    border-color: var(--ico);
+    color: var(--ico);
+    outline: none;
+    transition: color var(--transition-speed);
+    transition: border-color var(--transition-speed);
+}
+
+#submit-btn{
+    display: none;
+}
+#btn-label {
+    margin: auto auto;
+    font-size: 2rem;
+    transition: color var(--transition-speed);
+    transition: transform var(--transition-speed);
+}
+
+#btn-label:hover {
+    color: var(--ico);
+    transform: scale(1.2);
+    transition: color var(--transition-speed);
+    transition: transform var(--transition-speed);
+}
+
+.wrapper {
+    opacity: 0;
+}
+
+@media only screen and (max-width: 600px) {
+    footer {
+        bottom: 0;
+        left: unset;
+        width: 100%;
+        height: auto;
+    }
+}
