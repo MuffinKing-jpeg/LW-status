@@ -1,12 +1,15 @@
-
-
-footer {
+/* footer {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100px;
-    height: 100px;
+    width: auto;
+    height: auto;
     border-radius: 0 var(--border-r) 0 0;
+} */
+
+:root {
+    --px100: 100px;
+    font-family: Rubik;
 }
 
 #login-form-container {
@@ -16,33 +19,38 @@ footer {
     transform: translate(-50%, -50%);
     max-width: 500px;
     min-width: 240px;
+    padding: 2rem 0;
     width: 85%;
-    height: 200px;
     background-color: var(--shader-70);
     border-radius: var(--border-r);
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-content: center;
+    transition: opacity var(--transition-speed);
 }
 #login-form {
     display: flex;
     width: 90%;
     margin: auto;
     margin-top: 0;
+    color: var(--ico);
 }
 
 #form-name {
     font-size: 1.5rem;
     margin: auto;
     width: 90%;
+    padding-bottom: 1rem;
     /* margin-bottom: 0; */
 }
 #field-wrapper {
     display: flex;
     flex-direction: column;
     width: 80%;
-
+}
+#login-msg {
+    height: 1.5rem;
 }
 
 .form-field {
@@ -69,7 +77,7 @@ footer {
     transition: border-color var(--transition-speed);
 }
 
-#submit-btn{
+#submit-btn {
     display: none;
 }
 #btn-label {
@@ -77,6 +85,7 @@ footer {
     font-size: 2rem;
     transition: color var(--transition-speed);
     transition: transform var(--transition-speed);
+    color: var(--text-secondary);
 }
 
 #btn-label:hover {
@@ -88,7 +97,93 @@ footer {
 
 .wrapper {
     opacity: 0;
+    transition: opacity var(--transition-speed);
 }
+
+#container{
+    max-width: 999px;
+    width: 90%;
+    padding: var(--border-r);
+    border-radius: 0 0 var(--border-r) var(--border-r);
+    margin: 0 auto  calc(var(--footer-h) * 2);
+    background-color: var(--shader-70);
+    display: flex;
+    flex-direction: row;
+}
+.social {
+    margin-right: 30px;
+}
+.toggleBlock {
+    margin-left: 30px;
+}
+
+/* For dev purposes */
+.firebase-emulator-warning {
+    display: none !important;
+}
+
+#navbar {
+    max-width: 333px;
+    width: 100%;
+    height: 100%;
+
+}
+
+#navList {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+.navItem {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 20px;
+}
+
+.navItem::marker {
+    content: "";
+}
+
+
+#navList:first-child {
+    height: var(--px100);
+}
+
+#avatar,
+#logout {
+    height: auto;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+#userProfile {
+    display: flex;
+    flex-direction: row;
+}
+
+.navIcon {
+    margin: auto;
+}
+
+#avatar {
+    font-size: 65px;
+}
+
+#logout {
+    font-size: 30px;
+}
+
+#userInfo {
+    width: 100%;
+}
+
+#mainContent {
+    width: 100%;
+}
+
 
 @media only screen and (max-width: 600px) {
     footer {
@@ -96,5 +191,15 @@ footer {
         left: unset;
         width: 100%;
         height: auto;
+    }
+    .width-container {
+        flex-direction: row;
+    }
+    .social,
+    .toggleBlock {
+        margin: auto;
+    }
+    .socialBtn {
+        font-size: 30px;
     }
 }

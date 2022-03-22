@@ -6,18 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Страница статуса для проекта LogicWorld">
-    <meta name="keywords" content="Minecraft, LogicWorld, HiTech, Magic, RPG, SkyTech">
     <meta name="google-site-verification" content="_YU1edc5JEO3Nem_o1bvTpSKgreJZ6X32Dd-h4TFzZ4">
     <meta name="yandex-verification" content="b0bc5c2ce421366d">
     <meta name="mailru-verification" content="42e6cda95063ff36">
-    <meta name="theme-color" content="#222a30">
     <meta property="og:image" content="https://status.logicworld.ru/assets/img/baner.png" />
     <meta name="twitter:image:src" content="https://status.logicworld.ru/assets/img/baner.png">
     <meta name="twitter:card" content="summary_large_image">
-    <title>LogicWorld status</title>
+    <title>LW-status admin</title>
     <link rel="stylesheet" class="css" href="./assets/css/index.css">
     <link rel="stylesheet" class="css" href="./assets/css/content.css">
     <link rel="stylesheet" class="css" href="./assets/css/admin/index.css">
+    <link rel="stylesheet" class="css" href="./assets/css/debug.css">
+
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <script src="https://kit.fontawesome.com/95012a2d1e.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css" />
@@ -26,18 +26,44 @@
 
     <script defer src="/__/firebase/9.6.6/firebase-auth-compat.js"></script>
     <script defer src="/__/firebase/9.6.6/firebase-firestore-compat.js"></script>
-    
+
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <script defer class="js" src="./assets/js/admin/admin.js"></script>
 </head>
 
 <body>
+    <div id="debug_menu">
+        <ul>
+            <li><button onclick="debug.refresh_css()"> refresh_css</button></li>
+        </ul>
+        <br>
+        <button onclick="debug.toggleDev(false)">disable debug</button>
+    </div>
     <div id="flag">
         <div id="yellow"></div>
         <div id="blue"></div>
     </div>
     <div id="bgr"> </div>
     <main data-simplebar>
+
+        <div class="wrapper">
+            <div id="container">
+                <nav id="navbar">
+                    <div class="navItem" id="userProfile">
+                            <div id="avatar"><i class="fa-regular fa-circle-user navIcon"></i></div>
+                            <div id="userInfo">
+                            </div>
+                            <div id="logout" onclick="logOut()"><i class="fa-solid fa-arrow-right-from-bracket navIcon"></i></div>
+                    </div>
+                    <ul id="navList">
+                        
+                    </ul>
+                </nav>
+                <div id="mainContent">
+                    <div id="contetnt"></div>
+                </div>
+            </div>
+        </div>
         <div id="login-form-container">
             <div id="form-name">LWS admin panel</div>
             <form action="" onsubmit="trylogin(event)" id="login-form">
@@ -46,6 +72,7 @@
                     <br>
                     <input class="form-field" type="password" name="Password" id="pass-field" placeholder="Password">
                     <br>
+                    <div id="login-msg"></div>
                 </label>
                 <label id="btn-label">
                     <input class="form-field" type="submit" id="submit-btn" value="">
@@ -53,12 +80,6 @@
                 </label>
             </form>
         </div>
-        <div class="wrapper">
-            <div class="content">
-
-            </div>
-        </div>
-
 
 
     </main>
@@ -75,11 +96,22 @@
                     <span class="link-text">Покрасить</span>
                 </div>
             </div>
+            <div class="social">
+                <a href="https://discord.gg/CSASRtV" class="btn"><i class="socialBtn fab fa-discord svg-fa"></i></a>
+                <a href="https://vk.com/logic_world" class="btn"><i class="socialBtn fab fa-vk svg-fa"></i></a>
+                <a href="https://twitter.com/_logicworld" class=" btn"><i
+                        class="socialBtn fab fa-twitter svg-fa"></i></a>
+                <a href="https://t.me/logicworld" class="btn"><i class="socialBtn fab fa-telegram-plane svg-fa"></i></a>
+                <a href="https://github.com/LogicWorlds" class="btn"><i class="socialBtn fab fa-github svg-fa"></i></a>
+            </div>
         </div>
 
+
     </footer>
-    
+
     <script class="js" src="./assets/js/theme.js"></script>
+
+    <script class="js" src="./assets/js/debug.js"></script>
 
 </body>
 
