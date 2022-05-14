@@ -31,19 +31,18 @@
       <li><button onclick="debug.refresh_css()"> refresh_css</button></li>
       <li><button onclick="toggleSnow()"> toggleSnow</button></li>
       <li><button onclick="toggleTheme()"> toggleTheme</button></li>
-      <br>
+
       <li><button onclick="refresh_status_i()"> refresh_status_i</button></li>
       <li><button onclick="refresh_status_g()"> refresh_status_g</button></li>
-      <br>
+
       <li><button onclick="debug.breakLink()">break API URL</button></li>
       <li><button onclick="debug.fixLink()">fix API URL</button></li>
     </ul>
-    <br>
     <button onclick="debug.toggleDev(false)">disable debug</button>
   </div>
   <div id="flag">
-    <div id="yellow"></div>
     <div id="blue"></div>
+    <div id="yellow"></div>
   </div>
 
   <div id="bgr">
@@ -60,29 +59,26 @@
     <div class="wrapper">
       <a class="logo" href="https://logicworld.ru/start.html"><i class="fas fa-terminal"></i> LogicWorld</a>
       <div class="content">
-        <div class="head-text">Статус инфраструктуры<i class="fas fa-sync-alt btn reloadBtn" onclick="refresh_status_i()" id="reloadBtn-i"></i></div>
+        <div class="head-text">Статус инфраструктуры<i class="fas fa-sync-alt btn reloadBtn"
+            onclick="refresh_status_i()" id="reloadBtn-i"></i></div>
         <div class="status-wrapper">
-          <div  id="spiner_container-i">
+          <div id="spiner_container-i">
             <i class="fas fa-sync-alt fa-spin loading_spiner"></i>
           </div>
           <div class="status-container" id="status-container-i">
           </div>
         </div>
-        <div class="head-text">Статус игровых серверов<i class="fas fa-sync-alt btn reloadBtn" onclick="refresh_status_g(true)" id="reloadBtn-g"></i>
+        <div class="head-text">Статус игровых серверов<i class="fas fa-sync-alt btn reloadBtn"
+            onclick="refresh_status_g(true)" id="reloadBtn-g"></i>
         </div>
         <div class="status-wrapper" id="status-wrapper-g">
-            <div id="spiner_container-g">
-              <i class="fas fa-sync-alt fa-spin loading_spiner"></i>
-            </div>
-          <!-- <div class="status-container" id="status-container-g"> -->
+          <div id="spiner_container-g">
+            <i class="fas fa-sync-alt fa-spin loading_spiner"></i>
           </div>
+          <!-- <div class="status-container" id="status-container-g"> -->
         </div>
       </div>
-
     </div>
-
-
-
   </main>
 
   <input type="checkbox" id="footer-switch" name="footer-switch" checked>
