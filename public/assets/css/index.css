@@ -63,9 +63,10 @@ body {
   left: 0;
   height: 100vh;
   width: 100vw;
-  opacity: 0.015;
+  opacity: 0.05;
   display: inline;
 }
+
 #yellow {
   background-color: yellow;
   width: 100%;
@@ -321,7 +322,8 @@ footer {
   .width-container {
     flex-direction: column;
   }
-  .socialBtn{
+
+  .socialBtn {
     font-size: 20px;
   }
 }
