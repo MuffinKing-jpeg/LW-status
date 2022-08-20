@@ -6,7 +6,7 @@ const sign = `
 `
 
 function build_console() {
-    if (debug.detectDev() == true) {
+    if (debug.detectDev() === true) {
         console.warn("%cLOADED IN DEV MODE", "color:red; font-family:sans-serif; font-size: 30px;")
         console.log(`%cAPI url is: \n ${url}`, "color:red; font-family:sans-serif; font-size: 30px; font-size: 20px");
         console.log(`%c\nThis service is build by:`, 'color:#fff; font-size:15px;');
@@ -34,14 +34,14 @@ async function refresh_status_i() {
             for (let i = 0; i < data.length; i++) {
 
                 container.appendChild(document.createElement('div')).className = 'status-i';
-                document.getElementsByClassName('status-i')[i].classList.add(data[i].avalible);
+                document.getElementsByClassName('status-i')[i].classList.add(data[i].available);
                 document.getElementsByClassName('status-i')[i].appendChild(document.createElement('span')).className = 'status-icon-i';
                 document.getElementsByClassName('status-icon-i')[i].appendChild(document.createElement('i')).className = data[i].icon;
                 document.getElementsByClassName('status-i')[i].appendChild(document.createElement('span')).className = 'status-info-i';
                 document.getElementsByClassName('status-info-i')[i].appendChild(document.createElement('div')).className = 'status-name-i';
                 document.getElementsByClassName('status-info-i')[i].appendChild(document.createElement('div')).className = 'status-state-i';
                 document.getElementsByClassName('status-name-i')[i].innerHTML = data[i].name;
-                document.getElementsByClassName('status-state-i')[i].innerHTML = data[i].avalible;
+                document.getElementsByClassName('status-state-i')[i].innerHTML = data[i].available;
                 hosts[i] = {
                     host: data[i].host,
                     port: data[i].port
@@ -89,7 +89,7 @@ var gs_api_link = normal_gs;
 
 function refresh_status_g(recal) {
     setTimeout(document.getElementById('spiner_container-g').style.opacity = 1, 800)
-    if (recal == true) {
+    if (recal === true) {
         document.getElementById("status-summary-g").parentNode.removeChild(document.getElementById("status-summary-g"))
         document.getElementById("status-container-g").parentNode.removeChild(document.getElementById("status-container-g"))
     }
@@ -146,7 +146,7 @@ function refresh_status_g(recal) {
 
 
             let stat_index = 0;
-            Object.entries(data.servers).forEach(([key, value]) => {
+            Object.entries(data.servers).forEach(([key]) => {
                 container.appendChild(document.createElement('div')).className = 'status-g';
                 document.getElementsByClassName("status-g")[stat_index].appendChild(document.createElement("a")).className = "status-icon-g";
                 document.getElementsByClassName("status-g")[stat_index].appendChild(document.createElement("div")).className = "status-info-g";
@@ -223,7 +223,5 @@ debug.detectDev(); //detecting localhost
 
 refresh_status_i(); //loading status of infrastructure
 refresh_status_g(false); //loading game servers status
-
-;
 
 build_console(); //drawwing console

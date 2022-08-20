@@ -1,7 +1,6 @@
 const functions = require("firebase-functions");
 const isPortReachable = require('is-port-reachable');
 const admin = require('firebase-admin');
-const { log } = require("firebase-functions/logger");
 
 
 admin.initializeApp();
@@ -36,10 +35,11 @@ async function ping(data) {
 }
 
 async function state() {
-  var status
+  let status
   await db.collection("config").doc("servers").get()
     .then(async (doc) => {
       if (doc.exists) {
+        console.log(doc.data())
         let host2check = doc.data()
         host2check = host2check.servers;
         status = new Array(host2check.length);
@@ -47,7 +47,7 @@ async function state() {
           status[i] = {
             name: host2check[i].name,
             icon: host2check[i].icon,
-            avalible: await ping({ port: host2check[i].port, host: host2check[i].host })
+            available: await ping({ port: host2check[i].port, host: host2check[i].host })
           }
         }
       } else {
@@ -55,7 +55,7 @@ async function state() {
         status = {
           name: "Database",
           icon: "fa-solid fa-database",
-          avalible: "Offline"
+          available: "Offline"
         }
       }
     })
@@ -63,7 +63,7 @@ async function state() {
       status = {
         name: error,
         icon: "fa-solid fa-bug",
-        avalible: "Offline"
+        available: "Offline"
       }
     });
 

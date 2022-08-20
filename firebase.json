@@ -19,7 +19,7 @@
     ],
     "rewrites": [
       {
-        "source": "/",
+        "source": "/*",
         "destination": "/index.html"
       },
       {
@@ -43,9 +43,6 @@
     },
     "ui": {
       "enabled": true
-    },
-    "database": {
-      "port": 9000
     }
   }
 }

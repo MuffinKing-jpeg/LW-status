@@ -110,3 +110,4 @@ functions/package.json
 *install_nvm.sh
 .firebase/*
 *.cache
+*-debug.log

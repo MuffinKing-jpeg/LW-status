@@ -4,13 +4,5 @@
     "version": "1.13.1",
     "path": "firestore_export",
     "metadata_file": "firestore_export/firestore_export.overall_export_metadata"
-  },
-  "database": {
-    "version": "4.7.3",
-    "path": "database_export"
-  },
-  "storage": {
-    "version": "10.3.0",
-    "path": "storage_export"
   }
 }
