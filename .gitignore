@@ -111,3 +111,4 @@ functions/package.json
 .firebase/*
 *.cache
 *-debug.log
+firebase-export-*

@@ -63,7 +63,8 @@ async function refresh_status_i() {
                 document.getElementById('error-i').innerHTML = 'Something went wrong: <div class=error_text>' + err + '</div>';
                 document.getElementById('spiner_container-i').style.opacity = 0;
                 setTimeout(document.getElementById('status-container-i').style.opacity = 1, 400)
-
+                console.log(err)
+                console.dir(err)
             }
         );
 }

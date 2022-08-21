@@ -19,12 +19,12 @@
     ],
     "rewrites": [
       {
-        "source": "/*",
-        "destination": "/index.html"
-      },
-      {
         "source": "/api",
         "function": "status"
+      },
+      {
+        "source": "/",
+        "destination": "/index.html"
       }
     ]
   },

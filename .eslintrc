@@ -1,18 +1,30 @@
 {
-    "root": true,
-    "env": {
+  "root": true,
+  "env": {
     "es6": true,
-        "browser": true
-},
-    "extends": ["eslint:recommended", "google"],
-    "rules": {
-    "quotes": ["warn", "single"],
-        "require-jsdoc": 0,
-        "indent": ["warn", 2, { "SwitchCase": 1 }],
-        "object-curly-spacing": 0
-},
-    "parserOptions": {
+    "browser": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "rules": {
+    "quotes": [
+      "warn",
+      "single"
+    ],
+    "require-jsdoc": 0,
+    "indent": [
+      "warn",
+      2,
+      {
+        "SwitchCase": 1,
+        "MemberExpression": 1
+      }
+    ],
+    "object-curly-spacing": 0
+  },
+  "parserOptions": {
     "sourceType": "module",
-        "ecmaVersion": 9
-}
+    "ecmaVersion": 9
+  }
 }
