@@ -47,6 +47,7 @@ const combineDB = new Promise((resolve) => {
       });
 });
 
+
 const ping = (o, s) => {
   return new Promise((resolve) => {
     console.log(s, o);
