@@ -1,19 +1,19 @@
 name: Deploy to Preview Channel
 
 on:
-    push:
-        branches:
-            - dev
-
+  push:
+    branches:
+      - dev
+      - dev-angular
 jobs:
-    build_and_preview:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: FirebaseExtended/action-hosting-deploy@v0
-              with:
-                  repoToken: "${{ secrets.GITHUB_TOKEN }}"
-                  firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_LW_STATUS }}"
-                  expires: 30d
-                  projectId: lw-status
-                  channelId: dev
+  build_and_preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_LW_STATUS }}"
+          expires: 30d
+          projectId: lw-status
+          channelId: dev
