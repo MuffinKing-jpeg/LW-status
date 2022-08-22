@@ -112,3 +112,4 @@ functions/package.json
 *.cache
 *-debug.log
 firebase-export-*
+.angular/cache*

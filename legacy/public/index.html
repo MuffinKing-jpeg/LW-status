@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Страница статуса для проекта LogicWorld" name="description">
+    <meta content="Minecraft, LogicWorld, HiTech, Magic, RPG, SkyTech" name="keywords">
+    <meta content="_YU1edc5JEO3Nem_o1bvTpSKgreJZ6X32Dd-h4TFzZ4" name="google-site-verification">
+    <meta content="b0bc5c2ce421366d" name="yandex-verification">
+    <meta content="42e6cda95063ff36" name="mailru-verification">
+    <meta content="#222a30" name="theme-color">
+    <meta content="https://status.logicworld.ru/assets/img/baner.png" property="og:image"/>
+    <meta content="https://status.logicworld.ru/assets/img/baner.png" name="twitter:image:src">
+    <meta content="summary_large_image" name="twitter:card">
+    <title>LogicWorld status</title>
+    <link class="css" href="assetsss/index.css" rel="stylesheet">
+    <link class="css" href="assetsss/snow.css" rel="stylesheet">
+    <link class="css" href="assetsss/content.css" rel="stylesheet">
+    <link class="css" href="assetsss/debug.css" rel="stylesheet">
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <script crossorigin="anonymous" src="https://kit.fontawesome.com/95012a2d1e.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
+</head>
+
+<body>
+<div id="debug_menu">
+    <ul>
+        <li>
+            <button onclick="debug.refresh_css()"> refresh_css</button>
+        </li>
+        <li>
+            <button onclick="toggleSnow()"> toggleSnow</button>
+        </li>
+        <li>
+            <button onclick="toggleTheme()"> toggleTheme</button>
+        </li>
+        <br>
+        <li>
+            <button onclick="refresh_status_i()"> refresh_status_i</button>
+        </li>
+        <li>
+            <button onclick="refresh_status_g()"> refresh_status_g</button>
+        </li>
+        <br>
+        <li>
+            <button onclick="debug.breakLink()">break API URL</button>
+        </li>
+        <li>
+            <button onclick="debug.fixLink()">fix API URL</button>
+        </li>
+    </ul>
+    <br>
+    <button onclick="debug.toggleDev(false)">disable debug</button>
+</div>
+<div id="flag">
+    <div id="blue"></div>
+    <div id="yellow"></div>
+</div>
+
+<div id="bgr">
+
+</div>
+<div style="height: 100%; width: 100%; position: fixed;z-index: -1;">
+    <group id="snowContainer">
+        <div class="snow snow1" id="snow1"></div>
+        <div class="snow snow2" id="snow2"></div>
+        <div class="snow snow3" id="snow3"></div>
+    </group>
+</div>
+<main data-simplebar>
+    <div class="wrapper">
+        <a class="logo" href="https://logicworld.ru/start.html"><i class="fas fa-terminal"></i> LogicWorld</a>
+        <div class="content">
+            <div class="head-text">Статус инфраструктуры<i class="fas fa-sync-alt btn reloadBtn"
+                                                           id="reloadBtn-i" onclick="refresh_status_i()"></i></div>
+            <div class="status-wrapper">
+                <div id="spiner_container-i">
+                    <i class="fas fa-sync-alt fa-spin loading_spiner"></i>
+                </div>
+                <div class="status-container" id="status-container-i">
+                </div>
+            </div>
+            <div class="head-text">Статус игровых серверов<i class="fas fa-sync-alt btn reloadBtn"
+                                                             id="reloadBtn-g" onclick="refresh_status_g(true)"></i>
+            </div>
+            <div class="status-wrapper" id="status-wrapper-g">
+                <div id="spiner_container-g">
+                    <i class="fas fa-sync-alt fa-spin loading_spiner"></i>
+                </div>
+                <!-- <div class="status-container" id="status-container-g"> -->
+            </div>
+        </div>
+    </div>
+
+
+</main>
+
+<input checked id="footer-switch" name="footer-switch" type="checkbox">
+<footer>
+    <label class="footer-switch-button" for="footer-switch"><i aria-hidden="true" class="fas fa-angle-down"></i></label>
+    <div class="width-container">
+        <div class="toggleBlock">
+            <div class="toggleButton btn" id="themeButton">
+                <span class="tgl-icon" id="lightIcon"><i class="socialBtn fas fa-cloud-moon svg-fa"></i></span>
+                <span class="tgl-icon" id="darkIcon"><i class="socialBtn fas fa-glasses svg-fa"></i></span>
+                <span class="link-text">Покрасить</span>
+            </div>
+            <div class="toggleButton btn" id="snowButton" onclick="toggleSnow()">
+                <span class="tgl-icon" id="snowOn"><i class="socialBtn far fa-snowflake svg-fa"></i></span>
+                <span class="tgl-icon" id="snowOff"><i class="socialBtn fas fa-sun svg-fa"></i></span>
+                <span class="link-text">Снежок</span>
+            </div>
+        </div>
+
+        <div class="social">
+            <a class="btn" href="https://discord.gg/CSASRtV"><i class="socialBtn fab fa-discord svg-fa"></i></a>
+            <a class="btn" href="https://vk.com/logic_world"><i class="socialBtn fab fa-vk svg-fa"></i></a>
+            <a class=" btn" href="https://twitter.com/_logicworld"><i class="socialBtn fab fa-twitter svg-fa"></i></a>
+            <a class="btn" href="https://t.me/logicworld"><i class="socialBtn fab fa-telegram-plane svg-fa"></i></a>
+            <a class="btn" href="https://github.com/LogicWorlds"><i class="socialBtn fab fa-github svg-fa"></i></a>
+        </div>
+    </div>
+
+</footer>
+
+<script class="js" src="assetss/theme.js"></script>
+<script class="js" src="assetss/snow.js"></script>
+<script class="js" src="assetss/debug.js"></script>
+<script class="js" src="assetss/qr.js"></script>
+<script class="js" src="assetss/status-api.js"></script>
+</body>
+
+</html>
