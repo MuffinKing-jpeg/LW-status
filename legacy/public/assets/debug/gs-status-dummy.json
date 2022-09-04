@@ -1,0 +1,67 @@
+{
+	"servers": {
+		"BioTech": {
+			"address": "s2.logicworld.ru:5481",
+			"status": "online",
+			"online": 20,
+			"motd": "BioTech!",
+			"type": "§1",
+			"slots": 100,
+			"percent": 20,
+			"version": "1.12.2",
+			"ping": 0
+		},
+		"SkyTech": {
+			"address": "play.logicworld.ru:3567",
+			"status": "online",
+			"online": 78,
+			"motd": "SkyTech!",
+			"type": "§1",
+			"slots": 100,
+			"percent": 78,
+			"version": "1.7.10",
+			"ping": 1
+		},
+		"MagicRPG": {
+			"status": "Неизвестное ядро",
+			"address": "s2.logicworld.ru:3437"
+		},
+		"NewSky": {
+			"status": "Выключен",
+			"address": "s2.logicworld.ru:4167"
+		},
+		"ClassicTech": {
+			"status": "Выключен",
+			"address": "play.logicworld.ru:6665"
+		},
+		"R.A.D.Lite": {
+			"address": "s2.logicworld.ru:3637",
+			"status": "online",
+			"online": 0,
+			"motd": "R.A.D. Lite (RPG)!",
+			"type": "§1",
+			"slots": 100,
+			"percent": 0,
+			"version": "1.12.2",
+			"ping": 0
+		},
+		"SkyFactory4": {
+			"address": "s2.logicworld.ru:3737",
+			"status": "online",
+			"online": 0,
+			"motd": "SkyFactory 4!",
+			"type": "§1",
+			"slots": 100,
+			"percent": 0,
+			"version": "1.12.2",
+			"ping": 0
+		}
+	},
+	"online": 20,
+	"slots": 400,
+	"percent": 90,
+	"timerec": "25 января в 23:09",
+	"record": 53,
+	"recordday": 20,
+	"timerecday": "15:25"
+}

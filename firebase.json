@@ -23,7 +23,7 @@
         "function": "status"
       },
       {
-        "source": "/",
+        "source": "/**",
         "destination": "/index.html"
       }
     ]

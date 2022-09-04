@@ -1,0 +1,47 @@
+.snow {
+  position: absolute;
+  width: calc(100% + 450px);
+  height: calc(100% + 450px);
+}
+.snow1 {
+  opacity: 0.3;
+  background: url("../img/snow/snow1.png");
+  animation: snow1-animation 6.5s linear 0s infinite normal;
+  background-size: 125px;
+}
+.snow2 {
+  opacity: 0.5;
+  background: url("../img/snow/snow2.png");
+  animation: snow1-animation 5s linear 0s infinite normal;
+  background-size: 125px;
+}
+.snow3 {
+  opacity: 0.7;
+  background: url("../img/snow/snow3.png");
+  animation: snow1-animation 4.5s linear 0s infinite normal;
+  background-size: 125px;
+}
+@keyframes snow1-animation {
+  0% {
+    transform: translate(0px, 0px);
+  }
+  100% {
+    transform: translate(250px, 250px);
+  }
+}
+#snowContainer {
+  display: none;
+  opacity: 1;
+  transition: 3s;
+  position: fixed;
+  width: 200%;
+  height: 200%;
+  margin: -250px -250px;
+}
+.snowy #snowOn,
+.snowy #snowContainer {
+  display: block;
+}
+.clear #snowOff {
+  display: block;
+}

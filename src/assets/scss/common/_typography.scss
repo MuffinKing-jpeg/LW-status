@@ -1,0 +1,19 @@
+@use "./mixin" as *;
+@use "./presets" as *;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: $color-bg;
+}
+
+app-root {
+  min-height: 100vh;
+  width: 100%;
+  text-align: center;
+}
