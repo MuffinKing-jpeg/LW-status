@@ -1,0 +1,69 @@
+@use '../assets/scss/common/presets' as *;
+
+app-navbar {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  width: 280px;
+  z-index: 10;
+  transition: var(--transition),
+  left calc(var(--transition-speed) * 1.5) ease-in-out;
+  left: -280px;
+}
+
+.app-navbar-active {
+
+  left: 0;
+}
+
+.shadow {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  transition: background-color var(--transition-speed);
+  backdrop-filter: blur(0.1rem);
+  z-index: -1;
+
+  &-on {
+    z-index: 0;
+    background-color: var(--shader-30);
+  }
+
+  &-off {
+
+    background-color: transparent;
+  }
+
+}
+
+.navbar-btn {
+  position: fixed;
+  top: 0;
+  left: 0;
+  font-size: 1.2rem;
+  background-color: var(--shader-90);
+  transition: var(--transition);
+  border-radius: 0 0 2rem 0;
+
+  &:hover {
+    color: var(--ico);
+  }
+
+  i {
+    padding: $gap;
+  }
+
+}
+
+main {
+  padding-top: $gap-x3;
+  max-width: 1200px;
+  margin: auto;
+}
+

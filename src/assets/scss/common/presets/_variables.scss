@@ -1,7 +1,5 @@
 @use "sass:math";
 
-$font-header: "Quantico", "Oswald", sans-serif;
-$font-main: "Quantico", "Oswald", sans-serif;
 $font-size: 16px;
 
 $ul: 1340px;
@@ -22,4 +20,3 @@ $gap-x4: $gap * 4;
 $gap-x5: $gap * 5;
 $gap-x6: $gap * 6;
 
-$transiton-speed: 600ms;

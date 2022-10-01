@@ -1,2 +1,6 @@
-<router-outlet></router-outlet>
-<app-footer></app-footer>
+<app-navbar (click)="this.navState.setNavState = false" [classList]="navClass"></app-navbar>
+<div (click)="this.navState.setNavState = true" class="navbar-btn"><i class="fa-solid fa-chevron-right"></i></div>
+<main>
+  <router-outlet></router-outlet>
+</main>
+<div (click)="this.navState.setNavState = false" [classList]="shadowClass"></div>

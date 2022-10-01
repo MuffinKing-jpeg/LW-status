@@ -1,0 +1,7 @@
+.theme-btn {
+  color: var(--text-primary);
+  transition: color var(--transition-speed);
+}
+.theme-btn:hover {
+  color: var(--ico);
+}

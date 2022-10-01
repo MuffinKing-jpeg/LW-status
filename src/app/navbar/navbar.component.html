@@ -1,0 +1,30 @@
+<div class="nav-logo">
+  <a href="https://logicworld.ru">
+    <i class="fa-solid fa-terminal"></i>LogicWorld
+  </a>
+  <app-theme-btn></app-theme-btn>
+</div>
+<ul class="nav-list">
+  <li [class]="{'nav-item': true,
+    'nav-active': this.navState.currentPath === '/dashboard'}">
+    <button routerLink="/dashboard"><span class="nav-item--ico"><i class="fa-solid fa-chart-line"></i></span><span
+      class="nav-item--text">Dashboard</span></button>
+  </li>
+  <li [class]="{'nav-item': true,
+    'nav-active': this.navState.currentPath === '/log'}">
+    <button routerLink="/log"><span class="nav-item--ico"><i class="fa-regular fa-calendar-days"></i></span><span
+      class="nav-item--text">History</span></button>
+  </li>
+  <li [class]="{'nav-item': true,
+    'nav-active': this.navState.currentPath === '/admin'}">
+    <button routerLink="/admin"><span class="nav-item--ico"><i class="fa-solid fa-lock"></i></span><span
+      class="nav-item--text">Admin</span></button>
+  </li>
+</ul>
+<div class="social">
+  <a class="btn" href="https://discord.gg/CSASRtV"><i class="socialBtn fab fa-discord svg-fa"></i></a>
+  <a class="btn" href="https://vk.com/logic_world"><i class="socialBtn fab fa-vk svg-fa"></i></a>
+  <a class=" btn" href="https://twitter.com/_logicworld"><i class="socialBtn fab fa-twitter svg-fa"></i></a>
+  <a class="btn" href="https://t.me/logicworld"><i class="socialBtn fab fa-telegram-plane svg-fa"></i></a>
+  <a class="btn" href="https://github.com/LogicWorlds"><i class="socialBtn fab fa-github svg-fa"></i></a>
+</div>

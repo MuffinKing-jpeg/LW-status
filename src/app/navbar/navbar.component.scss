@@ -1,0 +1,83 @@
+@use '../../assets/scss/common/presets' as *;
+
+.nav-logo {
+  display: flex;
+  justify-content: space-between;
+  font-size: 2rem;
+  font-weight: bold;
+  padding: $gap;
+}
+
+.nav-list {
+padding-inline-start: 0;
+}
+
+
+
+.nav-item {
+  display: block;
+  font-size: 1.25em;
+  position: relative;
+
+
+  button {
+    transition: padding-left  calc(var(--transition-speed) / 2);
+    padding: $gap-sm;
+    width: 100%;
+    display: flex;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    color: inherit;
+    &:hover {
+      background-color: var(--shader-50);
+    padding-left: $gap;
+  }
+  }
+  &--ico {
+    width: 15%;
+  }
+
+  &--text {
+
+  }
+}
+
+.social {
+  margin: auto 0 0 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  font-size: 30px;
+  padding: $gap;
+
+  .btn {
+    margin: auto;
+  }
+}
+
+.nav-active {
+
+  button {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+    padding-left: $gap;
+    &:hover {
+      background-color: var(--bg-secondary);
+    }
+  }
+
+  &::before {
+    content: '';
+    width: 5px;
+    background-color: var(--ico);
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+
+

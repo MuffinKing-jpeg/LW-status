@@ -113,3 +113,6 @@ functions/package.json
 *-debug.log
 firebase-export-*
 .angular/cache*
+.idea/
+public/
+/public/
