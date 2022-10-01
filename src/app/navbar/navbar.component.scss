@@ -8,10 +8,15 @@
   padding: $gap;
 }
 
-.nav-list {
-padding-inline-start: 0;
+.nav-main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
+.nav-list {
+  padding-inline-start: 0;
+}
 
 
 .nav-item {
@@ -21,7 +26,7 @@ padding-inline-start: 0;
 
 
   button {
-    transition: padding-left  calc(var(--transition-speed) / 2);
+    transition: var(--transition), padding-left calc(var(--transition-speed) / 2);
     padding: $gap-sm;
     width: 100%;
     display: flex;
@@ -29,11 +34,14 @@ padding-inline-start: 0;
     border-radius: 0;
     background-color: transparent;
     color: inherit;
+
     &:hover {
+      color: var(--ico);
       background-color: var(--shader-50);
-    padding-left: $gap;
+      padding-left: $gap;
+    }
   }
-  }
+
   &--ico {
     width: 15%;
   }
@@ -62,6 +70,7 @@ padding-inline-start: 0;
     background-color: var(--bg-secondary);
     color: var(--text-secondary);
     padding-left: $gap;
+
     &:hover {
       background-color: var(--bg-secondary);
     }
