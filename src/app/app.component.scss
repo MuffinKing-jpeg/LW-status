@@ -20,11 +20,25 @@ app-navbar {
   left: 0;
 }
 
+.shadow {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  display: none;
+
+  &.on {
+    display: block;
+  }
+
+}
+
 main {
   padding-top: $gap-x3;
   max-width: 1200px;
   margin: auto;
-  min-height: 100vh;
   transition: filter calc(var(--transition-speed) * 1.5) ease-in-out;
 
   &.blurred {

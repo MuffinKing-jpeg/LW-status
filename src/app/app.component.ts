@@ -9,7 +9,6 @@ import {Router} from "@angular/router";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  public shadowClass: string = 'shadow-on shadow';
   public navClass: string = ''
 
   constructor(
@@ -20,17 +19,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.themeService.checkTheme();
-
-  }
-
-  ngDoCheck() {
-    if (this.navState.isNavActive) {
-      this.shadowClass = 'shadow-on shadow'
-      this.navClass = 'app-navbar-active'
-    } else {
-      this.navClass = ''
-      this.shadowClass = 'shadow-off shadow'
-    }
 
   }
 }
