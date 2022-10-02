@@ -1,4 +1,5 @@
-@use '../../scss/common' as *;
+@use '../../scss/common/presets/variables' as *;
+@use '../../scss/common/mixin' as *;
 
 .not-found-container {
   height: 100%;
