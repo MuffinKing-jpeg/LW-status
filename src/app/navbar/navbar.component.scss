@@ -1,11 +1,15 @@
-@use '../../assets/scss/common/presets' as *;
+@use '../../scss/common/presets' as *;
 
 .nav-logo {
   display: flex;
   justify-content: space-between;
   font-size: 2rem;
   font-weight: bold;
-  padding: $gap;
+  padding: $gap $gap $gap $gap-sm;
+
+  i {
+    margin-left: $gap-sm;
+  }
 }
 
 .nav-main {

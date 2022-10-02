@@ -9,7 +9,6 @@ import {Router} from "@angular/router";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  public navClass: string = ''
 
   constructor(
     private themeService: ThemeService,

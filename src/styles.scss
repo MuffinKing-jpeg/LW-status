@@ -1,1 +1,7 @@
-@use "./assets/scss";
+@use "./scss";
+
+@font-face {
+  font-family: 'Hobo';
+  src: url('./assets/fonts/Hobo.ttf') format('truetype');
+  /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}

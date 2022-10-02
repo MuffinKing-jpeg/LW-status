@@ -1,10 +1,9 @@
-@use "./mixin" as *;
-@use "./presets" as *;
-
+@use "mixin/index" as *;
+@use "presets/index" as *;
 
 :root {
   font-family: Rubik, sans-serif;
-  --transition-speed: 500ms;
+  --transition-speed: 400ms;
   --transition: color var(--transition-speed),
   background calc(var(--transition-speed) * 1.5);
 }
@@ -38,4 +37,7 @@ a:hover {
   color: var(--ico);
 }
 
-
+.accent {
+  color: var(--ico);
+  font-weight: bold;
+}

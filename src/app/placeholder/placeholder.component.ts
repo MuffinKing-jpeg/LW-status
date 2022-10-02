@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {NavbarStateService} from "../services/navbar-state.service";
 
 @Component({
   selector: 'app-placeholder',
@@ -7,7 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PlaceholderComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public currentLocation: NavbarStateService
+  ) {
+  }
 
   ngOnInit(): void {
   }

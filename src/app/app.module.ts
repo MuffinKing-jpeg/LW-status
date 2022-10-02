@@ -6,13 +6,15 @@ import {AppComponent} from './app.component';
 import { ThemeBtnComponent } from './navbar/theme-btn/theme-btn.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { PlaceholderComponent } from './placeholder/placeholder.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ThemeBtnComponent,
     NavbarComponent,
-    PlaceholderComponent
+    PlaceholderComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,

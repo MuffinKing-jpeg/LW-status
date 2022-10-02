@@ -1,4 +1,4 @@
-@use '../assets/scss/common/presets' as *;
+@use '../scss/common' as *;
 
 app-navbar {
   display: flex;
@@ -13,6 +13,7 @@ app-navbar {
   transition: var(--transition),
   left calc(var(--transition-speed) * 1.5) ease-in-out;
   left: -280px;
+  border-right: var(--ico) solid 1px;
 }
 
 .app-navbar-active {
@@ -36,13 +37,32 @@ app-navbar {
 }
 
 main {
-  padding-top: $gap-x3;
+  padding-top: $gap-sm;
   max-width: 1200px;
   margin: auto;
+  min-height: 100vh;
   transition: filter calc(var(--transition-speed) * 1.5) ease-in-out;
 
   &.blurred {
     filter: blur(4px);
+  }
+}
+
+.main-heading {
+  &--text {
+    padding-left: $gap-sm;
+  }
+
+  @include lg-min {
+    font-size: 3rem;
+  }
+
+  @include lg-md {
+    font-size: 2rem;
+  }
+
+  @include md {
+    font-size: 1.5rem;
   }
 }
 
