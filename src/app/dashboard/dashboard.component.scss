@@ -1,0 +1,63 @@
+@use '../../scss/common/presets/variables' as *;
+
+.dashboard-container {
+  width: 100%;
+}
+
+.status-list {
+  display: grid;
+  gap: $gap;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  padding-inline-start: 0;
+  padding: 0 $gap-lg;
+}
+
+.status {
+  background: var(--shader-70);
+  display: flex;
+  padding: $gap-sm $gap;
+  border-radius: 1rem;
+  font-size: 1em;
+  animation: spawn ease-in var(--transition-speed);
+
+  @keyframes spawn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  &--loading {
+    font-size: 4rem;
+  }
+
+  &--icon {
+    font-size: 2.8rem;
+  }
+
+  &--info {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    text-align: right;
+    justify-content: center;
+    gap: calc($gap-sm / 2);
+    font-weight: 800;
+
+    &--state {
+
+    }
+  }
+}
+
+.Offline {
+  color: var(--color-offline);
+}
+
+.Online {
+  color: var(--color-online);
+}
+
+

@@ -1,0 +1,26 @@
+<h2 class="dashboard-heading">
+  Infrastructure status
+  <span (click)="updateData()">
+    <i class="fa-solid fa-rotate"></i>
+  </span>
+</h2>
+<div class="dashboard-container">
+  <div *ngIf="serverStatus.length === 0" class="status--loading">
+    <i class="fa-solid fa-rotate fa-spin"></i>
+  </div>
+  <ul *ngIf="serverStatus.length !== 0" class="status-list">
+    <li *ngFor="let item of this.serverStatus; index as i;"
+        class="status">
+      <div class="status--icon {{serverStatus[i].available}}">
+        <i class="{{serverStatus[i].icon}}"></i>
+      </div>
+      <div class="status--info">
+        <span class="status--info--name">{{serverStatus[i].name}}</span>
+        <span class="status--info--state {{serverStatus[i].available}}">{{serverStatus[i].available}}</span>
+      </div>
+    </li>
+  </ul>
+</div>
+<h2 class="dashboard-heading">Game servers statistics</h2>
+<div class="dashboard-container"></div>
+
