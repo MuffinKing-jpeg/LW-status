@@ -6,8 +6,8 @@
 <div class="nav-main">
   <ul (click)="this.navState.setNavState = false" class="nav-list">
     <li [class]="{'nav-item': true,
-    'nav-active': this.navState.currentPath === '/dashboard'}">
-      <button routerLink="/dashboard"><span class="nav-item--ico"><i class="fa-solid fa-chart-line"></i></span><span
+    'nav-active': this.navState.currentPath === '/'}">
+      <button routerLink="/"><span class="nav-item--ico"><i class="fa-solid fa-chart-line"></i></span><span
         class="nav-item--text">Dashboard</span></button>
     </li>
     <li [class]="{'nav-item': true,

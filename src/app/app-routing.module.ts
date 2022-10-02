@@ -5,12 +5,12 @@ import {NotFoundComponent} from "./not-found/not-found.component";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 
 const routes: Routes = [
-  {path: 'dashboard', component: DashboardComponent},
+  {path: '', component: DashboardComponent},
   {path: 'log', component: PlaceholderComponent},
   {path: 'admin', component: PlaceholderComponent},
 
   //Default route
-  {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
+  // {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
   //404 route
   {path: '404', component: NotFoundComponent},
   {path: '**', component: NotFoundComponent, pathMatch: 'full'}
