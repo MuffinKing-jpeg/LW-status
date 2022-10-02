@@ -1,6 +1,5 @@
 <app-navbar [classList]="navClass"></app-navbar>
 
-<main>
+<main (click)="this.navState.setNavState = false" [class]="{'blurred': this.navState.isNavActive}">
   <router-outlet></router-outlet>
 </main>
-<div (click)="this.navState.setNavState = false" [classList]="shadowClass"></div>
