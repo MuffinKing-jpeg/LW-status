@@ -7,7 +7,7 @@ import {NavbarStateService} from "../services/navbar-state.service";
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-
+  
   constructor(
     public navState: NavbarStateService
   ) {
@@ -17,8 +17,10 @@ export class NavbarComponent implements OnInit {
     this.navState.getPath()
   }
 
-  ngDoCheck(): void {
-
+  public toggleNavState(): void {
+    this.navState.isNavActive ?
+      this.navState.setNavState = false :
+      this.navState.setNavState = true;
   }
 
 }

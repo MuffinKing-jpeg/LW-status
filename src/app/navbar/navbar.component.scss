@@ -52,7 +52,6 @@
 }
 
 .social {
-  margin: auto 0 0 0;
   display: flex;
   justify-content: center;
   width: 100%;
@@ -86,6 +85,44 @@
     bottom: 0;
     left: 0;
   }
+}
+
+.nav-btn {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: 0;
+  right: -50px;
+  font-size: 1.2rem;
+  background-color: var(--shader-90);
+  transition: var(--transition),
+  border-radius var(--transition-speed),
+  right calc(var(--transition-speed) * 1.5) ease-in-out;
+  border-radius: 0 0 1.5rem 0;
+  display: flex;
+
+  i {
+    margin: auto;
+    transition: rotate calc(var(--transition-speed) * 1.5) ease-in-out;
+  }
+
+  &:hover {
+    color: var(--ico);
+  }
+
+  &.active {
+    right: 0;
+    border-radius: 0 0 0 1.5rem;
+
+    i {
+      rotate: 180deg;
+    }
+  }
+}
+
+app-theme-btn {
+  margin-top: auto;
+  margin-bottom: 0;
 }
 
 

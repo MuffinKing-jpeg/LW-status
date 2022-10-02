@@ -2,10 +2,9 @@
   <a href="https://logicworld.ru">
     <i class="fa-solid fa-terminal"></i>LogicWorld
   </a>
-  <app-theme-btn></app-theme-btn>
 </div>
-<div (click)="this.navState.setNavState = false" class="nav-main">
-  <ul class="nav-list">
+<div class="nav-main">
+  <ul (click)="this.navState.setNavState = false" class="nav-list">
     <li [class]="{'nav-item': true,
     'nav-active': this.navState.currentPath === '/dashboard'}">
       <button routerLink="/dashboard"><span class="nav-item--ico"><i class="fa-solid fa-chart-line"></i></span><span
@@ -22,6 +21,7 @@
         class="nav-item--text">Admin</span></button>
     </li>
   </ul>
+  <app-theme-btn></app-theme-btn>
   <div class="social">
     <a class="btn" href="https://discord.gg/CSASRtV"><i class="socialBtn fab fa-discord svg-fa"></i></a>
     <a class="btn" href="https://vk.com/logic_world"><i class="socialBtn fab fa-vk svg-fa"></i></a>
@@ -29,5 +29,8 @@
     <a class="btn" href="https://t.me/logicworld"><i class="socialBtn fab fa-telegram-plane svg-fa"></i></a>
     <a class="btn" href="https://github.com/LogicWorlds"><i class="socialBtn fab fa-github svg-fa"></i></a>
   </div>
+</div>
+<div (click)="this.toggleNavState()" [class]="{'nav-btn': true, 'active': this.navState.isNavActive}">
+  <i class="fa-solid fa-angles-right"></i>
 </div>
 

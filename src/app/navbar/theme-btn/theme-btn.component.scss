@@ -1,7 +1,21 @@
+@use '../../../assets/scss/common/presets' as *;
+
 .theme-btn {
   color: var(--text-primary);
-  transition: color var(--transition-speed);
+  transition: var(--transition);
+  font-size: 1.25em;
+  padding: $gap-sm;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  &--ico {
+    width: 15%;
+  }
+
 }
+
 .theme-btn:hover {
   color: var(--ico);
+  background-color: var(--bg-secondary);
 }
