@@ -1,0 +1,61 @@
+@use '../../scss/common' as *;
+
+.not-found-container {
+  height: 100%;
+  width: 100%;
+
+  h2 {
+    @include lg-min {
+      font-size: 2.4em;
+    }
+
+    @include lg-md {
+      font-size: 2.2em;
+    }
+
+    @include md-sm {
+      font-size: 2em;
+    }
+
+    @include sm {
+      font-size: 1.8em;
+    }
+  }
+
+  p {
+    @include lg-min {
+      font-size: 1.4em;
+    }
+
+    @include lg-md {
+      font-size: 1.2em;
+    }
+
+    @include md-sm {
+      font-size: 1em;
+    }
+
+    @include sm {
+      font-size: 0.8em;
+    }
+  }
+
+  .not-found-home {
+    transition: var(--transition);
+    margin-top: $gap-lg;
+
+    i {
+      padding-right: $gap-sm;
+    }
+
+    &:hover {
+      color: var(--var);
+    }
+  }
+
+  .table-flip {
+    font-size: 2em;
+  }
+}
+
+
