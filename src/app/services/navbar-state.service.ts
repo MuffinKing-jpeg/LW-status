@@ -7,7 +7,7 @@ import {NavigationEnd, Router} from "@angular/router";
 })
 export class NavbarStateService {
 
-  public isNavActive: boolean = true;
+  public isNavActive: boolean = false;
   public currentPath!: string;
 
   constructor(
