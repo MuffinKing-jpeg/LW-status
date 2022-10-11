@@ -37,10 +37,10 @@ const getServers = new Promise((resolve) => {
 const combineDB = new Promise((resolve) => {
   Promise.all([getConf, getServers])
       .then((res) => {
-        console.dir(res);
         resolve(res);
       })
       .catch((err) => {
+        console.error('Error during config loading');
         resolve({
           status: 'error',
           msg: `Something went wrong: ${err}`,

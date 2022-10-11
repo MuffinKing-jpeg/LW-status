@@ -10,6 +10,7 @@ import {Router} from "@angular/router";
 })
 export class AppComponent implements OnInit {
 
+
   constructor(
     private themeService: ThemeService,
     public navState: NavbarStateService,
@@ -18,6 +19,5 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.themeService.checkTheme();
-
   }
 }

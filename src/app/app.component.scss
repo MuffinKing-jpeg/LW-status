@@ -10,7 +10,6 @@ app-navbar {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   width: 280px;
-  border-right: var(--ico) solid 1px;
   z-index: 10;
   transition: var(--transition),
   left calc(var(--transition-speed) * 1.5) ease-in-out;
@@ -42,11 +41,13 @@ main {
   margin: auto;
   min-height: 100vh;
   transition: filter calc(var(--transition-speed) * 1.5) ease-in-out;
+  width: 100%;
 
   &.blurred {
     filter: blur(4px);
   }
 }
+
 
 .main-heading {
   &--text {

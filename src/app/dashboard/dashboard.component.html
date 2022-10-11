@@ -1,7 +1,7 @@
 <h2 class="dashboard-heading">
   Infrastructure status
-  <span (click)="updateData()">
-    <i class="fa-solid fa-rotate"></i>
+  <span (click)="loadStatusData()">
+    <i [class]="{'fa-solid': true, 'fa-rotate': true, 'fa-spin': this.isStatusLoading}"></i>
   </span>
 </h2>
 <div class="dashboard-container">
@@ -21,6 +21,39 @@
     </li>
   </ul>
 </div>
-<h2 class="dashboard-heading">Game servers statistics</h2>
-<div class="dashboard-container"></div>
+<h2 class="dashboard-heading">
+  Game servers statistics
+  <span>
+    <i [class]="{'fa-solid': true, 'fa-rotate': true, 'fa-spin': this.isGamesLoading}"></i>
+  </span>
+</h2>
+<div class="dashboard-container">
+  <div *ngIf="gamesBrief" class="brief">
+    <div class="brief-container">
+      <div class="brief-item">
+        <span class="brief-item--name">Status:</span>
+        <span class="brief-item--text {{this.gamesBrief.status}}">{{this.gamesBrief.status}}</span>
+      </div>
+      <div class="brief-item">
+        <span class="brief-item--name">Online:</span>
+        <span class="brief-item--text {{this.gamesBrief.status}}">{{this.gamesBrief.online}}
+          /{{this.gamesBrief.slots}}</span>
+      </div>
+      <div class="brief-item">
+        <span class="brief-item--name">Record</span>
+        <span class="brief-item--text {{this.gamesBrief.status}}">{{this.gamesBrief.record}}</span>
+      </div>
+      <div class="brief-item">
+        <span class="brief-item--name">Record today</span>
+        <span class="brief-item--text {{this.gamesBrief.status}}">{{this.gamesBrief.recordday}}</span>
+      </div>
+    </div>
+
+    <div class="brief-progressbar">
+      <span class="brief-progressbar--pad"></span>
+      <span [style.width.%]="this.gamesBrief.percent ? this.gamesBrief.percent : 0"
+            class="brief-progressbar--overlay"></span>
+    </div>
+  </div>
+</div>
 

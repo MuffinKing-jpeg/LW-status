@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiFetchService} from "../services/api-fetch.service";
 import {ServerStatusInterface} from "../interfaces/serverStatus.interface";
+import {GamesBriefInterface} from "../interfaces/gamesBrief.interface";
 
 @Component({
   selector: 'app-dashboard',
@@ -8,41 +9,79 @@ import {ServerStatusInterface} from "../interfaces/serverStatus.interface";
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  public serverStatus!: ServerStatusInterface[];
+  public serverStatus: ServerStatusInterface[] = [];
+  public isStatusLoading = false;
+
+  public gamesStatus: any[] = [];
+  public gamesBrief!: GamesBriefInterface
+  public isGamesLoading = false
 
   constructor(public apiFetch: ApiFetchService) {
   }
 
   ngOnInit(): void {
-    this.updateData()
-
+    this.loadStatusData()
+    this.loadGameServers()
   }
 
-  updateData(): void {
+  loadStatusData(): void {
     this.serverStatus = [];
-    const subscriber = this.apiFetch.loadStatus().subscribe({
+    this.isStatusLoading = true;
+    const subscription = this.apiFetch.loadStatus().subscribe({
       next: (res) => {
+        this.isStatusLoading = false
         if (res) {
           this.serverStatus = res
         } else {
           this.serverStatus = [{
             available: 'Offline',
             icon: 'fa-solid fa-bug',
-            name: 'Api unavailable'
+            name: 'Empty API response'
           }]
+          throw 'Empty API response'
         }
-        subscriber.unsubscribe()
+        subscription.unsubscribe()
       },
       error: err => {
         console.error(err)
         this.serverStatus = [{
           available: 'Offline',
           icon: 'fa-solid fa-bug',
-          name: err
+          name: err.name
         }]
+        subscription.unsubscribe()
       }
     })
 
+  }
+
+  loadGameServers(): void {
+    this.isGamesLoading = true
+    const subscription = this.apiFetch.loadGames().subscribe({
+      next: res => {
+
+        if (res) {
+          this.gamesBrief = {
+            status: "Online",
+            record: res['record'],
+            online: res['online'],
+            slots: res['slots'],
+            percent: 100 - Math.ceil(res['online'] / res['slots'] * 100),
+            recordday: res['recordday']
+          }
+          console.log(this.gamesBrief)
+          this.isGamesLoading = false
+        } else {
+
+        }
+
+        subscription.unsubscribe()
+      },
+      error: err => {
+        console.error(err)
+        subscription.unsubscribe()
+      }
+    })
   }
 
 }

@@ -1,7 +1,61 @@
-@use "./scss";
+@use './scss' as *;
 
 @font-face {
   font-family: 'Hobo';
   src: url('./assets/fonts/Hobo.ttf') format('truetype');
   /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}
+
+.loading-placeholder {
+  text-align: center;
+  min-height: 100vh;
+  justify-items: center;
+  font-family: Rubik, sans-serif;
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    margin-top: auto;
+    margin-bottom: 5px;
+  }
+
+  h2 {
+    margin-bottom: auto;
+    margin-top: 5px;
+    font-size: 0.7em;
+    font-weight: 300;
+    position: relative;
+
+
+    &::after {
+      position: absolute;
+      content: '';
+      animation: loading infinite 1s;
+    }
+
+    @keyframes loading {
+      0% {
+        content: '.';
+      }
+      35% {
+        content: '..';
+      }
+      70% {
+        content: '...';
+      }
+    }
+  }
+
+  @include lg-min {
+    font-size: 3rem;
+  }
+
+  @include lg-md {
+    font-size: 2rem;
+  }
+
+  @include md {
+    font-size: 1rem;
+  }
+
 }

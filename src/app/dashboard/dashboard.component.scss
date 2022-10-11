@@ -1,15 +1,33 @@
 @use '../../scss/common/presets/variables' as *;
+@use '../../scss/common/mixin/mixin-media' as *;
 
 .dashboard-container {
   width: 100%;
 }
 
-.status-list {
+.status-list, .brief-container {
   display: grid;
   gap: $gap;
   grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
   padding-inline-start: 0;
   padding: 0 $gap-lg;
+  justify-content: center;
+}
+
+h2 {
+
+  @include lg-min {
+    font-size: 1.5em;
+  }
+
+  @include lg-md {
+    font-size: 1.1em;
+  }
+
+  @include md {
+    font-size: 0.9em;
+  }
+
 }
 
 .status {
@@ -20,14 +38,6 @@
   font-size: 1em;
   animation: spawn ease-in var(--transition-speed);
 
-  @keyframes spawn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
 
   &--loading {
     font-size: 4rem;
@@ -44,10 +54,11 @@
     text-align: right;
     justify-content: center;
     gap: calc($gap-sm / 2);
-    font-weight: 800;
+    font-weight: 600;
 
     &--state {
-
+      font-weight: 400;
+      //letter-spacing: 0.2em;
     }
   }
 }
@@ -60,4 +71,39 @@
   color: var(--color-online);
 }
 
+.dashboard-heading {
+  position: relative;
+}
+
+.brief {
+
+  border-radius: 1rem;
+  background-color: var(--shader-70);
+  padding: $gap-lg 0;
+  margin: 0 $gap-lg;
+
+  &-progressbar {
+    background: linear-gradient(90deg, var(--color-online) 0%, var(--color-offline) 100%);
+    border-radius: 1rem;
+    height: 5px;
+    margin: 5px $gap 0 $gap;
+  }
+
+  &-item {
+    display: flex;
+    flex-direction: row;
+    text-align: right;
+    justify-content: center;
+    gap: calc($gap-sm / 2);
+  }
+}
+
+@keyframes spawn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 

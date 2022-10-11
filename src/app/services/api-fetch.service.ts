@@ -9,15 +9,19 @@ import {ServerStatusInterface} from "../interfaces/serverStatus.interface";
 })
 export class ApiFetchService {
   private url: string = environment.API_URL
-
+  private gameUrl: string = environment.GAME_URL
 
   constructor(
     private http: HttpClient
   ) {
   }
 
-  loadStatus(): Observable<ServerStatusInterface[]> {
+  public loadStatus(): Observable<ServerStatusInterface[]> {
     return this.http.get<ServerStatusInterface[]>(this.url)
+  }
+
+  public loadGames(): Observable<any> {
+    return this.http.get<any>(`${this.gameUrl}${Date.now()}`)
   }
 
 }
