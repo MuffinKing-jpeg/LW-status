@@ -15,11 +15,13 @@ Lightweight, cloud-based utility for tracking state of [LogicWorld](https://logi
 - Supporting mobile devices;
 - Server list and config storing at Firestore.
 
-### Udate history
+### Update history
 
 - __Mid of 2021__ First usable version.
 - __End of 2021__ Better design (*sort of* ).
 - __24.02.2022__ __*__WAR IN UKRAINE__*__
 - __16.03.2022__ Implemented use of Firestore. *Update your server list and config faster!*
+- __22.08.2022__ Implemented asynchronous ping in API.
+- __16.10.2022__ Through pain and tears Angular version of service is available!
 
 ###### See ya in peace \#nowar
