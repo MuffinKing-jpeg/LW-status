@@ -1,0 +1,89 @@
+{
+  "servers": {
+    "BioTech": {
+      "address": "s2.logicworld.ru:5481",
+      "status": "online",
+      "online": 15,
+      "motd": "BioTech!",
+      "type": "\u00a71",
+      "slots": 16,
+      "percent": 0,
+      "version": "1.12.2",
+      "ping": 1
+    },
+    "SkyTech": {
+      "address": "play.logicworld.ru:3567",
+      "status": "online",
+      "online": 9,
+      "motd": "SkyTech!",
+      "type": "\u00a71",
+      "slots": 16,
+      "percent": 0,
+      "version": "1.7.10",
+      "ping": 0
+    },
+    "MagicRPG": {
+      "status": "Неизвестное ядро",
+      "address": "s2.logicworld.ru:3437"
+    },
+    "NewSky": {
+      "status": "Выключен",
+      "address": "s2.logicworld.ru:4167"
+    },
+    "ClassicTech": {
+      "status": "Выключен",
+      "address": "play.logicworld.ru:6665"
+    },
+    "R.A.D.Lite": {
+      "address": "s2.logicworld.ru:3637",
+      "status": "online",
+      "online": 6,
+      "motd": "R.A.D. Lite (RPG)!",
+      "type": "\u00a71",
+      "slots": 16,
+      "percent": 0,
+      "version": "1.12.2",
+      "ping": 0
+    },
+    "SkyFactory4": {
+      "address": "s2.logicworld.ru:3737",
+      "status": "online",
+      "online": 7,
+      "motd": "SkyFactory 4!",
+      "type": "\u00a71",
+      "slots": 16,
+      "percent": 0,
+      "version": "1.12.2",
+      "ping": 0
+    },
+    "Engineer'sLife2": {
+      "address": "s2.logicworld.ru:3838",
+      "status": "online",
+      "online": 2,
+      "motd": "Engineers Life 2 Server",
+      "type": "\u00a71",
+      "slots": 5,
+      "percent": 0,
+      "version": "1.16.5",
+      "ping": 0
+    },
+    "Classic": {
+      "address": "s2.logicworld.ru:3939",
+      "status": "online",
+      "online": 0,
+      "motd": " LogicWorld Classic Server",
+      "type": "\u00a71",
+      "slots": 20,
+      "percent": 0,
+      "version": "1.18.2",
+      "ping": 0
+    }
+  },
+  "online": 690,
+  "slots": 1337,
+  "percent": 90,
+  "timerec": "25 января в 23:09",
+  "record": 960,
+  "recordday": 1000,
+  "timerecday": "15:25"
+}

@@ -7,18 +7,18 @@
   <ul (click)="this.navState.setNavState = false" class="nav-list">
     <li [class]="{'nav-item': true,
     'nav-active': this.navState.currentPath === '/'}">
-      <button routerLink="/"><span class="nav-item--ico"><i class="fa-solid fa-chart-line"></i></span><span
-        class="nav-item--text">Dashboard</span></button>
+      <button routerLink="/"><span class="nav-item__ico"><i class="fa-solid fa-chart-line"></i></span><span
+        class="nav-item__text">Dashboard</span></button>
     </li>
     <li [class]="{'nav-item': true,
     'nav-active': this.navState.currentPath === '/log'}">
-      <button routerLink="/log"><span class="nav-item--ico"><i class="fa-regular fa-calendar-days"></i></span><span
-        class="nav-item--text">History</span></button>
+      <button routerLink="/log"><span class="nav-item__ico"><i class="fa-regular fa-calendar-days"></i></span><span
+        class="nav-item__text">History</span></button>
     </li>
     <li [class]="{'nav-item': true,
     'nav-active': this.navState.currentPath === '/admin'}">
-      <button routerLink="/admin"><span class="nav-item--ico"><i class="fa-solid fa-lock"></i></span><span
-        class="nav-item--text">Admin</span></button>
+      <button routerLink="/admin"><span class="nav-item__ico"><i class="fa-solid fa-lock"></i></span><span
+        class="nav-item__text">Admin</span></button>
     </li>
   </ul>
   <app-theme-btn></app-theme-btn>

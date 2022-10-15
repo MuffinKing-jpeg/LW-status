@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   API_URL: 'http://localhost:5001/lw-status/us-central1/status',
-  GAME_URL: 'https://logicworld.ru/monAJAX/cache/cache.json?nocache='
+  GAME_URL: '/assets/json/gameDummy.json?nocache='
 };
 
 /*
