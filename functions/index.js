@@ -19,7 +19,7 @@ const getConf = new Promise((resolve) => {
       .get()
       .then((doc) => {
         resolve(
-            doc.data()
+          doc.exists ? doc.data() : DEFAULT_CONFIG
         );
       });
 }
@@ -40,6 +40,7 @@ const combineDB = new Promise((resolve) => {
         resolve(res);
       })
       .catch((err) => {
+        console.error('Error during config loading');
         resolve({
           status: 'error',
           msg: `Something went wrong: ${err}`,
@@ -47,10 +48,8 @@ const combineDB = new Promise((resolve) => {
       });
 });
 
-
 const ping = (o, s) => {
   return new Promise((resolve) => {
-    console.log(s, o);
     isPortReachable(o.port, {
       timeout: s.timeout ? s.timeout : DEFAULT_CONFIG.timeout,
       host: o.host,
@@ -84,9 +83,11 @@ const pingAll = new Promise((resolve) => {
 }
 );
 
-exports.status = functions.https.onRequest((request, response) => {
-  response.set('Access-Control-Allow-Origin', '*');
-  pingAll.then((data) => {
-    response.send(data);
-  });
-});
+exports.status = functions
+    .https
+    .onRequest((request, response) => {
+      response.set('Access-Control-Allow-Origin', '*');
+      pingAll.then((data) => {
+        response.send(data);
+      });
+    });
