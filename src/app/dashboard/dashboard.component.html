@@ -24,12 +24,15 @@
 </div>
 <h2 class="dashboard-heading">
   Game servers statistics
-  <span>
+  <span (click)="this.apiFetch.loadGameServers()">
     <i [class]="{'fa-solid': true, 'fa-rotate': true, 'fa-spin': this.apiFetch.isGamesLoading}"></i>
   </span>
 </h2>
 <div class="dashboard-container">
-  <div *ngIf="this.apiFetch.gamesBrief" class="brief">
+  <div *ngIf="this.apiFetch.gamesStatus.length === 0" class="status__loading">
+    <i class="fa-solid fa-rotate fa-spin"></i>
+  </div>
+  <div *ngIf="this.apiFetch.gamesBrief && !this.apiFetch.isGamesLoading" class="brief">
     <div class="brief-container">
       <div class="brief-item">
         <span class="brief-item__name"><i class="fa-solid fa-signal"></i> Status:</span>
@@ -56,7 +59,7 @@
             class="progressbar__overlay"></span>
     </div>
   </div>
-  <ul *ngIf="this.apiFetch.gamesStatus" class="games-stats">
+  <ul *ngIf="this.apiFetch.gamesStatus && !this.apiFetch.isGamesLoading" class="games-stats">
     <li *ngFor="let item of this.apiFetch.gamesStatus; index as i;" class="game">
       <div class="game__circle {{this.apiFetch.gamesStatus[i]['status']}}">
         <div class="ping-pong {{this.apiFetch.gamesStatus[i]['status']}}">
