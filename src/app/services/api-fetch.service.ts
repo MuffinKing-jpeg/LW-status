@@ -106,7 +106,6 @@ export class ApiFetchService {
           })
 
           this.isGamesLoading = false
-          console.log(this.gamesStatus)
         } else {
 
         }

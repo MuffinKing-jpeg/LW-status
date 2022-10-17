@@ -52,6 +52,7 @@ h2 {
     font-size: 1em;
   }
 
+
 }
 
 .status, .game {
@@ -62,6 +63,7 @@ h2 {
   font-size: 1em;
   animation: spawn ease-in var(--transition-speed);
   font-weight: 600;
+
 
   &__circle {
     width: 50px;
@@ -107,6 +109,14 @@ h2 {
   padding-left: calc($gap / 2);
   display: flex;
   font-size: 0.85em;
+
+  @include xx-min {
+    font-size: 0.85em;
+  }
+
+  @include xx {
+    font-size: 0.7em;
+  }
 
   &__wrapper {
     width: 100%;
