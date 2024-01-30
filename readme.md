@@ -1,10 +1,10 @@
 # LW-status
 
-![LogicStatus Banner](https://github.com/MuffinKing-jpeg/LW-status/blob/main/public/assets/img/baner.png?raw=true)
+![LogixyStatus Banner](https://github.com/MuffinKing-jpeg/LW-status/blob/main/public/assets/img/baner.png?raw=true)
 
 ## Description
 
-Lightweight, cloud-based utility for tracking state of [LogicWorld](https://logicworld.ru/)`s server infrastructure.
+Lightweight, cloud-based utility for tracking state of [Logixy.net](https://logixy.net/)`s server infrastructure.
 
 ### Current developed features
 
@@ -23,5 +23,6 @@ Lightweight, cloud-based utility for tracking state of [LogicWorld](https://logi
 - __16.03.2022__ Implemented use of Firestore. *Update your server list and config faster!*
 - __22.08.2022__ Implemented asynchronous ping in API.
 - __16.10.2022__ Through pain and tears Angular version of service is available!
+- __30.01.2024__ Mograte to logixy.net
 
 ###### See ya in peace \#nowar
