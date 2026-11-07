@@ -1,8 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Subscription} from 'rxjs';
+import {delay, of, Subscription} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {HistoryResponse} from './history.interface';
+import {createMockHistory} from './history.mock';
 import {playerChart, summarizeHistory, TimelineCell} from './history.utils';
 
 @Component({
@@ -11,6 +12,8 @@ import {playerChart, summarizeHistory, TimelineCell} from './history.utils';
   styleUrls: ['./history.component.scss']
 })
 export class HistoryComponent implements OnInit, OnDestroy {
+  readonly demoAvailable = !environment.production;
+  demoMode = this.demoAvailable && environment.HISTORY_MOCK;
   days = 1;
   periods = [{days: 1, label: '24 hours'}, {days: 7, label: '7 days'}, {days: 30, label: '30 days'}];
   loading = false;
@@ -32,7 +35,9 @@ export class HistoryComponent implements OnInit, OnDestroy {
     this.error = false;
     this.data = undefined;
     this.summary = undefined;
-    this.request = this.http.get<HistoryResponse>(environment.HISTORY_URL, {params: {days}}).subscribe({
+    const source = this.demoMode && this.demoAvailable ? of(createMockHistory(days)).pipe(delay(200)) :
+      this.http.get<HistoryResponse>(environment.HISTORY_URL, {params: {days}});
+    this.request = source.subscribe({
       next: data => {
         this.data = data;
         this.summary = summarizeHistory(data);
@@ -41,6 +46,12 @@ export class HistoryComponent implements OnInit, OnDestroy {
       },
       error: () => { this.error = true; this.loading = false; }
     });
+  }
+
+  toggleDemo(): void {
+    if (!this.demoAvailable) return;
+    this.demoMode = !this.demoMode;
+    this.load();
   }
 
   cellTitle(cell: TimelineCell): string {

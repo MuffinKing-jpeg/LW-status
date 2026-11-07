@@ -1,6 +1,6 @@
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {CommonModule} from '@angular/common';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {environment} from '../../environments/environment';
 import {HistoryComponent} from './history.component';
 
@@ -13,6 +13,7 @@ describe('HistoryComponent', () => {
       imports: [CommonModule, HttpClientTestingModule], declarations: [HistoryComponent]
     }).compileComponents();
     fixture = TestBed.createComponent(HistoryComponent);
+    fixture.componentInstance.demoMode = false;
     http = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   });
@@ -47,4 +48,18 @@ describe('HistoryComponent', () => {
     });
     expect(fixture.componentInstance.days).toBe(7);
   });
+
+  it('renders demo history without a backend request', fakeAsync(() => {
+    http.expectOne(`${environment.HISTORY_URL}?days=1`).flush({
+      from: 0, to: 86400000, interval: 300000, samples: []
+    });
+    fixture.componentInstance.toggleDemo();
+    tick(200);
+    fixture.detectChanges();
+    http.expectNone(request => request.url === environment.HISTORY_URL);
+    expect(fixture.nativeElement.textContent).toContain('Demo preview');
+    expect(fixture.nativeElement.textContent).toContain('Edge router');
+    expect(fixture.componentInstance.summary?.rows.length).toBe(4);
+    expect(fixture.componentInstance.error).toBeFalse();
+  }));
 });

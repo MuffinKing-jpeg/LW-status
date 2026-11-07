@@ -13,6 +13,12 @@
     </div>
   </header>
 
+  <div *ngIf="demoAvailable" class="demo-notice">
+    <div><strong>{{demoMode ? 'Demo preview' : 'Local API mode'}}</strong>
+      <p>{{demoMode ? 'Synthetic measurements for preview only. No Firebase connection required.' : 'Showing measurements from the configured history API.'}}</p></div>
+    <button type="button" (click)="toggleDemo()">{{demoMode ? 'Use real API' : 'Show demo data'}}</button>
+  </div>
+
   <div *ngIf="loading" class="message" role="status"><i class="fa-solid fa-rotate fa-spin"></i> Loading history…</div>
   <div *ngIf="error" class="message" role="alert">
     <h3>History is unavailable</h3><p>Could not load measurements. Please try again.</p>

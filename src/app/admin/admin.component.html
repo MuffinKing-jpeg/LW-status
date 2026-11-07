@@ -1,0 +1,62 @@
+<section class="admin">
+  <header class="page-header"><div><span class="eyebrow">MONITORING CONTROL</span><h2>Administration</h2>
+    <p>Manage infrastructure without editing database documents.</p></div>
+    <div *ngIf="auth.authenticated" class="session"><span>{{auth.email}}</span><button type="button" (click)="signOut()" [disabled]="busy">Sign out</button></div>
+  </header>
+  <p *ngIf="error" class="alert error" role="alert">{{error}}</p>
+  <p *ngIf="notice" class="alert" role="status">{{notice}}</p>
+
+  <article *ngIf="!auth.authenticated" class="login panel">
+    <i class="fa-solid fa-shield-halved login-icon" aria-hidden="true"></i><h3>Administrator sign in</h3>
+    <p>Use your Firebase Authentication account. Only explicitly enabled administrators can access monitoring settings.</p>
+    <p *ngIf="auth.sessionMessage" role="status">{{auth.sessionMessage}}</p>
+    <form #loginForm="ngForm" (ngSubmit)="signIn()">
+      <label>Email<input name="email" type="email" autocomplete="username" [(ngModel)]="email" required email [disabled]="busy"></label>
+      <label>Password<input name="password" type="password" autocomplete="current-password" [(ngModel)]="password" required [disabled]="busy"></label>
+      <button type="submit" class="primary" [disabled]="busy || loginForm.invalid">{{busy ? 'Signing in…' : 'Sign in securely'}}</button>
+    </form>
+    <small>Sessions last up to one hour. Reloading the page requires signing in again. No password or session token is stored in your browser storage.</small>
+  </article>
+
+  <ng-container *ngIf="auth.authenticated">
+    <div class="overview"><span><strong>{{servers.length}}</strong> configured devices</span><span><strong>{{enabledCount}}</strong> monitored</span><span class="pending" *ngIf="dirty">Unsaved changes</span></div>
+    <form #editor="ngForm" (ngSubmit)="save()">
+      <fieldset [disabled]="busy">
+        <article class="panel">
+          <div class="section-header"><div><h3>Infrastructure</h3><p>TCP host and port checks. Disable a device to pause monitoring without losing its history.</p></div>
+            <button type="button" (click)="addServer()" [disabled]="servers.length >= 100 || !configuration"><i class="fa-solid fa-plus" aria-hidden="true"></i> Add device</button></div>
+          <label class="search">Find a device<input type="search" name="search" [(ngModel)]="search" placeholder="Name or hostname"></label>
+          <p *ngIf="!servers.length" class="empty">No devices configured. Add your first device to start monitoring.</p>
+          <p *ngIf="servers.length && !visibleServers.length" class="empty">No devices match your search.</p>
+          <article class="device" *ngFor="let server of visibleServers; trackBy: trackServer">
+            <div class="device-header"><span><i [class]="server.icon" aria-hidden="true"></i> {{server.name || 'New device'}}</span>
+              <label class="switch"><input type="checkbox" [name]="'enabled-' + server.id" [(ngModel)]="server.enabled" (ngModelChange)="markDirty()"> Monitoring enabled</label></div>
+            <div class="device-fields">
+              <label>Display name<input [name]="'name-' + server.id" [(ngModel)]="server.name" (ngModelChange)="markDirty()" required maxlength="80"></label>
+              <label>Hostname / IP<input [name]="'host-' + server.id" [(ngModel)]="server.host" (ngModelChange)="markDirty()" required maxlength="253" placeholder="server.example.net" spellcheck="false"></label>
+              <label>TCP port<input type="number" [name]="'port-' + server.id" [(ngModel)]="server.port" (ngModelChange)="markDirty()" required min="1" max="65535" step="1"></label>
+              <label>Font Awesome icon<input [name]="'icon-' + server.id" [(ngModel)]="server.icon" (ngModelChange)="markDirty()" required maxlength="160" placeholder="fa-solid fa-server"></label>
+            </div>
+            <div class="device-footer"><small>ID: {{server.id}}</small><button type="button" class="danger" (click)="removeServer(server)">Remove device</button></div>
+          </article>
+        </article>
+
+        <article class="panel"><h3>Monitoring settings</h3>
+          <label class="timeout">Connection timeout (ms)<input type="number" name="timeout" [(ngModel)]="timeout" (ngModelChange)="markDirty()" required min="100" max="10000" step="1"></label>
+          <p class="hint">100–10000 ms. History is collected every 5 minutes; changing this interval requires redeploying the scheduler.</p>
+          <details><summary>Additional configuration fields (JSON)</summary><p class="hint">Other fields from config/config. The timeout field is managed above. Do not store passwords or private keys here.</p>
+            <textarea name="extras" [(ngModel)]="extraSettings" (ngModelChange)="markDirty()" rows="7" spellcheck="false" aria-label="Additional configuration JSON"></textarea>
+          </details>
+        </article>
+      </fieldset>
+      <div class="save-bar"><span>{{dirty ? 'Changes are not saved yet.' : 'Configuration is up to date.'}}</span><div>
+        <button type="button" (click)="reload()" [disabled]="busy">Reload</button>
+        <button type="submit" class="primary" [disabled]="busy || !dirty || editor.invalid || !configuration">{{busy ? 'Please wait…' : 'Save configuration'}}</button>
+      </div></div>
+    </form>
+
+    <article class="panel audit"><h3>Recent changes</h3><p *ngIf="!configuration?.audit?.length">No administration changes recorded yet.</p>
+      <div *ngFor="let event of configuration?.audit" class="audit-entry"><div><strong>{{event.email}}</strong><small>{{event.deviceCount}} devices · {{event.changedDevices.length}} device changes · {{event.settingsKeys.length}} setting changes</small></div><time>{{event.timestamp | date:'medium'}}</time></div>
+    </article>
+  </ng-container>
+</section>

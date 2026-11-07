@@ -10,6 +10,8 @@ import {NotFoundComponent} from './not-found/not-found.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {HttpClientModule} from "@angular/common/http";
 import {HistoryComponent} from './history/history.component';
+import {FormsModule} from '@angular/forms';
+import {AdminComponent} from './admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -19,10 +21,12 @@ import {HistoryComponent} from './history/history.component';
     PlaceholderComponent,
     NotFoundComponent,
     DashboardComponent,
-    HistoryComponent
+    HistoryComponent,
+    AdminComponent
   ],
   imports: [
     HttpClientModule,
+    FormsModule,
     BrowserModule,
     AppRoutingModule
   ],

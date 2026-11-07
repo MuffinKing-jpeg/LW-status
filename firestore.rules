@@ -1,15 +1,22 @@
 rules_version = '2';
 service cloud.firestore {
- match /databases/{database}/documents {
+  match /databases/{database}/documents {
+    // Public news remains readable; only explicitly enabled admins may edit it.
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.enabled == true;
+    }
     match /news/{document=**} {
-      allow read, update, delete, create: if request.auth != null
-      // &&(request.auth.uid == "sMIHPa5Ep9NZtX9QyOOB4HNr2Gw1")
-      ;
-      allow read;
-      }
-    match /config/{document=**} {
-    	allow read, update, delete, create: if request.auth != null
-      // &&(request.auth.uid == "sMIHPa5Ep9NZtX9QyOOB4HNr2Gw1")
-      ;}
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    // All monitoring writes go through adminApi (validation, revision, audit).
+    // Membership can only be changed using trusted project administrator access.
+    match /config/{document=**} { allow read, write: if false; }
+    match /admins/{document=**} { allow read, write: if false; }
+    match /adminAudit/{document=**} { allow read, write: if false; }
+    match /adminAccessAudit/{document=**} { allow read, write: if false; }
+    match /history/{document=**} { allow read, write: if false; }
   }
 }

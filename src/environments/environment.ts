@@ -2,10 +2,15 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import {firebaseWebApiKey} from './firebase-client';
+
 export const environment = {
   production: false,
   API_URL: 'http://localhost:5001/lw-status/us-central1/status',
   HISTORY_URL: 'http://localhost:5001/lw-status/us-central1/history',
+  HISTORY_MOCK: true,
+  ADMIN_API_URL: 'http://localhost:5001/lw-status/us-central1/adminApi',
+  FIREBASE_API_KEY: firebaseWebApiKey,
   GAME_URL: '/assets/json/gameDummy.json?nocache='
 };
 

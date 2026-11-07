@@ -2,6 +2,10 @@
 .history { padding: 12px 24px; text-align: left; }
 .history-header, .controls, .panel-heading, .equipment-heading, .incident, .axis { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .history-header { flex-wrap: wrap; margin-bottom: 28px; }
+.demo-notice { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 16px; margin-bottom: 20px; border: 1px dashed var(--color-warning); border-radius: 12px; background: var(--shader-70); }
+.demo-notice strong { color: var(--color-warning); font-size: .85rem; }
+.demo-notice p { font-size: .75rem; opacity: .8; }
+.demo-notice button { font-size: .75rem; }
 h2 { margin: 8px 0; font-size: 1.8rem; }
 h3 { margin: 0 0 8px; font-size: 1.1rem; }
 p { margin: 0; line-height: 1.6; }

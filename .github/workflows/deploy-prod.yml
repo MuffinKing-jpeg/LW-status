@@ -48,6 +48,9 @@ jobs:
       - name: Build production site
         run: npm run build -- --configuration production
 
+      - name: Test frontend
+        run: node node_modules/@angular/cli/bin/ng.js test --watch=false --browsers=ChromeHeadless
+
       - name: Set up Node for Functions and Firebase CLI
         uses: actions/setup-node@v4
         with:
@@ -76,6 +79,9 @@ jobs:
       - name: Check Functions syntax
         run: node --check functions/index.js
 
+      - name: Test administration authorization and configuration
+        run: npm test --prefix functions
+
       - name: Authenticate to Firebase
         uses: google-github-actions/auth@v2
         with:
@@ -83,5 +89,5 @@ jobs:
           project_id: ${{ env.FIREBASE_PROJECT_ID }}
 
       # No --force: unexpected function deletions must be reviewed manually.
-      - name: Deploy Functions and Hosting
-        run: npx --yes firebase-tools@15.34.2 deploy --only functions,hosting --project "$FIREBASE_PROJECT_ID" --non-interactive
+      - name: Deploy Functions, Hosting and Firestore rules
+        run: npx --yes firebase-tools@15.34.2 deploy --only functions,hosting,firestore:rules --project "$FIREBASE_PROJECT_ID" --non-interactive

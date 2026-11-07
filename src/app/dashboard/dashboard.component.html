@@ -5,9 +5,10 @@
   </span>
 </h2>
 <div class="dashboard-container">
-  <div *ngIf="this.apiFetch.serverStatus.length === 0" class="status__loading">
+  <div *ngIf="this.apiFetch.isStatusLoading" class="status__loading">
     <i class="fa-solid fa-rotate fa-spin"></i>
   </div>
+  <p *ngIf="!this.apiFetch.isStatusLoading && this.apiFetch.serverStatus.length === 0">No enabled infrastructure devices.</p>
   <ul *ngIf="this.apiFetch.serverStatus.length !== 0" class="status-list">
     <li *ngFor="let item of this.apiFetch.serverStatus; index as i;"
         class="status">

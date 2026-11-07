@@ -3,11 +3,17 @@ const isPortReachable = require('is-port-reachable');
 const admin = require('firebase-admin');
 const https = require('https');
 const crypto = require('crypto');
+const {createAdminHandler} = require('./admin-api');
 
 admin.initializeApp();
 const db = admin.firestore();
 const INTERVAL = 5 * 60 * 1000;
 const RETENTION = 30 * 24 * 60 * 60 * 1000;
+
+exports.adminApi = functions.https.onRequest(createAdminHandler({
+  db, auth: admin.auth(), logger: functions.logger,
+  serverTimestamp: () => admin.firestore.FieldValue.serverTimestamp(),
+}));
 
 // Read configuration on every run, not once per warm function instance.
 const checkServers = async () => {
@@ -16,10 +22,10 @@ const checkServers = async () => {
   ]);
   const config = configDoc.data() || {};
   const servers = (serversDoc.data() || {}).servers;
-  if (!Array.isArray(servers) || !servers.length) {
+  if (!Array.isArray(servers)) {
     throw new Error('No equipment configured');
   }
-  return Promise.all(servers.map(async (server) => {
+  return Promise.all(servers.filter((server) => server.enabled !== false).map(async (server) => {
     const started = Date.now();
     const available = await isPortReachable(server.port, {
       host: server.host, timeout: config.timeout || 1000,

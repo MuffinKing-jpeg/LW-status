@@ -15,6 +15,13 @@ Lightweight, cloud-based utility for tracking state of [Logixy.net](https://logi
 - Supporting mobile devices;
 - Server list and config storing at Firestore.
 - Player activity charts and equipment availability history (24 hours / 7 days / 30 days).
+- Admin UI for infrastructure and settings, with Firebase Authentication and server-enforced administrator membership.
+
+### Administration
+
+See [admin setup and security](docs/admin.md) for the one-time Email/Password
+provider setup, granting the first administrator, deployment and local development.
+The UI is at `/admin`; no database credentials or service-account keys belong in it.
 
 ### Monitoring history
 
@@ -30,18 +37,28 @@ in equipment identifiers (stable hashes). Set an explicit unique `id` in each
 
 **Deployment:**
 
-1. Install frontend and function dependencies (`npm ci` in the root and `functions`).
+1. Install frontend dependencies with Node 16.20.2 (`npm ci` in the root).
+   Install migrated function dependencies with Node 22 (`npm ci --prefix functions`).
 2. Use a Firebase project on the **Blaze** plan with Cloud Scheduler / Pub/Sub
    enabled and the existing `config/config` and `config/servers` documents configured.
-3. Run `npm run build`, then `firebase deploy --only functions,hosting`.
-   This deploys `status`, `history`, `collectHistory`, `cleanupHistory` and the
-   `/api/history` hosting rewrite. A currently supported Cloud Functions Node.js
-   runtime is required; the repository's legacy Node 16 configuration must be
-   upgraded with compatible Firebase dependencies before deploying to Firebase.
+3. Run `npm run build` with Node 16, then switch to Node 22 and run
+   `npx --yes firebase-tools@15.34.2 deploy --only functions,hosting,firestore:rules --project lw-status`.
+   This deploys the monitoring/admin functions, Hosting rewrites and security rules.
+   The backend migration must be committed first;
+   see **GitHub Actions deployment** below for the required files and SDK versions.
 4. Wait for the first scheduled measurement (up to 5 minutes). Historical data
    before deployment cannot be reconstructed; the UI shows an empty state.
 
-For local development, use the existing Firebase emulators and Angular dev server.
+For a local UI preview, run `npm ci` and `npm start`, then open
+`http://localhost:4200/log`. Development mode enables synthetic history by default
+(`HISTORY_MOCK: true` in `src/environments/environment.ts`), including player
+activity, recovered outages, an unrecovered storage outage, and monitoring gaps.
+All three period filters work without Firebase. The **Demo preview** banner labels
+these as synthetic measurements. Use **Use real API** to switch to the configured
+backend, or set `HISTORY_MOCK: false` to start with real measurements. Production
+always uses the real API and does not offer the demo switch.
+
+For real local measurements, use the existing Firebase emulators and Angular dev server.
 The Functions emulator does not trigger schedules automatically: invoke
 `collectHistory()` in the Firebase Functions shell to collect a sample into the
 Firestore emulator. Player counts are fetched from the real game endpoint, not
@@ -53,6 +70,53 @@ than counted as online or offline. Coverage is shown separately. Outages are
 grouped only across consecutive observations; recovery is never inferred across
 gaps. Charts aggregate to at most 240 points and show per-bucket average and peak
 on hover. Tests: `npm test -- --watch=false --browsers=ChromeHeadless`.
+
+### GitHub Actions deployment
+
+- Push to `main`: build/test production assets and functions, then deploy
+  **Functions, live Hosting and Firestore rules**.
+- Push to `dev` or `dev-angular`: deploy **only** the shared `dev` Hosting preview
+  (expires after 30 days). It uses the already deployed backend; it does not
+  deploy or isolate Functions, and does not deploy security rules.
+- Both workflows can be started from the **Actions** tab with **Run workflow**
+  on their respective branches. Deployments to the same target are serialized.
+- The Angular 14 build temporarily uses Node 16.20.2, which is EOL. Node 22 is
+  used for Functions dependencies and Firebase CLI 15.34.2. Upgrade Angular to
+  remove the legacy build runtime; do not run Firebase CLI on Node 16.
+- Installs use `npm ci`; always commit the corresponding lockfiles.
+
+In **Settings → Secrets and variables → Actions**, configure the repository
+secret `FIREBASE_SERVICE_ACCOUNT_LW_STATUS` with the service account JSON.
+The workflows use Google Application Default Credentials; no interactive login
+or `FIREBASE_TOKEN` is needed. They do not depend on the GitHub owner's name.
+Do not commit credentials or print them in logs. The service account needs
+permissions for Hosting and, for production, Cloud Functions deployment,
+Cloud Scheduler / Pub/Sub provisioning, and permission to act as the runtime
+service account. It also needs permission to release Firebase/Firestore rules.
+The old Hosting-only service account may need additional IAM
+permissions. Have a project administrator grant the required access rather
+than granting Owner indiscriminately. Missing APIs may also require an
+administrator to enable them once. GitHub repository permissions do not grant
+Google Cloud IAM permissions.
+
+**One-time prerequisite after the Cloud Shell migration:** save the working
+backend changes in Git before enabling production auto-deploy:
+
+```sh
+# In the Cloud Shell checkout where the Functions deployment succeeded:
+git diff -- functions/package.json functions/package-lock.json functions/index.js
+git add functions/package.json functions/package-lock.json functions/index.js
+git commit -m "Migrate Firebase Functions to Node 22 and current SDKs"
+git push origin main
+```
+
+Use a pull request if `main` is protected. The committed runtime must be Node 22,
+dependencies must include `firebase-functions` 6+ and `firebase-admin` 13+, and
+the existing first-generation handlers must import `firebase-functions/v1`.
+Do not commit only `engines.node`: both SDK updates and the updated lockfile are
+required. CI checks this and stops with an actionable error rather than
+deploying the old configuration over the working Cloud Shell deployment.
+No automatic `npm audit fix --force` or forced function deletion is performed.
 
 ### Update history
 
