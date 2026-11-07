@@ -28,9 +28,9 @@
   <ng-container *ngIf="!loading && data && summary">
     <div *ngIf="!data.samples.length" class="message">
       <i class="fa-regular fa-clock empty-icon" aria-hidden="true"></i>
-      <h3>Your history starts here</h3><p>No measurements for this period yet. Once monitoring is deployed, a new sample is saved every 5 minutes.</p>
+      <h3>Your history starts here</h3><p>No measurements for this period yet. Configured devices are listed below; a new sample is saved every 5 minutes.</p>
     </div>
-    <ng-container *ngIf="data.samples.length">
+    <ng-container *ngIf="data.samples.length || summary.rows.length">
       <div class="metrics">
         <article><span>Equipment uptime</span><strong [class.healthy]="summary.uptime === 100" [class.unhealthy]="summary.uptime !== null && summary.uptime < 99">{{summary.uptime === null ? '—' : (summary.uptime | number:'1.2-2') + '%'}}</strong><small>Successful / measured checks</small></article>
         <article><span>Peak players</span><strong>{{summary.peak === null ? '—' : (summary.peak | number:'1.0-0')}}</strong><small>Highest recorded online</small></article>
@@ -55,13 +55,13 @@
       </article>
 
       <article class="panel">
-        <div class="panel-heading"><div><h3>Equipment stability</h3><p>Each segment represents part of the selected period.</p></div></div>
+        <div class="panel-heading"><div><h3>Equipment stability</h3><p>Currently configured devices. Each segment represents part of the selected period.</p></div></div>
         <div class="legend"><span><b class="online"></b>Online</span><span><b class="mixed"></b>Partial / gaps</span><span><b class="offline"></b>Offline</span><span><b class="unknown"></b>No data</span></div>
-        <p *ngIf="!summary.rows.length">No equipment measurements in this period.</p>
+        <p *ngIf="!summary.rows.length">No infrastructure devices configured.</p>
         <div *ngFor="let row of summary.rows" class="equipment">
-          <div class="equipment-heading"><span><i [class]="row.icon" aria-hidden="true"></i> {{row.name}}</span>
-            <span class="equipment-meta">{{row.coverage | number:'1.0-0'}}% coverage <strong [class.healthy]="row.uptime === 100" [class.unhealthy]="row.uptime !== null && row.uptime < 99">{{row.uptime | number:'1.2-2'}}%</strong></span></div>
-          <div class="timeline" role="img" [attr.aria-label]="row.name + ': ' + (row.uptime | number:'1.2-2') + '% successful checks'">
+          <div class="equipment-heading"><span><i [class]="row.icon" aria-hidden="true"></i> {{row.name}}<small *ngIf="row.enabled === false"> · Paused</small></span>
+            <span class="equipment-meta">{{row.coverage | number:'1.0-0'}}% coverage <strong [class.healthy]="row.uptime === 100" [class.unhealthy]="row.uptime !== null && row.uptime < 99">{{row.uptime === null ? '—' : (row.uptime | number:'1.2-2') + '%'}}</strong></span></div>
+          <div class="timeline" role="img" [attr.aria-label]="row.name + ': ' + (row.uptime === null ? 'No measurements' : (row.uptime | number:'1.2-2') + '% successful checks')">
             <span *ngFor="let cell of row.cells" [class]="'cell ' + cell.state" [title]="cellTitle(cell)"></span>
           </div>
         </div>
@@ -71,7 +71,8 @@
 
       <article class="panel">
         <div class="panel-heading"><div><h3>Outage log</h3><p>Consecutive failed checks grouped by equipment.</p></div></div>
-        <div *ngIf="!summary.incidents.length" class="all-clear"><i class="fa-solid fa-check" aria-hidden="true"></i> No outages detected in recorded measurements.</div>
+        <div *ngIf="!summary.incidents.length && summary.uptime !== null" class="all-clear"><i class="fa-solid fa-check" aria-hidden="true"></i> No outages detected in recorded measurements.</div>
+        <p *ngIf="summary.uptime === null" class="note">No equipment measurements in this period.</p>
         <div class="incident" *ngFor="let incident of summary.incidents | slice:0:50">
           <span class="incident-dot"></span><div><strong>{{incident.name}}</strong><small>{{incident.from | date:'MMM d, HH:mm'}} → {{incident.to | date:'MMM d, HH:mm'}}</small></div>
           <span class="incident-status" [class.healthy]="incident.recovered">{{incident.recovered ? 'Recovered' : 'Recovery not observed'}}</span>

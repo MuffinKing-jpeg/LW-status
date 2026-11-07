@@ -106,4 +106,33 @@ describe('History calculations', () => {
     expect(chart.points[0].peak).toBe(100);
     expect(chart.max).toBe(100);
   });
+
+  it('hides removed equipment and its incidents even if stale samples still contain it', () => {
+    const data = response([{timestamp: interval, equipment: equipment('Offline'), players: 12}]);
+    data.equipment = [];
+    const result = summarizeHistory(data);
+    expect(result.rows).toEqual([]);
+    expect(result.incidents).toEqual([]);
+    expect(result.uptime).toBeNull();
+    expect(result.peak).toBe(12);
+  });
+
+  it('lists newly configured equipment without fabricating uptime', () => {
+    const data = response([]);
+    data.equipment = [{id: 'new', name: 'New device', icon: 'fas fa-server', enabled: true}];
+    const row = summarizeHistory(data).rows[0];
+    expect(row.name).toBe('New device');
+    expect(row.uptime).toBeNull();
+    expect(row.coverage).toBe(0);
+    expect(row.cells.every(cell => cell.state === 'unknown')).toBeTrue();
+  });
+
+  it('uses current names and keeps paused equipment measurements', () => {
+    const data = response([{timestamp: interval, equipment: equipment('Online', 'Old name'), players: 0}]);
+    data.equipment = [{id: 'router', name: 'Current name', icon: 'fas fa-server', enabled: false}];
+    const row = summarizeHistory(data).rows[0];
+    expect(row.name).toBe('Current name');
+    expect(row.enabled).toBeFalse();
+    expect(row.uptime).toBe(100);
+  });
 });

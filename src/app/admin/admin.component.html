@@ -1,4 +1,4 @@
-<section class="admin">
+<section class="admin" [class.admin--login]="!auth.authenticated">
   <header class="page-header"><div><span class="eyebrow">MONITORING CONTROL</span><h2>Administration</h2>
     <p>Manage infrastructure without editing database documents.</p></div>
     <div *ngIf="auth.authenticated" class="session"><span>{{auth.email}}</span><button type="button" (click)="signOut()" [disabled]="busy">Sign out</button></div>

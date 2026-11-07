@@ -1,5 +1,6 @@
 :host { display: block; }
 .admin { padding: 12px 24px; text-align: left; }
+.admin--login { max-width: 488px; margin-inline: auto; }
 .page-header, .session, .section-header, .device-header, .device-footer, .save-bar, .audit-entry { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
 .page-header { margin-bottom: 28px; }
 .eyebrow { color: var(--color-online); font-size: .7rem; letter-spacing: .16em; }
@@ -8,7 +9,7 @@ h3 { margin: 0 0 12px; font-size: 1.1rem; }
 p { margin: 0; line-height: 1.6; }
 .page-header p, .section-header p, .hint, small, .session, .save-bar, time { font-size: .8rem; opacity: .75; }
 .panel { padding: 24px; margin-bottom: 20px; background: var(--shader-70); border: 1px solid var(--shader-30); border-radius: 16px; }
-.login { max-width: 440px; margin: 36px auto; }
+.login { margin: 0 0 36px; }
 .login-icon { font-size: 2rem; color: var(--color-online); margin-bottom: 20px; }
 .login p { font-size: .85rem; margin-bottom: 20px; }
 .login form { display: grid; gap: 18px; margin: 24px 0; }

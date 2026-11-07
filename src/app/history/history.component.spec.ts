@@ -28,6 +28,16 @@ describe('HistoryComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('Your history starts here');
   });
 
+  it('shows configured devices with no measurements before the first collection', () => {
+    http.expectOne(`${environment.HISTORY_URL}?days=1`).flush({
+      from: 0, to: 86400000, interval: 300000, samples: [],
+      equipment: [{id: 'new', name: 'New device', icon: 'fas fa-server', enabled: true}]
+    });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('New device');
+    expect(fixture.nativeElement.querySelector('.equipment-meta strong').textContent).toBe('—');
+  });
+
   it('offers a retry after an API error', () => {
     http.expectOne(`${environment.HISTORY_URL}?days=1`).flush({}, {status: 503, statusText: 'Unavailable'});
     fixture.detectChanges();

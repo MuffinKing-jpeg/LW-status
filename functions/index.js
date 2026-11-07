@@ -2,8 +2,9 @@ const functions = require('firebase-functions/v1');
 const isPortReachable = require('is-port-reachable');
 const admin = require('firebase-admin');
 const https = require('https');
-const crypto = require('crypto');
 const {createAdminHandler} = require('./admin-api');
+const {publicDevice} = require('./monitoring-config');
+const {historyForInventory} = require('./history-data');
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -31,11 +32,7 @@ const checkServers = async () => {
       host: server.host, timeout: config.timeout || 1000,
     });
     return {
-      id: crypto.createHash('sha256')
-          .update(String(server.id || `${server.host}:${server.port}`))
-          .digest('hex').slice(0, 24),
-      name: server.name || server.host,
-      icon: server.icon || 'fa-solid fa-server',
+      ...publicDevice(server),
       available: available ? 'Online' : 'Offline',
       latency: available ? Date.now() - started : null,
     };
@@ -113,12 +110,18 @@ exports.history = functions.https.onRequest(async (request, response) => {
   const to = Date.now();
   const from = to - days * 24 * 60 * 60 * 1000;
   try {
-    const snapshot = await db.collection('history')
-        .where('timestamp', '>=', from).where('timestamp', '<=', to)
-        .orderBy('timestamp').limit(9000).get();
-    response.set('Cache-Control', 'public, max-age=60');
+    const [snapshot, inventory] = await Promise.all([
+      db.collection('history')
+          .where('timestamp', '>=', from).where('timestamp', '<=', to)
+          .orderBy('timestamp').limit(9000).get(),
+      db.doc('config/servers').get(),
+    ]);
+    const visible = historyForInventory(snapshot.docs.map((doc) => doc.data()),
+        (inventory.data() || {}).servers);
+    // A manual refresh must reflect inventory edits, not a cached pre-deletion list.
+    response.set('Cache-Control', 'no-store');
     response.json({from, to, interval: INTERVAL,
-      samples: snapshot.docs.map((doc) => doc.data())});
+      ...visible});
   } catch (error) {
     functions.logger.error('History read failed', error);
     response.status(503).json({error: 'History unavailable'});

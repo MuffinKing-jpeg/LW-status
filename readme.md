@@ -70,6 +70,9 @@ than counted as online or offline. Coverage is shown separately. Outages are
 grouped only across consecutive observations; recovery is never inferred across
 gaps. Charts aggregate to at most 240 points and show per-bucket average and peak
 on hover. Tests: `npm test -- --watch=false --browsers=ChromeHeadless`.
+History shows currently configured devices only: removing a device hides its
+past observations and outages from the API/UI without deleting stored samples.
+Paused devices remain visible; new devices initially show no measurements.
 
 ### GitHub Actions deployment
 

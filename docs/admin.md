@@ -124,8 +124,14 @@ point local development at a production write endpoint unintentionally.
 - Legacy device IDs are derived from the original host/port before their first
   edit; saving persists that ID. Editing the host or port then retains the same
   history hash. New devices receive random IDs. IDs are deliberately not editable.
-- Removing a device does not delete its historical samples; normal 30-day cleanup
-  still applies. Recreating it as a new device starts a separate identity.
+- Removing a device hides it from History for all periods, including its outages
+  and contribution to equipment summaries. The API filters past observations
+  against the current inventory. Stored samples are not physically deleted;
+  normal 30-day cleanup still applies. Recreating it as a new device starts a
+  separate identity. Pausing a configured device keeps its history visible.
+- Newly configured devices appear in History immediately after refreshing, with
+  no-data segments until their first scheduled observation. History responses
+  are not cached, so refresh reflects inventory changes immediately.
 - Both configuration documents are saved in one Firestore transaction together
   with an audit entry. Nanosecond-precision document revisions reject stale edits
   with HTTP 409 instead of silently overwriting another administrator's changes.

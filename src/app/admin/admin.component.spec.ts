@@ -86,6 +86,7 @@ describe('AdminComponent template', () => {
     }).compileComponents();
     const fixture = TestBed.createComponent(AdminComponent);
     fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.admin--login')).not.toBeNull();
     expect(fixture.nativeElement.querySelector('input[type=password]')).not.toBeNull();
     expect(fixture.nativeElement.querySelector('textarea')).toBeNull();
     fixture.destroy();

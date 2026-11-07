@@ -1,4 +1,5 @@
 const net = require('net');
+const crypto = require('crypto');
 
 const httpError = (status, message) => Object.assign(new Error(message), {status});
 const object = (value) => value !== null && typeof value === 'object' &&
@@ -28,6 +29,14 @@ const editableServer = (server) => ({
   port: Number(server.port),
   icon: server.icon || 'fa-solid fa-server',
   enabled: server.enabled !== false,
+});
+
+const publicDevice = (server) => ({
+  id: crypto.createHash('sha256')
+      .update(String(server.id || `${server.host}:${server.port}`))
+      .digest('hex').slice(0, 24),
+  name: server.name || server.host,
+  icon: server.icon || 'fa-solid fa-server',
 });
 
 const validateConfiguration = (body) => {
@@ -74,4 +83,4 @@ const revisionOf = (...snapshots) => snapshots.map((snapshot) => {
   return time ? `${time.seconds}.${time.nanoseconds}` : 'missing';
 }).join('/');
 
-module.exports = {httpError, editableServer, validateConfiguration, revisionOf};
+module.exports = {httpError, editableServer, publicDevice, validateConfiguration, revisionOf};

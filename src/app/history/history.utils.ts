@@ -1,4 +1,4 @@
-import {HistoryResponse} from './history.interface';
+import {EquipmentInfo, HistoryResponse} from './history.interface';
 
 export interface TimelineCell {
   state: 'online' | 'offline' | 'mixed' | 'unknown';
@@ -15,8 +15,12 @@ export interface Incident {
 }
 
 export function summarizeHistory(data: HistoryResponse) {
-  const equipment = new Map<string, {id: string; name: string; icon: string}>();
-  data.samples.forEach(sample => sample.equipment?.forEach(server => equipment.set(server.id, server)));
+  const equipment = new Map<string, EquipmentInfo>();
+  if (data.equipment !== undefined) {
+    data.equipment.forEach(server => equipment.set(server.id, server));
+  } else {
+    data.samples.forEach(sample => sample.equipment?.forEach(server => equipment.set(server.id, server)));
+  }
   const incidents: Incident[] = [];
   let totalChecks = 0;
   let onlineChecks = 0;

@@ -33,5 +33,5 @@ export function createMockHistory(days: number, now = Date.now()): HistoryRespon
     samples.push({timestamp, players, equipment});
   }
 
-  return {from, to, interval, samples};
+  return {from, to, interval, samples, equipment: servers.map(server => ({...server, enabled: true}))};
 }

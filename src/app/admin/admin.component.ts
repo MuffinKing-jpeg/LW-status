@@ -80,7 +80,7 @@ export class AdminComponent implements OnInit {
   }
 
   removeServer(server: MonitoredDevice): void {
-    if (!window.confirm(`Remove ${server.name || 'this device'}? Its recorded history will be retained.`)) return;
+    if (!window.confirm(`Remove ${server.name || 'this device'}? It will also disappear from History. Stored measurements are retained until normal cleanup.`)) return;
     this.servers = this.servers.filter(item => item.id !== server.id);
     this.markDirty();
   }
