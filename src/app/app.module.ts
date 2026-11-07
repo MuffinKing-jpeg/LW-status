@@ -9,6 +9,7 @@ import {PlaceholderComponent} from './placeholder/placeholder.component';
 import {NotFoundComponent} from './not-found/not-found.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {HttpClientModule} from "@angular/common/http";
+import {HistoryComponent} from './history/history.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {HttpClientModule} from "@angular/common/http";
     NavbarComponent,
     PlaceholderComponent,
     NotFoundComponent,
-    DashboardComponent
+    DashboardComponent,
+    HistoryComponent
   ],
   imports: [
     HttpClientModule,

@@ -3,7 +3,7 @@
 
 module.exports = function(config) {
   config.set({
-    basePath: 'LW-status',
+    basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
