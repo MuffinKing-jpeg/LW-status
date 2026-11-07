@@ -88,6 +88,25 @@ jobs:
           credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LW_STATUS }}
           project_id: ${{ env.FIREBASE_PROJECT_ID }}
 
+      - name: Show deployment identity (no secrets)
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const file = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+          if (!file) throw new Error('Application Default Credentials were not configured');
+          const credentials = JSON.parse(fs.readFileSync(file, 'utf8'));
+          if (credentials.type !== 'service_account' || typeof credentials.client_email !== 'string') {
+            throw new Error('Expected service-account credentials from the Firebase repository secret');
+          }
+          // Never log the credential object, private key, access token or file contents.
+          console.log(`Deployment service account: ${credentials.client_email}`);
+          console.log(`Credentials project: ${credentials.project_id}`);
+          console.log(`Deployment target project: ${process.env.FIREBASE_PROJECT_ID}`);
+          if (process.env.FIREBASE_TOKEN) {
+            throw new Error('Remove the legacy FIREBASE_TOKEN environment variable: deployment must use the configured service account');
+          }
+          NODE
+
       # No --force: unexpected function deletions must be reviewed manually.
       - name: Deploy Functions, Hosting and Firestore rules
         run: npx --yes firebase-tools@15.34.2 deploy --only functions,hosting,firestore:rules --project "$FIREBASE_PROJECT_ID" --non-interactive
