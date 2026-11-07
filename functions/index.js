@@ -1,4 +1,4 @@
-const functions = require('firebase-functions');
+const functions = require('firebase-functions/v1');
 const isPortReachable = require('is-port-reachable');
 const admin = require('firebase-admin');
 const https = require('https');
