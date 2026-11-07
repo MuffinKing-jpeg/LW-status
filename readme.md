@@ -26,3 +26,4 @@ Lightweight, cloud-based utility for tracking state of [Logixy.net](https://logi
 - __30.01.2024__ Mograte to logixy.net
 
 ###### See ya in peace \#nowar
+
