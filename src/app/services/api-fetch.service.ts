@@ -52,6 +52,7 @@ export class ApiFetchService {
       },
       error: err => {
         console.error(err)
+        this.isStatusLoading = false
         this.serverStatus = [{
           available: 'Offline',
           icon: 'fa-solid fa-bug',

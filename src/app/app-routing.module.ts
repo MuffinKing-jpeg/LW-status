@@ -3,10 +3,11 @@ import {RouterModule, Routes} from '@angular/router';
 import {PlaceholderComponent} from "./placeholder/placeholder.component";
 import {NotFoundComponent} from "./not-found/not-found.component";
 import {DashboardComponent} from "./dashboard/dashboard.component";
+import {HistoryComponent} from './history/history.component';
 
 const routes: Routes = [
   {path: '', component: DashboardComponent},
-  {path: 'log', component: PlaceholderComponent},
+  {path: 'log', component: HistoryComponent},
   {path: 'admin', component: PlaceholderComponent},
 
   //Default route
