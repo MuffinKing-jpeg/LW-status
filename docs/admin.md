@@ -92,8 +92,12 @@ npx --yes firebase-tools@15.34.2 deploy --only functions,hosting,firestore:rules
 
 This includes the new `adminApi` function, its `/api/admin` Hosting rewrite, and
 the rules that prevent direct client writes to configuration. Deploying only the
-frontend is insufficient. The production GitHub workflow includes all three
-targets and backend/frontend tests. Its service account must also have permission
+frontend is insufficient for an initial admin rollout. The production GitHub
+workflow publishes Hosting independently from Functions/rules, with separate
+tests and statuses. Routine UI changes can go live even when the backend fails;
+check both jobs when changing authentication, APIs or permissions. For initial
+setup deploy restrictive rules before enabling Email/Password. The CI service
+account must also have permission
 to release Firestore rules (Firebase Rules), in addition to its existing deployment
 permissions. Preview deploys never change rules or backend functions.
 The `adminApi` runtime service account needs Firestore access and Firebase Auth

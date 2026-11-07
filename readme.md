@@ -76,13 +76,27 @@ Paused devices remain visible; new devices initially show no measurements.
 
 ### GitHub Actions deployment
 
-- Push to `main`: build/test production assets and functions, then deploy
-  **Functions, live Hosting and Firestore rules**.
+- Push to `main`: plan changes and deploy **Hosting** and **Functions / rules**
+  in independent jobs. A backend deployment failure does not block or roll back
+  the website release. Each job retains its own failure status in Actions.
+- Frontend-only changes do not redeploy Functions. Changes are compared against
+  the last successful production push, not simply the previous commit, so a
+  failed or superseded backend release is retried rather than silently forgotten.
+  If no reliable baseline is available, all targets are scheduled.
 - Push to `dev` or `dev-angular`: deploy **only** the shared `dev` Hosting preview
   (expires after 30 days). It uses the already deployed backend; it does not
   deploy or isolate Functions, and does not deploy security rules.
 - Both workflows can be started from the **Actions** tab with **Run workflow**
   on their respective branches. Deployments to the same target are serialized.
+- Production manual runs offer `all`, `hosting` or `backend`. Choose `hosting`
+  to recover a UI release without waiting for a backend fix. Run the workflow
+  on `main` rather than re-running an obsolete commit after newer changes exist.
+- The run summary reports website/backend outcomes separately. Hosting publishes
+  a public, non-cacheable [`build-info.json`](https://status.logixy.net/build-info.json)
+  containing only the frontend commit and build timestamp, and verifies that
+  both the default Firebase domain and custom domain serve that exact commit.
+  HTML entry points (`/`, `/admin`, `/log`, `/index.html`) are revalidated rather
+  than kept stale in browser caches; hashed JS/CSS assets are unchanged.
 - The Angular 14 build temporarily uses Node 16.20.2, which is EOL. Node 22 is
   used for Functions dependencies and Firebase CLI 15.34.2. Upgrade Angular to
   remove the legacy build runtime; do not run Firebase CLI on Node 16.
@@ -120,6 +134,13 @@ Do not commit only `engines.node`: both SDK updates and the updated lockfile are
 required. CI checks this and stops with an actionable error rather than
 deploying the old configuration over the working Cloud Shell deployment.
 No automatic `npm audit fix --force` or forced function deletion is performed.
+Firebase deploy debug output is captured privately by the CI wrapper; only
+selected, redacted Google API error messages are printed on failure. Raw debug
+logs and credential files are never uploaded as artifacts. A failed backend job
+still fails the overall workflow; a green Hosting job is not proof of backend
+success. API changes must remain backward-compatible with separately released
+frontends. Initial releases introducing a new function/authorization model may
+require deploying the backend/rules first before enabling the UI/provider.
 
 ### Update history
 

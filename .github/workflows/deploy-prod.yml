@@ -4,61 +4,127 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      target:
+        description: What to publish (manual recovery)
+        type: choice
+        options: [all, hosting, backend]
+        default: all
 
 permissions:
   contents: read
 
-# Never interrupt a deployment that may already be updating Cloud Functions.
+# Do not interrupt an in-flight Cloud Functions deployment.
 concurrency:
   group: firebase-production-lw-status
   cancel-in-progress: false
 
+env:
+  FIREBASE_PROJECT_ID: lw-status
+  CI: 'true'
+
 jobs:
-  deploy_live_website:
+  plan:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-    env:
-      FIREBASE_PROJECT_ID: lw-status
-      CI: 'true'
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      hosting: ${{ steps.targets.outputs.hosting }}
+      backend: ${{ steps.targets.outputs.backend }}
+      rules: ${{ steps.targets.outputs.rules }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Check Firebase secret
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test deployment tooling
+        run: node --test .github/scripts/*.test.cjs
+      - name: Plan deployments since last successful production run
+        id: targets
         env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LW_STATUS }}
-        run: |
-          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
-            echo "::error::Add FIREBASE_SERVICE_ACCOUNT_LW_STATUS in repository Settings > Secrets and variables > Actions."
-            exit 1
-          fi
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/deploy-plan.cjs
 
-      # Angular 14 officially supports Node 16, not the Functions runtime.
-      # This EOL version is used for the legacy build only, never for deployment.
+  deploy_hosting:
+    needs: plan
+    if: needs.plan.outputs.hosting == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      # Node 16 is EOL, but still required by the legacy Angular 14 toolchain.
       - name: Set up Node for Angular 14
         uses: actions/setup-node@v4
         with:
           node-version: '16.20.2'
           cache: npm
           cache-dependency-path: package-lock.json
-
       - name: Install frontend dependencies
         run: npm ci
-
       - name: Build production site
         run: npm run build -- --configuration production
-
       - name: Test frontend
         run: node node_modules/@angular/cli/bin/ng.js test --watch=false --browsers=ChromeHeadless
+      - name: Set up Node for Firebase CLI
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Write public build identity
+        run: |
+          node -e 'require("fs").writeFileSync("public/build-info.json", JSON.stringify({commit: process.env.GITHUB_SHA, builtAt: new Date().toISOString()}))'
+      - name: Authenticate to Firebase
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LW_STATUS }}
+          project_id: ${{ env.FIREBASE_PROJECT_ID }}
+      - name: Show deployment identity (no secrets)
+        run: node .github/scripts/deploy-identity.cjs
+      # No dependency on deploy_backend: a Functions failure cannot block Hosting.
+      - name: Publish website only
+        run: node .github/scripts/deploy-firebase.cjs hosting
+      - name: Verify the published frontend revision
+        run: |
+          node --input-type=module <<'NODE'
+          const sites = [`https://${process.env.FIREBASE_PROJECT_ID}.web.app`, 'https://status.logixy.net'];
+          for (const site of sites) {
+            let verified = false;
+            for (let attempt = 0; attempt < 6; attempt++) {
+              try {
+                const response = await fetch(`${site}/build-info.json?commit=${process.env.GITHUB_SHA}`, {
+                  signal: AbortSignal.timeout(10000), cache: 'no-store'
+                });
+                if (response.ok && (await response.json()).commit === process.env.GITHUB_SHA) {
+                  verified = true;
+                  break;
+                }
+              } catch { /* Give Hosting/CDN propagation a bounded retry. */ }
+              if (attempt < 5) await new Promise(resolve => setTimeout(resolve, 5000));
+            }
+            if (!verified) throw new Error(`${site} is not serving the expected frontend revision`);
+            console.log(`Verified ${site}: ${process.env.GITHUB_SHA}`);
+          }
+          NODE
 
+  deploy_backend:
+    needs: plan
+    if: needs.plan.outputs.backend == 'true' || needs.plan.outputs.rules == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
       - name: Set up Node for Functions and Firebase CLI
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
           cache-dependency-path: functions/package-lock.json
-
       - name: Check committed Functions migration
+        if: needs.plan.outputs.backend == 'true'
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -68,45 +134,59 @@ jobs:
           if (pkg.engines.node !== '22' || major('firebase-functions') < 6 ||
               major('firebase-admin') < 13 ||
               !/require\(['"]firebase-functions\/v1['"]\)/.test(source)) {
-            console.error('::error::Commit the Node 22 / Functions v1 migration from Cloud Shell: functions/package.json, functions/package-lock.json and functions/index.js. See readme.md.');
-            process.exit(1);
+            throw new Error('Commit the Node 22 / Functions v1 migration; see readme.md');
           }
           NODE
-
       - name: Install Functions dependencies from lockfile
+        if: needs.plan.outputs.backend == 'true'
         run: npm ci --prefix functions
-
       - name: Check Functions syntax
+        if: needs.plan.outputs.backend == 'true'
         run: node --check functions/index.js
-
-      - name: Test administration authorization and configuration
+      - name: Test backend
+        if: needs.plan.outputs.backend == 'true'
         run: npm test --prefix functions
-
       - name: Authenticate to Firebase
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LW_STATUS }}
           project_id: ${{ env.FIREBASE_PROJECT_ID }}
-
       - name: Show deployment identity (no secrets)
+        run: node .github/scripts/deploy-identity.cjs
+      - name: Publish backend (independent of website)
+        env:
+          DEPLOY_FUNCTIONS: ${{ needs.plan.outputs.backend }}
+          DEPLOY_RULES: ${{ needs.plan.outputs.rules }}
         run: |
-          node <<'NODE'
-          const fs = require('fs');
-          const file = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-          if (!file) throw new Error('Application Default Credentials were not configured');
-          const credentials = JSON.parse(fs.readFileSync(file, 'utf8'));
-          if (credentials.type !== 'service_account' || typeof credentials.client_email !== 'string') {
-            throw new Error('Expected service-account credentials from the Firebase repository secret');
-          }
-          // Never log the credential object, private key, access token or file contents.
-          console.log(`Deployment service account: ${credentials.client_email}`);
-          console.log(`Credentials project: ${credentials.project_id}`);
-          console.log(`Deployment target project: ${process.env.FIREBASE_PROJECT_ID}`);
-          if (process.env.FIREBASE_TOKEN) {
-            throw new Error('Remove the legacy FIREBASE_TOKEN environment variable: deployment must use the configured service account');
-          }
-          NODE
+          targets=()
+          if [ "$DEPLOY_FUNCTIONS" = true ]; then targets+=(functions); fi
+          if [ "$DEPLOY_RULES" = true ]; then targets+=(firestore:rules); fi
+          target_list=$(IFS=,; echo "${targets[*]}")
+          node .github/scripts/deploy-firebase.cjs "$target_list"
 
-      # No --force: unexpected function deletions must be reviewed manually.
-      - name: Deploy Functions, Hosting and Firestore rules
-        run: npx --yes firebase-tools@15.34.2 deploy --only functions,hosting,firestore:rules --project "$FIREBASE_PROJECT_ID" --non-interactive
+  deployment_summary:
+    needs: [plan, deploy_hosting, deploy_backend]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Summarize independent deployment results
+        env:
+          PLAN_RESULT: ${{ needs.plan.result }}
+          HOSTING_RESULT: ${{ needs.deploy_hosting.result }}
+          BACKEND_RESULT: ${{ needs.deploy_backend.result }}
+        run: |
+          {
+            echo '## Production deployment'
+            echo "Commit: $GITHUB_SHA"
+            echo ''
+            echo '| Target | Result |'
+            echo '| --- | --- |'
+            echo "| Plan | $PLAN_RESULT |"
+            echo "| Website (Hosting) | $HOSTING_RESULT |"
+            echo "| Functions / rules | $BACKEND_RESULT |"
+            echo ''
+            echo 'Website: https://status.logixy.net'
+            echo 'Published frontend version: https://status.logixy.net/build-info.json'
+            echo 'A backend failure does not roll back a successful Hosting release.'
+          } >> "$GITHUB_STEP_SUMMARY"
