@@ -2,21 +2,86 @@ name: Deploy to Live Channel
 
 on:
   push:
-    branches:
-      - main
-    # Optionally configure to run only for specific files. For example:
-    # paths:
-    # - "website/**"
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never interrupt a deployment that may already be updating Cloud Functions.
+concurrency:
+  group: firebase-production-lw-status
+  cancel-in-progress: false
 
 jobs:
   deploy_live_website:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      FIREBASE_PROJECT_ID: lw-status
+      CI: 'true'
     steps:
-      - uses: actions/checkout@v2
-      - run: npm i && npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - uses: actions/checkout@v4
+
+      - name: Check Firebase secret
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LW_STATUS }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "::error::Add FIREBASE_SERVICE_ACCOUNT_LW_STATUS in repository Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+      # Angular 14 officially supports Node 16, not the Functions runtime.
+      # This EOL version is used for the legacy build only, never for deployment.
+      - name: Set up Node for Angular 14
+        uses: actions/setup-node@v4
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_LW_STATUS }}"
-          projectId: lw-status
-          channelId: live
+          node-version: '16.20.2'
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build production site
+        run: npm run build -- --configuration production
+
+      - name: Set up Node for Functions and Firebase CLI
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: functions/package-lock.json
+
+      - name: Check committed Functions migration
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const pkg = require('./functions/package.json');
+          const major = name => Number((pkg.dependencies[name] || '').match(/\d+/)?.[0] || 0);
+          const source = fs.readFileSync('functions/index.js', 'utf8');
+          if (pkg.engines.node !== '22' || major('firebase-functions') < 6 ||
+              major('firebase-admin') < 13 ||
+              !/require\(['"]firebase-functions\/v1['"]\)/.test(source)) {
+            console.error('::error::Commit the Node 22 / Functions v1 migration from Cloud Shell: functions/package.json, functions/package-lock.json and functions/index.js. See readme.md.');
+            process.exit(1);
+          }
+          NODE
+
+      - name: Install Functions dependencies from lockfile
+        run: npm ci --prefix functions
+
+      - name: Check Functions syntax
+        run: node --check functions/index.js
+
+      - name: Authenticate to Firebase
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LW_STATUS }}
+          project_id: ${{ env.FIREBASE_PROJECT_ID }}
+
+      # No --force: unexpected function deletions must be reviewed manually.
+      - name: Deploy Functions and Hosting
+        run: npx --yes firebase-tools@15.34.2 deploy --only functions,hosting --project "$FIREBASE_PROJECT_ID" --non-interactive

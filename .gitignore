@@ -72,6 +72,9 @@ typings/
 .env
 .env.test
 
+# Temporary credentials created by google-github-actions/auth
+gha-creds-*.json
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 

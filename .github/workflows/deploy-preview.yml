@@ -2,19 +2,61 @@ name: Deploy to Preview Channel
 
 on:
   push:
-    branches:
-      - dev
-      - dev-angular
+    branches: [dev, dev-angular]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# These branches share the same preview channel, so serialize their deployments.
+concurrency:
+  group: firebase-preview-lw-status
+  cancel-in-progress: false
+
 jobs:
   build_and_preview:
+    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-angular'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      FIREBASE_PROJECT_ID: lw-status
+      CI: 'true'
     steps:
-      - uses: actions/checkout@v2
-      - run: npm i && npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - uses: actions/checkout@v4
+
+      - name: Check Firebase secret
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LW_STATUS }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "::error::Add FIREBASE_SERVICE_ACCOUNT_LW_STATUS in repository Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+      - name: Set up Node for Angular 14
+        uses: actions/setup-node@v4
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_LW_STATUS }}"
-          expires: 30d
-          projectId: lw-status
-          channelId: dev
+          node-version: '16.20.2'
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build production site
+        run: npm run build -- --configuration production
+
+      - name: Set up Node for Firebase CLI
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Authenticate to Firebase
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LW_STATUS }}
+          project_id: ${{ env.FIREBASE_PROJECT_ID }}
+
+      # Preview must never update the production Functions or live Hosting.
+      - name: Deploy Hosting preview only
+        run: npx --yes firebase-tools@15.34.2 hosting:channel:deploy dev --expires 30d --project "$FIREBASE_PROJECT_ID" --non-interactive
