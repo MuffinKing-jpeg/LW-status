@@ -4,6 +4,9 @@
 .dashboard-container {
   width: 100%;
 }
+.dashboard-notice { padding: 0 $gap-lg; }
+.status-refresh { border: 0; background: transparent; color: inherit; cursor: pointer; }
+.status-refresh:focus-visible { outline: 2px solid var(--color-online); }
 
 .status-list, .brief-container, .games-stats {
   display: grid;

@@ -3,6 +3,14 @@ import {CommonModule} from '@angular/common';
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {environment} from '../../environments/environment';
 import {HistoryComponent} from './history.component';
+import {of} from 'rxjs';
+import {RouterTestingModule} from '@angular/router/testing';
+import {LocalizationModule} from '../i18n/localization.module';
+import {LocalizationService} from '../i18n/localization.service';
+import {InfrastructureStatusService} from '../services/infrastructure-status.service';
+import {InfrastructureAlertComponent} from '../infrastructure-alert/infrastructure-alert.component';
+import {PlayerChartComponent} from './player-chart.component';
+import {OutageLogComponent} from './outage-log.component';
 
 describe('HistoryComponent', () => {
   let fixture: ComponentFixture<HistoryComponent>;
@@ -10,8 +18,11 @@ describe('HistoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, HttpClientTestingModule], declarations: [HistoryComponent]
+      imports: [CommonModule, HttpClientTestingModule, LocalizationModule, RouterTestingModule],
+      declarations: [HistoryComponent, InfrastructureAlertComponent, PlayerChartComponent, OutageLogComponent],
+      providers: [{provide: InfrastructureStatusService, useValue: {state$: of({devices: [], loading: false, error: false, checkedAt: null}), refresh: () => {}}}]
     }).compileComponents();
+    TestBed.inject(LocalizationService).setPreference('en');
     fixture = TestBed.createComponent(HistoryComponent);
     fixture.componentInstance.demoMode = false;
     http = TestBed.inject(HttpTestingController);

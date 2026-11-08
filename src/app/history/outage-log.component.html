@@ -1,0 +1,12 @@
+<p *ngIf="!hasMeasurements" class="note">{{'No equipment measurements in this period.' | t}}</p>
+<p *ngIf="hasMeasurements && !incidents.length" class="all-clear"><i class="fa-solid fa-check" aria-hidden="true"></i> {{'No outages detected in recorded measurements.' | t}}</p>
+<div class="incident" *ngFor="let incident of incidents | slice:0:visibleCount">
+  <span class="dot"></span><div><strong>{{incident.name}}</strong><small>{{incident.from | localDate:'short'}} → {{incident.to | localDate:'short'}}</small></div>
+  <span class="status" [class.healthy]="incident.recovered">{{(incident.recovered ? 'Recovered' : 'Recovery not observed') | t}}</span>
+</div>
+<div class="controls" *ngIf="incidents.length > 5">
+  <span>{{(visibleCount < incidents.length ? visibleCount : incidents.length) | localNumber}} / {{incidents.length | localNumber}}</span>
+  <button *ngIf="remaining" type="button" (click)="more()">{{'Show {count} more ({remaining} hidden)' | t:{count: nextCount, remaining: remaining} }}</button>
+  <button *ngIf="visibleCount > 5" type="button" (click)="collapse()">{{'Collapse' | t}}</button>
+</div>
+<p class="note">{{'Times show the first and last observed failure, or the first successful check after recovery. All times are local.' | t}}</p>

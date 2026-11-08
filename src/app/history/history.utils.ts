@@ -84,34 +84,52 @@ export function summarizeHistory(data: HistoryResponse) {
   };
 }
 
-// Bucket to a maximum of 240 points while retaining gaps and peak values.
-export function playerChart(data: HistoryResponse) {
-  const width = 960;
-  const height = 200;
-  const buckets = Array.from({length: 240}, () => [] as number[]);
-  data.samples.forEach(sample => {
-    if (sample.players === null) return;
-    const index = Math.min(239, Math.max(0,
-      Math.floor((sample.timestamp - data.from) / (data.to - data.from) * 240)));
-    buckets[index].push(sample.players);
+// Select real observations (first/min/max/last per interval), never synthetic
+// averages or bucket-center timestamps. Coordinates are shared by line and dots.
+export function playerChart(data: HistoryResponse, width = 960) {
+  const height = 240;
+  const left = 42;
+  const right = Math.max(left + 1, width - 12);
+  const top = 16;
+  const bottom = 206;
+  const buckets = Array.from({length: 120}, () => [] as {timestamp: number; online: number; segment: number}[]);
+  let segment = 0;
+  let previous: number | null = null;
+  let count = 0;
+  const duration = data.to - data.from;
+  const unique = new Map(data.samples.map(sample => [sample.timestamp, sample]));
+  Array.from(unique.values()).sort((a, b) => a.timestamp - b.timestamp).forEach(sample => {
+    if (duration <= 0 || sample.timestamp < data.from || sample.timestamp > data.to) return;
+    if (sample.players === null || !Number.isFinite(sample.players) || sample.players < 0) { previous = null; return; }
+    if (previous === null || sample.timestamp - previous > data.interval * 1.5) segment++;
+    previous = sample.timestamp;
+    count++;
+    const index = Math.min(119, Math.floor((sample.timestamp - data.from) / duration * 120));
+    buckets[index].push({timestamp: sample.timestamp, online: sample.players, segment});
   });
-  const max = Math.max(1, ...data.samples.map(sample => sample.players || 0));
+  const selected = buckets.flatMap(values => {
+    if (!values.length) return [];
+    const minimum = values.reduce((a, b) => a.online <= b.online ? a : b);
+    const maximum = values.reduce((a, b) => a.online >= b.online ? a : b);
+    return Array.from(new Map([values[0], minimum, maximum, values[values.length - 1]].map(point => [point.timestamp, point])).values());
+  }).sort((a, b) => a.timestamp - b.timestamp);
+  const max = Math.max(1, ...selected.map(point => point.online));
+  const step = Math.max(1, Math.pow(10, Math.floor(Math.log10(max))) / 2);
+  const axisMax = Math.ceil(max / (2 * step)) * 2 * step;
+  const round = (value: number) => Number(value.toFixed(2));
+  const points = selected.map(point => ({...point,
+    x: round(left + (point.timestamp - data.from) / duration * (right - left)),
+    y: round(bottom - point.online / axisMax * (bottom - top))
+  }));
   const segments: string[] = [];
-  let segment = '';
-  const points: {x: number; y: number; timestamp: number; average: number; peak: number}[] = [];
-  buckets.forEach((values, index) => {
-    if (!values.length) {
-      if (segment) segments.push(segment);
-      segment = '';
-      return;
-    }
-    const average = values.reduce((sum, value) => sum + value, 0) / values.length;
-    const x = (index + 0.5) / 240 * width;
-    const y = height - average / max * (height - 12);
-    segment += `${segment ? ' L' : 'M'}${x.toFixed(2)},${y.toFixed(2)}`;
-    points.push({x, y, timestamp: data.from + (index + 0.5) / 240 * (data.to - data.from),
-      average, peak: Math.max(...values)});
+  let path = '';
+  points.forEach((point, index) => {
+    if (index === 0 || point.segment !== points[index - 1].segment) {
+      if (path) segments.push(path);
+      path = `M${point.x},${point.y}`;
+    } else path += ` L${point.x},${point.y}`;
   });
-  if (segment) segments.push(segment);
-  return {segments, points, max};
+  if (path) segments.push(path);
+  return {width, height, left, right, top, bottom, max, axisMax, segments, points, downsampled: count > points.length,
+    ticks: [{y: top, value: axisMax}, {y: (top + bottom) / 2, value: axisMax / 2}, {y: bottom, value: 0}]};
 }

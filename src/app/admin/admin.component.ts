@@ -2,6 +2,7 @@ import {Component, HostListener, OnInit} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import {AdminService} from './admin.service';
 import {AdminConfiguration, MonitoredDevice} from './admin.interface';
+import {LocalizationService} from '../i18n/localization.service';
 
 @Component({
   selector: 'app-admin', templateUrl: './admin.component.html', styleUrls: ['./admin.component.scss']
@@ -19,12 +20,12 @@ export class AdminComponent implements OnInit {
   configuration?: AdminConfiguration;
   servers: MonitoredDevice[] = [];
 
-  constructor(public auth: AdminService) {}
+  constructor(public auth: AdminService, private i18n: LocalizationService) {}
 
   ngOnInit(): void { if (this.auth.authenticated) void this.reload(); }
 
   confirmLeave(): boolean {
-    return !this.dirty || !this.auth.authenticated || window.confirm('Discard unsaved monitoring changes?');
+    return !this.dirty || !this.auth.authenticated || window.confirm(this.i18n.translate('Discard unsaved monitoring changes?'));
   }
 
   @HostListener('window:beforeunload', ['$event'])
@@ -50,7 +51,7 @@ export class AdminComponent implements OnInit {
   }
 
   signOut(): void {
-    if (this.dirty && !window.confirm('Discard unsaved changes and sign out?')) return;
+    if (this.dirty && !window.confirm(this.i18n.translate('Discard unsaved changes and sign out?'))) return;
     this.auth.signOut();
     this.configuration = undefined;
     this.servers = [];
@@ -61,7 +62,7 @@ export class AdminComponent implements OnInit {
   }
 
   async reload(): Promise<void> {
-    if (this.dirty && !window.confirm('Reload and discard unsaved changes?')) return;
+    if (this.dirty && !window.confirm(this.i18n.translate('Reload and discard unsaved changes?'))) return;
     this.busy = true;
     this.error = '';
     this.notice = '';
@@ -80,7 +81,7 @@ export class AdminComponent implements OnInit {
   }
 
   removeServer(server: MonitoredDevice): void {
-    if (!window.confirm(`Remove ${server.name || 'this device'}? It will also disappear from History. Stored measurements are retained until normal cleanup.`)) return;
+    if (!window.confirm(this.i18n.translate('Remove {name}? It will also disappear from History. Stored measurements are retained until normal cleanup.', {name: server.name || this.i18n.translate('New device')}))) return;
     this.servers = this.servers.filter(item => item.id !== server.id);
     this.markDirty();
   }
@@ -97,7 +98,7 @@ export class AdminComponent implements OnInit {
       this.error = 'Additional settings must be a valid JSON object.';
       return;
     }
-    if (!this.enabledCount && !window.confirm('All devices will be disabled. Continue?')) return;
+    if (!this.enabledCount && !window.confirm(this.i18n.translate('All devices will be disabled. Continue?'))) return;
     this.busy = true;
     try {
       await this.auth.save({revision: this.configuration.revision, servers: this.servers,

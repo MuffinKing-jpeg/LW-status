@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {NavbarStateService} from "../services/navbar-state.service";
+import {LocalizationService} from '../i18n/localization.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,13 +10,15 @@ import {NavbarStateService} from "../services/navbar-state.service";
 export class NavbarComponent implements OnInit {
   
   constructor(
-    public navState: NavbarStateService
+    public navState: NavbarStateService,
+    public i18n: LocalizationService
   ) {
   }
 
   ngOnInit(): void {
     this.navState.getPath()
   }
+  languageChange(event: Event): void { this.i18n.setPreference((event.target as HTMLSelectElement).value); }
 
   public toggleNavState(): void {
     this.navState.isNavActive ?

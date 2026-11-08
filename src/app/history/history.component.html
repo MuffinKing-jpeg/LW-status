@@ -1,84 +1,52 @@
 <section class="history">
+  <app-infrastructure-alert *ngIf="!demoMode" [state]="infrastructure.state$ | async" [historyPage]="true"></app-infrastructure-alert>
+  <app-infrastructure-alert *ngIf="demoMode" [state]="demoState" [historyPage]="true" [demo]="true"></app-infrastructure-alert>
   <header class="history-header">
-    <div><span class="eyebrow">INFRASTRUCTURE INSIGHTS</span><h2>Stability & history</h2>
-      <p>Player activity and equipment availability over time.</p></div>
+    <div><span class="eyebrow">{{'INFRASTRUCTURE INSIGHTS' | t}}</span><h2>{{'Stability & history' | t}}</h2>
+      <p>{{'Player activity and equipment availability over time.' | t}}</p></div>
     <div class="controls">
-      <div class="periods" role="group" aria-label="History period">
-        <button *ngFor="let period of periods" type="button" [class.selected]="days === period.days"
-                [attr.aria-pressed]="days === period.days" (click)="load(period.days)">{{period.label}}</button>
+      <div class="periods" role="group" [attr.aria-label]="'History period' | t">
+        <button *ngFor="let period of periods" type="button" [class.selected]="days === period.days" [attr.aria-pressed]="days === period.days" (click)="load(period.days)">{{period.label | t}}</button>
       </div>
-      <button type="button" class="refresh" (click)="load()" [disabled]="loading" aria-label="Refresh history">
-        <i class="fa-solid fa-rotate" [class.fa-spin]="loading" aria-hidden="true"></i>
-      </button>
+      <button type="button" class="refresh" (click)="load()" [disabled]="loading" [attr.aria-label]="'Refresh history' | t"><i class="fa-solid fa-rotate" [class.fa-spin]="loading" aria-hidden="true"></i></button>
     </div>
   </header>
-
-  <div *ngIf="demoAvailable" class="demo-notice">
-    <div><strong>{{demoMode ? 'Demo preview' : 'Local API mode'}}</strong>
-      <p>{{demoMode ? 'Synthetic measurements for preview only. No Firebase connection required.' : 'Showing measurements from the configured history API.'}}</p></div>
-    <button type="button" (click)="toggleDemo()">{{demoMode ? 'Use real API' : 'Show demo data'}}</button>
+  <div *ngIf="demoAvailable" class="demo-notice"><div><strong>{{(demoMode ? 'Demo preview' : 'Local API mode') | t}}</strong>
+    <p>{{(demoMode ? 'Synthetic measurements for preview only. No Firebase connection required.' : 'Showing measurements from the configured history API.') | t}}</p></div>
+    <button type="button" (click)="toggleDemo()">{{(demoMode ? 'Use real API' : 'Show demo data') | t}}</button>
   </div>
-
-  <div *ngIf="loading" class="message" role="status"><i class="fa-solid fa-rotate fa-spin"></i> Loading history…</div>
-  <div *ngIf="error" class="message" role="alert">
-    <h3>History is unavailable</h3><p>Could not load measurements. Please try again.</p>
-    <button type="button" (click)="load()">Try again</button>
-  </div>
-
+  <div *ngIf="loading" class="message" role="status"><i class="fa-solid fa-rotate fa-spin"></i> {{'Loading history…' | t}}</div>
+  <div *ngIf="error" class="message" role="alert"><h3>{{'History is unavailable' | t}}</h3><p>{{'Could not load measurements. Please try again.' | t}}</p><button type="button" (click)="load()">{{'Try again' | t}}</button></div>
   <ng-container *ngIf="!loading && data && summary">
-    <div *ngIf="!data.samples.length" class="message">
-      <i class="fa-regular fa-clock empty-icon" aria-hidden="true"></i>
-      <h3>Your history starts here</h3><p>No measurements for this period yet. Configured devices are listed below; a new sample is saved every 5 minutes.</p>
+    <div *ngIf="!data.samples.length" class="message"><i class="fa-regular fa-clock empty-icon" aria-hidden="true"></i>
+      <h3>{{'Your history starts here' | t}}</h3><p>{{'No measurements for this period yet. Configured devices are listed below; a new sample is saved every 5 minutes.' | t}}</p>
     </div>
     <ng-container *ngIf="data.samples.length || summary.rows.length">
       <div class="metrics">
-        <article><span>Equipment uptime</span><strong [class.healthy]="summary.uptime === 100" [class.unhealthy]="summary.uptime !== null && summary.uptime < 99">{{summary.uptime === null ? '—' : (summary.uptime | number:'1.2-2') + '%'}}</strong><small>Successful / measured checks</small></article>
-        <article><span>Peak players</span><strong>{{summary.peak === null ? '—' : (summary.peak | number:'1.0-0')}}</strong><small>Highest recorded online</small></article>
-        <article><span>Average online</span><strong>{{summary.average === null ? '—' : (summary.average | number:'1.0-1')}}</strong><small>Across recorded samples</small></article>
-        <article><span>Observed outages</span><strong [class.unhealthy]="summary.incidents.length > 0">{{summary.incidents.length}}</strong><small>{{summary.coverage | number:'1.0-0'}}% equipment data coverage</small></article>
+        <article><span>{{'Equipment uptime' | t}}</span><strong [class.healthy]="summary.uptime === 100" [class.unhealthy]="summary.uptime !== null && summary.uptime < 99">{{summary.uptime === null ? '—' : (summary.uptime | localNumber:'1.2-2') + '%'}}</strong><small>{{'Successful / measured checks' | t}}</small></article>
+        <article><span>{{'Peak players' | t}}</span><strong>{{summary.peak | localNumber}}</strong><small>{{'Highest recorded online' | t}}</small></article>
+        <article><span>{{'Average online' | t}}</span><strong>{{summary.average | localNumber:'1.0-1'}}</strong><small>{{'Across recorded samples' | t}}</small></article>
+        <article><span>{{'Observed outages' | t}}</span><strong [class.unhealthy]="summary.incidents.length > 0">{{summary.incidents.length | localNumber}}</strong><small>{{summary.coverage | localNumber}}% {{'equipment data coverage' | t}}</small></article>
       </div>
-
-      <article class="panel">
-        <div class="panel-heading"><div><h3>Players online</h3><p>Average per chart interval · hover a point for details</p></div><span class="badge">5 min sampling</span></div>
-        <div *ngIf="!chart.points.length" class="message">No player measurements in this period.</div>
-        <div *ngIf="chart.points.length" class="chart">
-          <div class="chart-scale"><span>{{chart.max}}</span><span>{{chart.max / 2 | number:'1.0-0'}}</span><span>0</span></div>
-          <svg viewBox="0 0 960 216" role="img" aria-label="Player activity over the selected period. Gaps indicate missing measurements.">
-            <path class="grid-line" d="M0,12 H960 M0,106 H960 M0,200 H960"/>
-            <path *ngFor="let segment of chart.segments" class="chart-line" [attr.d]="segment"/>
-            <circle *ngFor="let point of chart.points" [attr.cx]="point.x" [attr.cy]="point.y" r="3" class="chart-point">
-              <title>{{point.timestamp | date:'medium'}} · Average: {{point.average | number:'1.0-1'}} · Peak: {{point.peak}}</title>
-            </circle>
-          </svg>
-        </div>
-        <div class="axis"><span>{{data.from | date:'MMM d, HH:mm'}}</span><span>{{data.to | date:'MMM d, HH:mm'}}</span></div>
+      <article class="panel"><div class="panel-heading"><div><h3>{{'Players online' | t}}</h3><p>{{'Recorded online · hover or tap a dot for details' | t}}</p></div><span class="badge">{{'5 min sampling' | t}}</span></div>
+        <app-player-chart [data]="data"></app-player-chart>
       </article>
-
       <article class="panel">
-        <div class="panel-heading"><div><h3>Equipment stability</h3><p>Currently configured devices. Each segment represents part of the selected period.</p></div></div>
-        <div class="legend"><span><b class="online"></b>Online</span><span><b class="mixed"></b>Partial / gaps</span><span><b class="offline"></b>Offline</span><span><b class="unknown"></b>No data</span></div>
-        <p *ngIf="!summary.rows.length">No infrastructure devices configured.</p>
+        <div class="panel-heading"><div><h3>{{'Equipment stability' | t}}</h3><p>{{'Currently configured devices. Each segment represents part of the selected period.' | t}}</p></div></div>
+        <div class="legend"><span><b class="online"></b>{{'Online' | t}}</span><span><b class="mixed"></b>{{'Partial / gaps' | t}}</span><span><b class="offline"></b>{{'Offline' | t}}</span><span><b class="unknown"></b>{{'No data' | t}}</span></div>
+        <p *ngIf="!summary.rows.length">{{'No infrastructure devices configured.' | t}}</p>
         <div *ngFor="let row of summary.rows" class="equipment">
-          <div class="equipment-heading"><span><i [class]="row.icon" aria-hidden="true"></i> {{row.name}}<small *ngIf="row.enabled === false"> · Paused</small></span>
-            <span class="equipment-meta">{{row.coverage | number:'1.0-0'}}% coverage <strong [class.healthy]="row.uptime === 100" [class.unhealthy]="row.uptime !== null && row.uptime < 99">{{row.uptime === null ? '—' : (row.uptime | number:'1.2-2') + '%'}}</strong></span></div>
-          <div class="timeline" role="img" [attr.aria-label]="row.name + ': ' + (row.uptime === null ? 'No measurements' : (row.uptime | number:'1.2-2') + '% successful checks')">
+          <div class="equipment-heading"><span><i [class]="row.icon" aria-hidden="true"></i> {{row.name}}<small *ngIf="row.enabled === false"> · {{'Paused' | t}}</small></span>
+            <span class="equipment-meta">{{row.coverage | localNumber}}% {{'coverage' | t}} <strong [class.healthy]="row.uptime === 100" [class.unhealthy]="row.uptime !== null && row.uptime < 99">{{row.uptime === null ? '—' : (row.uptime | localNumber:'1.2-2') + '%'}}</strong></span></div>
+          <div class="timeline" role="img" [attr.aria-label]="row.name + ': ' + (row.uptime === null ? ('No measurements' | t) : (row.uptime | localNumber:'1.2-2') + '% ' + ('successful checks' | t))">
             <span *ngFor="let cell of row.cells" [class]="'cell ' + cell.state" [title]="cellTitle(cell)"></span>
           </div>
         </div>
-        <div class="axis"><span>{{data.from | date:'MMM d, HH:mm'}}</span><span>{{data.to | date:'MMM d, HH:mm'}}</span></div>
-        <p class="note">Uptime is based on TCP port checks, not application health. Missing measurements are excluded. Short outages between checks may not be detected.</p>
+        <div class="axis"><span>{{data.from | localDate:'short'}}</span><span>{{data.to | localDate:'short'}}</span></div>
+        <p class="note">{{'Uptime is based on TCP port checks, not application health. Missing measurements are excluded. Short outages between checks may not be detected.' | t}}</p>
       </article>
-
-      <article class="panel">
-        <div class="panel-heading"><div><h3>Outage log</h3><p>Consecutive failed checks grouped by equipment.</p></div></div>
-        <div *ngIf="!summary.incidents.length && summary.uptime !== null" class="all-clear"><i class="fa-solid fa-check" aria-hidden="true"></i> No outages detected in recorded measurements.</div>
-        <p *ngIf="summary.uptime === null" class="note">No equipment measurements in this period.</p>
-        <div class="incident" *ngFor="let incident of summary.incidents | slice:0:50">
-          <span class="incident-dot"></span><div><strong>{{incident.name}}</strong><small>{{incident.from | date:'MMM d, HH:mm'}} → {{incident.to | date:'MMM d, HH:mm'}}</small></div>
-          <span class="incident-status" [class.healthy]="incident.recovered">{{incident.recovered ? 'Recovered' : 'Recovery not observed'}}</span>
-        </div>
-        <p class="note" *ngIf="summary.incidents.length > 50">Showing the 50 most recent outages.</p>
-        <p class="note">Times show the first and last observed failure, or the first successful check after recovery. All times are local.</p>
+      <article class="panel" id="outage-log"><div class="panel-heading"><div><h3>{{'Outage log' | t}}</h3><p>{{'Consecutive failed checks grouped by equipment.' | t}}</p></div></div>
+        <app-outage-log [incidents]="summary.incidents" [hasMeasurements]="summary.uptime !== null"></app-outage-log>
       </article>
     </ng-container>
   </ng-container>

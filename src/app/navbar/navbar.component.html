@@ -8,20 +8,23 @@
     <li [class]="{'nav-item': true,
     'nav-active': this.navState.currentPath === '/'}">
       <button routerLink="/"><span class="nav-item__ico"><i class="fa-solid fa-chart-line"></i></span><span
-        class="nav-item__text">Dashboard</span></button>
+        class="nav-item__text">{{'Dashboard' | t}}</span></button>
     </li>
     <li [class]="{'nav-item': true,
     'nav-active': this.navState.currentPath === '/log'}">
       <button routerLink="/log"><span class="nav-item__ico"><i class="fa-regular fa-calendar-days"></i></span><span
-        class="nav-item__text">History</span></button>
+        class="nav-item__text">{{'History' | t}}</span></button>
     </li>
     <li [class]="{'nav-item': true,
     'nav-active': this.navState.currentPath === '/admin'}">
       <button routerLink="/admin"><span class="nav-item__ico"><i class="fa-solid fa-lock"></i></span><span
-        class="nav-item__text">Admin</span></button>
+        class="nav-item__text">{{'Admin' | t}}</span></button>
     </li>
   </ul>
   <app-theme-btn></app-theme-btn>
+  <label class="language-picker"><span><i class="fa-solid fa-language" aria-hidden="true"></i> {{'Language' | t}}</span>
+    <select [value]="i18n.preference" (change)="languageChange($event)"><option value="auto">{{'Automatic (device language)' | t}}</option><option value="en">English</option><option value="ru">Русский</option><option value="uk">Українська</option></select>
+  </label>
   <div class="social">
     <a class="btn" href="https://discord.gg/CSASRtV"><i class="socialBtn fab fa-discord svg-fa"></i></a>
     <a class="btn" href="https://twitter.com/_logicworld"><i class="socialBtn fab fa-twitter svg-fa"></i></a>
@@ -32,4 +35,3 @@
 <div (click)="this.toggleNavState()" [class]="{'nav-btn': true, 'active': this.navState.isNavActive}">
   <i class="fa-solid fa-angles-right"></i>
 </div>
-

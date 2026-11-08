@@ -1,0 +1,10 @@
+<aside *ngIf="state && (state.error || offline.length)" class="notice" [class.warning]="state.error" role="status" aria-live="polite">
+  <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+  <div><strong><ng-container *ngIf="demo">{{'Demo' | t}} · </ng-container>{{(state.error ? 'Monitoring is unavailable' : 'Infrastructure issue detected') | t}}</strong>
+    <p *ngIf="state.error">{{'Could not check the current equipment status. Previously displayed statuses may be stale.' | t}}</p>
+    <p *ngIf="!state.error">{{'Unavailable:' | t}} <b *ngFor="let name of offline; last as last">{{name}}{{last ? '' : ', '}}</b>.</p>
+    <small><ng-container *ngIf="historyPage">{{'Live status, independent of the selected history period.' | t}} </ng-container><ng-container *ngIf="state.checkedAt">{{'Last successful check:' | t}} {{state.checkedAt | localDate}}. </ng-container>{{(state.loading ? 'Refreshing…' : 'Checks refresh every minute; history is recorded every 5 minutes.') | t}}</small>
+  </div>
+  <a *ngIf="!historyPage" routerLink="/log">{{'View history' | t}} →</a>
+  <button *ngIf="historyPage" type="button" (click)="jumpToLog()">{{'Outage log' | t}} ↓</button>
+</aside>

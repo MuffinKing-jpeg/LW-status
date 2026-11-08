@@ -16,6 +16,7 @@ Lightweight, cloud-based utility for tracking state of [Logixy.net](https://logi
 - Server list and config storing at Firestore.
 - Player activity charts and equipment availability history (24 hours / 7 days / 30 days).
 - Admin UI for infrastructure and settings, with Firebase Authentication and server-enforced administrator membership.
+- Automatic English/Russian/Ukrainian UI localization with a manual language override.
 
 ### Administration
 
@@ -68,11 +69,34 @@ Uptime is the ratio of successful TCP checks to recorded checks, not a guarantee
 of application health. Failed collectors and missing periods are excluded rather
 than counted as online or offline. Coverage is shown separately. Outages are
 grouped only across consecutive observations; recovery is never inferred across
-gaps. Charts aggregate to at most 240 points and show per-bucket average and peak
-on hover. Tests: `npm test -- --watch=false --browsers=ChromeHeadless`.
+gaps. Player charts show real measured counts and timestamps. Longer periods
+select first/minimum/maximum/last observations per interval (at most 480 dots),
+preserving peaks without inventing averages or drawing across missing samples.
+Pointer/touch tooltips and keyboard arrows inspect the same points used by the
+SVG line. Dates, numbers and tooltips follow the selected UI language.
+Tests: `npm test -- --watch=false --browsers=ChromeHeadless`.
 History shows currently configured devices only: removing a device hides its
 past observations and outages from the API/UI without deleting stored samples.
 Paused devices remain visible; new devices initially show no measurements.
+
+The outage log starts with five entries, offers ten more at a time, and can be
+collapsed again. Live infrastructure alerts appear above both Dashboard and
+History, independently of the selected historical period. One shared status
+stream checks every minute and stops when neither page is visible. Monitoring
+API failures are marked as unknown/stale, not invented equipment outages; old
+unrecovered historical incidents are not assumed to still be active. Demo
+history uses explicitly labeled demo alerts without querying live infrastructure.
+
+### Interface language
+
+English (`en`), Russian (`ru`) and Ukrainian (`uk`) are supported. The app chooses
+the first supported entry in `navigator.languages` (including region variants
+such as `ru-RU`/`uk-UA`), otherwise English. The navigation menu allows choosing
+a language or returning to automatic device-language mode. Only that public
+preference is persisted in `lw-status-language`; authentication stays memory-only.
+`document.lang`, UI text, date/number formatting, chart tooltips and confirmation
+dialogs update together. User-entered device names and API model status codes
+are not translated or rewritten. Translation sources are in `src/app/i18n/`.
 
 ### GitHub Actions deployment
 

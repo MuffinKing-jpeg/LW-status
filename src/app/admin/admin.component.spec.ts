@@ -5,6 +5,9 @@ import {TestBed} from '@angular/core/testing';
 import {AdminComponent} from './admin.component';
 import {AdminService} from './admin.service';
 import {AdminConfiguration} from './admin.interface';
+import {LocalizationService} from '../i18n/localization.service';
+import {LocalizationModule} from '../i18n/localization.module';
+import {IconPickerComponent} from './icon-picker.component';
 
 const configuration = (): AdminConfiguration => ({
   user: {uid: 'admin', email: 'admin@example.net'}, revision: '1/1', audit: [],
@@ -24,7 +27,9 @@ describe('AdminComponent editing', () => {
     auth.signIn.and.resolveTo(configuration());
     auth.load.and.resolveTo(configuration());
     auth.save.and.resolveTo({ok: true});
-    component = new AdminComponent(auth);
+    const i18n = TestBed.inject(LocalizationService);
+    i18n.setPreference('en');
+    component = new AdminComponent(auth, i18n);
   });
 
   it('clears the password even when sign in fails', async () => {
@@ -81,9 +86,10 @@ describe('AdminComponent template', () => {
   it('renders the sign-in form without exposing configuration', async () => {
     const auth = jasmine.createSpyObj('AdminService', ['signIn'], {authenticated: false});
     await TestBed.configureTestingModule({
-      declarations: [AdminComponent], imports: [CommonModule, FormsModule],
+      declarations: [AdminComponent, IconPickerComponent], imports: [CommonModule, FormsModule, LocalizationModule],
       providers: [{provide: AdminService, useValue: auth}]
     }).compileComponents();
+    TestBed.inject(LocalizationService).setPreference('en');
     const fixture = TestBed.createComponent(AdminComponent);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.admin--login')).not.toBeNull();

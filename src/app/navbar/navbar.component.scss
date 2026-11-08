@@ -130,3 +130,6 @@ app-theme-btn {
 
 
 
+.language-picker { display: grid; gap: 8px; padding: 14px 20px; font-size: .8rem; }
+.language-picker select { width: 100%; min-width: 0; padding: 8px; border-radius: 6px; color: var(--text-primary); background: var(--bg-primary); border: 1px solid var(--shader-30); }
+.language-picker select:focus-visible { outline: 2px solid var(--color-online); }

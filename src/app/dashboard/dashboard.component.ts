@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiFetchService} from "../services/api-fetch.service";
+import {InfrastructureStatusService} from '../services/infrastructure-status.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,11 +10,10 @@ import {ApiFetchService} from "../services/api-fetch.service";
 export class DashboardComponent implements OnInit {
 
 
-  constructor(public apiFetch: ApiFetchService) {
+  constructor(public apiFetch: ApiFetchService, public infrastructure: InfrastructureStatusService) {
   }
 
   ngOnInit(): void {
-    this.apiFetch.loadStatusData()
     this.apiFetch.loadGameServers()
   }
 

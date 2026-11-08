@@ -1,8 +1,6 @@
 <div class="placeholder-container">
-  <h2 class="placeholder-heading">Under construction</h2>
-  <p class="placeholder-body">Page <span class="accent">{{this.currentLocation.currentPath}}</span> under construction.
-    You can reach us in social
-    networks.</p>
+  <h2 class="placeholder-heading">{{'Under construction' | t}}</h2>
+  <p class="placeholder-body">{{'Page {path} is under construction. You can reach us on social networks.' | t:{path: currentLocation.currentPath} }}</p>
   <p class="social">
     <a class="btn" href="https://discord.gg/CSASRtV"><i class="socialBtn fab fa-discord svg-fa"></i></a>
     <a class="btn" href="https://twitter.com/_logicworld"><i class="socialBtn fab fa-twitter svg-fa"></i></a>

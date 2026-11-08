@@ -1,0 +1,15 @@
+<details #picker class="picker">
+  <summary [attr.aria-disabled]="disabled" [attr.tabindex]="disabled ? -1 : 0" (click)="disabled && $event.preventDefault()" [attr.aria-label]="'Choose a Font Awesome icon' | t">
+    <i [class]="value" aria-hidden="true"></i><span>{{label | t}}</span><i class="fa-solid fa-chevron-down arrow" aria-hidden="true"></i>
+  </summary>
+  <div class="palette">
+    <input type="search" [(ngModel)]="search" [ngModelOptions]="{standalone: true}" [placeholder]="'Find an icon…' | t" [attr.aria-label]="'Search icons' | t" [disabled]="disabled">
+    <div class="icon-grid" role="group" [attr.aria-label]="'Available icons' | t">
+      <button *ngFor="let option of options" type="button" [class.selected]="selected(option.icon)" [attr.aria-pressed]="selected(option.icon)" [attr.aria-label]="option.label | t" [title]="option.label | t" (click)="choose(option.icon)" [disabled]="disabled"><i [class]="option.icon" aria-hidden="true"></i><span>{{option.label | t}}</span></button>
+    </div>
+    <p *ngIf="!options.length">{{'No matching icons.' | t}}</p>
+    <details class="custom"><summary>{{'Custom Font Awesome class' | t}}</summary>
+      <div><input [(ngModel)]="custom" [ngModelOptions]="{standalone: true}" maxlength="160" [attr.aria-label]="'Custom icon class' | t" [disabled]="disabled" placeholder="fa-solid fa-server"><button type="button" (click)="choose(custom)" [disabled]="disabled || !validCustom">{{'Apply' | t}}</button></div>
+    </details>
+  </div>
+</details>

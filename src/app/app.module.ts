@@ -12,6 +12,11 @@ import {HttpClientModule} from "@angular/common/http";
 import {HistoryComponent} from './history/history.component';
 import {FormsModule} from '@angular/forms';
 import {AdminComponent} from './admin/admin.component';
+import {IconPickerComponent} from './admin/icon-picker.component';
+import {InfrastructureAlertComponent} from './infrastructure-alert/infrastructure-alert.component';
+import {PlayerChartComponent} from './history/player-chart.component';
+import {OutageLogComponent} from './history/outage-log.component';
+import {LocalizationModule} from './i18n/localization.module';
 
 @NgModule({
   declarations: [
@@ -22,11 +27,16 @@ import {AdminComponent} from './admin/admin.component';
     NotFoundComponent,
     DashboardComponent,
     HistoryComponent,
-    AdminComponent
+    AdminComponent,
+    IconPickerComponent,
+    InfrastructureAlertComponent,
+    PlayerChartComponent,
+    OutageLogComponent
   ],
   imports: [
     HttpClientModule,
     FormsModule,
+    LocalizationModule,
     BrowserModule,
     AppRoutingModule
   ],

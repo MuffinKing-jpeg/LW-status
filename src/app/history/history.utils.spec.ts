@@ -93,18 +93,37 @@ describe('History calculations', () => {
     expect(chart.points.length).toBe(2);
     expect(chart.segments.length).toBe(2);
     expect(chart.max).toBe(20);
-    expect(chart.points[0].average).toBe(0);
+    expect(chart.points[0].online).toBe(0);
   });
 
-  it('preserves the peak while averaging a chart bucket', () => {
+  it('preserves actual values and timestamps instead of inventing bucket averages', () => {
     const chart = playerChart(response([
       {timestamp: 10, equipment: null, players: 0},
       {timestamp: 20, equipment: null, players: 100}
     ]));
-    expect(chart.points.length).toBe(1);
-    expect(chart.points[0].average).toBe(50);
-    expect(chart.points[0].peak).toBe(100);
+    expect(chart.points.length).toBe(2);
+    expect(chart.points.map(point => point.online)).toEqual([0, 100]);
+    expect(chart.points.map(point => point.timestamp)).toEqual([10, 20]);
     expect(chart.max).toBe(100);
+  });
+
+  it('uses identical coordinates for SVG paths and dots at all chart widths', () => {
+    const data = response([{timestamp: interval, equipment: null, players: 13}, {timestamp: interval * 2, equipment: null, players: 21}]);
+    for (const width of [240, 600, 960]) {
+      const chart = playerChart(data, width);
+      chart.points.forEach(point => expect(chart.segments.join(' ')).toContain(`${point.x},${point.y}`));
+      expect(chart.points[1].y).toBeLessThan(chart.points[0].y);
+      expect(chart.ticks[0].value).toBeGreaterThanOrEqual(21);
+    }
+  });
+
+  it('preserves extremes and never connects across missing observations', () => {
+    const samples: HistorySample[] = Array.from({length: 2000}, (_, index) => ({timestamp: index * interval, players: index === 70 ? 999 : 10, equipment: null}));
+    samples[900].players = null;
+    const chart = playerChart(response(samples, 2000 * interval));
+    expect(chart.points.length).toBeLessThanOrEqual(480);
+    expect(chart.points.some(point => point.online === 999 && point.timestamp === 70 * interval)).toBeTrue();
+    expect(chart.segments.length).toBe(2);
   });
 
   it('hides removed equipment and its incidents even if stale samples still contain it', () => {

@@ -1,0 +1,19 @@
+:host { display: block; min-width: 0; }
+.picker { position: relative; }
+summary, input, button { color: inherit; font: inherit; }
+.picker > summary { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border: 1px solid var(--shader-30); border-radius: 8px; background: var(--bg-primary); cursor: pointer; list-style: none; }
+summary::-webkit-details-marker { display: none; }
+summary[aria-disabled=true] { opacity: .5; cursor: not-allowed; }
+.arrow { margin-left: auto; font-size: .65rem; }
+.palette { position: absolute; right: 0; top: calc(100% + 6px); width: min(360px, calc(100vw - 60px)); z-index: 5; padding: 14px; border: 1px solid var(--shader-30); border-radius: 12px; background: var(--bg-primary); box-shadow: 0 12px 32px #0005; }
+input { width: 100%; min-width: 0; padding: 10px; border-radius: 6px; border: 1px solid var(--shader-30); background: var(--shader-70); box-sizing: border-box; }
+.icon-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; max-height: 250px; overflow-y: auto; margin: 12px 0; }
+button { background: transparent; border: 1px solid var(--shader-30); border-radius: 8px; padding: 10px 4px; cursor: pointer; }
+.icon-grid i { display: block; font-size: 1.3rem; margin-bottom: 6px; }
+.icon-grid span { font-size: .6rem; }
+button:hover, .selected { background: var(--shader-70); border-color: var(--color-online); color: var(--color-online); }
+:is(button, input, summary):focus-visible { outline: 2px solid var(--color-online); outline-offset: 2px; }
+.custom { font-size: .75rem; margin-top: 10px; }
+.custom summary { cursor: pointer; }
+.custom div { display: flex; gap: 6px; margin-top: 10px; }
+button:disabled { opacity: .5; cursor: not-allowed; }

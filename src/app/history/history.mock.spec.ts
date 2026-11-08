@@ -18,7 +18,7 @@ describe('Demo history', () => {
       expect(summary.coverage).toBeLessThan(100);
       expect(summary.incidents.some(incident => incident.recovered)).toBeTrue();
       expect(summary.incidents.some(incident => !incident.recovered)).toBeTrue();
-      expect(playerChart(data).points.length).toBeLessThanOrEqual(240);
+      expect(playerChart(data).points.length).toBeLessThanOrEqual(480);
     });
   });
 

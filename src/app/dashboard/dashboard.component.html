@@ -1,30 +1,33 @@
+<ng-container *ngIf="infrastructure.state$ | async as status">
+<div class="dashboard-notice"><app-infrastructure-alert [state]="status"></app-infrastructure-alert></div>
 <h2 class="dashboard-heading">
-  Infrastructure status
-  <span (click)="this.apiFetch.loadStatusData()">
-    <i [class]="{'fa-solid': true, 'fa-rotate': true, 'fa-spin': this.apiFetch.isStatusLoading}"></i>
-  </span>
+  {{'Infrastructure status' | t}}
+  <button type="button" class="status-refresh" (click)="infrastructure.refresh()" [disabled]="status.loading" [attr.aria-label]="'Refresh infrastructure status' | t">
+    <i class="fa-solid fa-rotate" [class.fa-spin]="status.loading"></i>
+  </button>
 </h2>
 <div class="dashboard-container">
-  <div *ngIf="this.apiFetch.isStatusLoading" class="status__loading">
+  <div *ngIf="status.loading && status.checkedAt === null" class="status__loading">
     <i class="fa-solid fa-rotate fa-spin"></i>
   </div>
-  <p *ngIf="!this.apiFetch.isStatusLoading && this.apiFetch.serverStatus.length === 0">No enabled infrastructure devices.</p>
-  <ul *ngIf="this.apiFetch.serverStatus.length !== 0" class="status-list">
-    <li *ngFor="let item of this.apiFetch.serverStatus; index as i;"
+  <p *ngIf="!status.loading && !status.error && status.devices.length === 0">{{'No enabled infrastructure devices.' | t}}</p>
+  <ul *ngIf="status.devices.length !== 0" class="status-list">
+    <li *ngFor="let item of status.devices"
         class="status">
-      <div class="status__icon {{this.apiFetch.serverStatus[i].available}}">
-        <i class="{{this.apiFetch.serverStatus[i].icon}}"></i>
+      <div class="status__icon {{item.available}}">
+        <i [class]="item.icon"></i>
       </div>
       <div class="status__info">
-        <span class="status__info__name">{{this.apiFetch.serverStatus[i].name}}</span>
+        <span class="status__info__name">{{item.name}}</span>
         <span
-          class="status__info__state {{this.apiFetch.serverStatus[i].available}}">{{this.apiFetch.serverStatus[i].available}}</span>
+          class="status__info__state {{item.available}}">{{item.available | t}}</span>
       </div>
     </li>
   </ul>
 </div>
+</ng-container>
 <h2 class="dashboard-heading">
-  Game servers statistics
+  {{'Game servers statistics' | t}}
   <span (click)="this.apiFetch.loadGameServers()">
     <i [class]="{'fa-solid': true, 'fa-rotate': true, 'fa-spin': this.apiFetch.isGamesLoading}"></i>
   </span>
@@ -36,21 +39,21 @@
   <div *ngIf="this.apiFetch.gamesBrief && !this.apiFetch.isGamesLoading" class="brief">
     <div class="brief-container">
       <div class="brief-item">
-        <span class="brief-item__name"><i class="fa-solid fa-signal"></i> Status:</span>
-        <span class="brief-item__text {{this.apiFetch.gamesBrief.status}}">{{this.apiFetch.gamesBrief.status}}</span>
+        <span class="brief-item__name"><i class="fa-solid fa-signal"></i> {{'Status' | t}}:</span>
+        <span class="brief-item__text {{this.apiFetch.gamesBrief.status}}">{{this.apiFetch.gamesBrief.status | t}}</span>
       </div>
       <div class="brief-item">
-        <span class="brief-item__name"><i class="fa-solid fa-user"></i> Online:</span>
-        <span class="brief-item__text {{this.apiFetch.gamesBrief.status}}">{{this.apiFetch.gamesBrief.online}}
-          /{{this.apiFetch.gamesBrief.slots}}</span>
+        <span class="brief-item__name"><i class="fa-solid fa-user"></i> {{'Online' | t}}:</span>
+        <span class="brief-item__text {{this.apiFetch.gamesBrief.status}}">{{this.apiFetch.gamesBrief.online | localNumber}}
+          /{{this.apiFetch.gamesBrief.slots | localNumber}}</span>
       </div>
       <div class="brief-item">
-        <span class="brief-item__name"><i class="fa-solid fa-trophy"></i> Record</span>
-        <span class="brief-item__text {{this.apiFetch.gamesBrief.status}}">{{this.apiFetch.gamesBrief.record}}</span>
+        <span class="brief-item__name"><i class="fa-solid fa-trophy"></i> {{'Record' | t}}</span>
+        <span class="brief-item__text {{this.apiFetch.gamesBrief.status}}">{{this.apiFetch.gamesBrief.record | localNumber}}</span>
       </div>
       <div class="brief-item">
-        <span class="brief-item__name"><i class="fa-solid fa-trophy"></i> Record today</span>
-        <span class="brief-item__text {{this.apiFetch.gamesBrief.status}}">{{this.apiFetch.gamesBrief.recordday}}</span>
+        <span class="brief-item__name"><i class="fa-solid fa-trophy"></i> {{'Record today' | t}}</span>
+        <span class="brief-item__text {{this.apiFetch.gamesBrief.status}}">{{this.apiFetch.gamesBrief.recordday | localNumber}}</span>
       </div>
     </div>
 
@@ -71,27 +74,27 @@
         <div class="game__info">
           <span class="game__info__name">{{this.apiFetch.gamesStatus[i]['name']}}:</span>
           <span
-            class="game__info__state {{this.apiFetch.gamesStatus[i]['status']}}">{{this.apiFetch.gamesStatus[i]['status']}}</span>
+             class="game__info__state {{this.apiFetch.gamesStatus[i]['status']}}">{{this.apiFetch.gamesStatus[i]['status'] | t}}</span>
         </div>
         <div class="game__status">
           <div *ngIf="this.apiFetch.gamesStatus[i]['status'] === 'Online'">
             <div class="game__status__stats">
-              <span>Players:</span>
+              <span>{{'Players' | t}}:</span>
               <span
-                class="{{this.apiFetch.gamesStatus[i]['status']}} game-slots">{{this.apiFetch.gamesStatus[i]['online']}}
-                /{{this.apiFetch.gamesStatus[i]['slots']}}</span>
+                 class="{{this.apiFetch.gamesStatus[i]['status']}} game-slots">{{this.apiFetch.gamesStatus[i]['online'] | localNumber}}
+                 /{{this.apiFetch.gamesStatus[i]['slots'] | localNumber}}</span>
             </div>
           </div>
           <div *ngIf="this.apiFetch.gamesStatus[i]['status'] === 'Warning'">
             <div class="game__status__stats game__status__stats--unavailable">
-              <span class="{{this.apiFetch.gamesStatus[i]['status']}}">Booting</span>
+              <span class="{{this.apiFetch.gamesStatus[i]['status']}}">{{'Booting' | t}}</span>
             </div>
           </div>
           <div
             *ngIf="this.apiFetch.gamesStatus[i]['status'] !== 'Online' &&
              this.apiFetch.gamesStatus[i]['status'] !=='Warning'">
             <div class="game__status__stats game__status__stats--unavailable">
-              <span class="{{this.apiFetch.gamesStatus[i]['status']}}">Unavailable</span>
+              <span class="{{this.apiFetch.gamesStatus[i]['status']}}">{{'Unavailable' | t}}</span>
             </div>
           </div>
           <div class="progressbar">

@@ -6,6 +6,12 @@ The `/admin` page manages the configuration currently used by monitoring:
 - `config/config`: TCP timeout (100–10000 ms) and additional configuration JSON;
 - the latest 20 successful edits in the server-written `adminAudit` collection.
 
+Icons are selected from a visual, searchable Font Awesome gallery with a live
+preview. Existing `fas` classes and common legacy aliases remain recognized.
+The advanced custom-class input is still available. Icon selection changes only
+the current draft until **Save configuration** is pressed. Language is selected
+automatically from the device, with an optional override in the navigation menu.
+
 Unknown legacy fields on each device and on the `config/servers` document are
 retained. Existing settings appear in the JSON editor (excluding timeout, which
 has its own input). This is not a general-purpose Firestore document editor:

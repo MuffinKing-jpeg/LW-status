@@ -1,0 +1,23 @@
+<div #frame class="chart-frame">
+  <p *ngIf="!chart.points.length" class="empty">{{'No player measurements in this period.' | t}}</p>
+  <svg *ngIf="chart.points.length" [attr.viewBox]="'0 0 ' + chart.width + ' ' + chart.height" preserveAspectRatio="none" height="240" tabindex="0" role="img"
+       [attr.aria-label]="'Players online. Hover or tap a point; use arrow keys to explore measurements.' | t" (pointermove)="hover($event)" (pointerdown)="hover($event)" (pointerleave)="clear()" (blur)="clear()" (keydown)="key($event)">
+    <g *ngFor="let tick of chart.ticks">
+      <line class="grid" [attr.x1]="chart.left" [attr.x2]="chart.right" [attr.y1]="tick.y" [attr.y2]="tick.y"></line>
+      <text class="axis-label" [attr.x]="chart.left - 8" [attr.y]="tick.y + 4" text-anchor="end">{{tick.value | localNumber}}</text>
+    </g>
+    <path *ngFor="let segment of chart.segments" class="line" [attr.d]="segment"></path>
+    <circle *ngFor="let point of chart.points" class="dot" [attr.cx]="point.x" [attr.cy]="point.y" r="2.5"></circle>
+    <ng-container *ngIf="active as point">
+      <line class="guide" [attr.x1]="point.x" [attr.x2]="point.x" [attr.y1]="chart.top" [attr.y2]="chart.bottom"></line>
+      <circle class="active" [attr.cx]="point.x" [attr.cy]="point.y" r="5"></circle>
+    </ng-container>
+    <text class="axis-label" [attr.x]="chart.left" y="232">{{from | localDate:'short'}}</text>
+    <text *ngIf="chart.width > 540" class="axis-label" [attr.x]="(chart.left + chart.right) / 2" y="232" text-anchor="middle">{{(from + to) / 2 | localDate:'short'}}</text>
+    <text class="axis-label" [attr.x]="chart.right" y="232" text-anchor="end">{{to | localDate:'short'}}</text>
+  </svg>
+  <div *ngIf="active as point" class="tooltip" role="status" [class.below]="point.y < 76" [style.left.px]="tooltipLeft" [style.top.px]="point.y < 76 ? point.y + 18 : point.y - 12">
+    <strong>{{'Online' | t}}: {{point.online | localNumber}}</strong><span>{{point.timestamp | localDate}}</span>
+  </div>
+  <p *ngIf="chart.downsampled" class="hint">{{'Dots are actual measurements. Peaks and lows are preserved for longer periods.' | t}}</p>
+</div>

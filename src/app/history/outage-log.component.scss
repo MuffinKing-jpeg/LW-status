@@ -1,0 +1,10 @@
+.incident { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--shader-30); font-size: .85rem; }
+.incident small { display: block; margin-top: 6px; opacity: .7; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-offline); flex-shrink: 0; }
+.status { margin-left: auto; font-size: .75rem; text-align: right; }
+.healthy, .all-clear { color: var(--color-online); }
+.note { margin: 20px 0 0; font-size: .72rem; opacity: .7; line-height: 1.6; }
+.controls { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 18px; font-size: .8rem; }
+.controls span { margin-right: auto; opacity: .7; }
+button { color: inherit; font: inherit; background: var(--shader-30); border: 1px solid var(--shader-30); border-radius: 8px; padding: 8px 12px; cursor: pointer; }
+button:focus-visible { outline: 2px solid var(--color-online); outline-offset: 2px; }
