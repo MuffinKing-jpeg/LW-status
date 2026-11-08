@@ -13,6 +13,9 @@ export class IconPickerComponent implements OnChanges {
   constructor(private host: ElementRef<HTMLElement>, private i18n: LocalizationService) {}
 
   ngOnChanges(): void { this.custom = this.value; if (this.disabled) this.close(); }
+  // Angular cancels native activation when a template handler returns false.
+  // A void handler preserves <summary>'s mouse, keyboard and touch behavior.
+  onSummaryClick(event: MouseEvent): void { if (this.disabled) event.preventDefault(); }
   get label(): string { return iconOptions.find(option => this.selected(option.icon))?.label || 'Custom icon'; }
   get options() { const query = this.search.trim().toLowerCase(); return iconOptions.filter(option => `${option.label} ${this.i18n.translate(option.label)} ${option.icon} ${option.keywords}`.toLowerCase().includes(query)); }
   get validCustom(): boolean { return /^[a-z\d -]{1,160}$/i.test(this.custom.trim()); }
