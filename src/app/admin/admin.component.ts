@@ -16,6 +16,7 @@ export class AdminComponent implements OnInit {
   notice = '';
   search = '';
   timeout = 1000;
+  checkAttempts = 3;
   extraSettings = '{}';
   configuration?: AdminConfiguration;
   servers: MonitoredDevice[] = [];
@@ -102,7 +103,7 @@ export class AdminComponent implements OnInit {
     this.busy = true;
     try {
       await this.auth.save({revision: this.configuration.revision, servers: this.servers,
-        settings: {...extras, timeout: Number(this.timeout)}});
+        settings: {...extras, timeout: Number(this.timeout), checkAttempts: Number(this.checkAttempts)}});
       this.dirty = false;
       try {
         this.accept(await this.auth.load());
@@ -119,7 +120,8 @@ export class AdminComponent implements OnInit {
     this.configuration = configuration;
     this.servers = configuration.servers.map(server => ({...server}));
     this.timeout = configuration.settings.timeout;
-    const {timeout, ...extras} = configuration.settings;
+    this.checkAttempts = configuration.settings.checkAttempts ?? 3;
+    const {timeout, checkAttempts, ...extras} = configuration.settings;
     this.extraSettings = JSON.stringify(extras, null, 2);
     this.dirty = false;
   }

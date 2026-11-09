@@ -37,7 +37,9 @@
       </article>
       <article class="panel"><h3>{{'Monitoring settings' | t}}</h3><label class="timeout">{{'Connection timeout (ms)' | t}}<input type="number" name="timeout" [(ngModel)]="timeout" (ngModelChange)="markDirty()" required min="100" max="10000" step="1"></label>
         <p class="hint">{{'100–10000 ms. History is collected every 5 minutes; changing this interval requires redeploying the scheduler.' | t}}</p>
-        <details><summary>{{'Additional configuration fields (JSON)' | t}}</summary><p class="hint">{{'Other fields from config/config. The timeout field is managed above. Do not store passwords or private keys here.' | t}}</p>
+        <label class="timeout">{{'Connection attempts' | t}}<input type="number" name="checkAttempts" [(ngModel)]="checkAttempts" (ngModelChange)="markDirty()" required min="1" max="5" step="1"></label>
+        <p class="hint">{{'1–5 attempts, including the first. Successful checks stop immediately; failed attempts wait 0.5 seconds before retrying.' | t}}</p>
+        <details><summary>{{'Additional configuration fields (JSON)' | t}}</summary><p class="hint">{{'Other fields from config/config. Timeout and attempts are managed above. Do not store passwords or private keys here.' | t}}</p>
           <textarea name="extras" [(ngModel)]="extraSettings" (ngModelChange)="markDirty()" rows="7" spellcheck="false" [attr.aria-label]="'Additional configuration JSON' | t"></textarea>
         </details>
       </article>

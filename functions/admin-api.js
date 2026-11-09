@@ -66,7 +66,7 @@ const createAdminHandler = ({db, auth, serverTimestamp, logger}) => {
             .orderBy('timestamp', 'desc').limit(20).get();
         response.json({
           user: {uid: user.uid, email: user.email || ''},
-          settings: {timeout: 1000, ...(config.data() || {})},
+          settings: {timeout: 1000, checkAttempts: 3, ...(config.data() || {})},
           servers: ((servers.data() || {}).servers || []).map(editableServer),
           revision: revisionOf(config, servers),
           audit: events.docs.map((doc) => {

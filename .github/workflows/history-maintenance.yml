@@ -1,0 +1,67 @@
+name: Review short history outages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - functions/history-corrections.js
+      - functions/scripts/clean-short-outages.js
+      - .github/workflows/history-maintenance.yml
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Preview is read-only; apply requires explicit confirmation
+        type: choice
+        options: [preview, apply, restore]
+        default: preview
+      days:
+        description: Days to inspect (1–30, ignored for restore)
+        default: '30'
+      confirmation:
+        description: Apply EXCLUDE_SINGLE_FAILURES; restore RESTORE_SINGLE_FAILURES
+        default: ''
+      run_id:
+        description: Backup run ID (restore only)
+        default: ''
+
+permissions:
+  contents: read
+concurrency:
+  group: history-maintenance-lw-status
+  cancel-in-progress: false
+
+jobs:
+  review_history:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GOOGLE_CLOUD_PROJECT: lw-status
+      FIREBASE_PROJECT_ID: lw-status
+      HISTORY_MODE: ${{ inputs.mode || 'preview' }}
+      HISTORY_DAYS: ${{ inputs.days || '30' }}
+      HISTORY_CONFIRMATION: ${{ inputs.confirmation }}
+      HISTORY_RUN_ID: ${{ inputs.run_id }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: functions/package-lock.json
+      - name: Install trusted operator dependencies
+        run: npm ci --prefix functions
+      - name: Test correction safeguards
+        run: npm test --prefix functions
+      - name: Authenticate to the project
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_LW_STATUS }}
+          project_id: lw-status
+      - name: Show operator identity (no secrets)
+        run: node .github/scripts/deploy-identity.cjs
+      - name: Review or apply the explicitly selected operation
+        run: |
+          args=("$HISTORY_MODE" --days "$HISTORY_DAYS" --confirm "$HISTORY_CONFIRMATION")
+          if [ -n "$HISTORY_RUN_ID" ]; then args+=(--run-id "$HISTORY_RUN_ID"); fi
+          node functions/scripts/clean-short-outages.js "${args[@]}"

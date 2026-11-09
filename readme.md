@@ -9,7 +9,7 @@ Lightweight, cloud-based utility for tracking state of [Logixy.net](https://logi
 ### Current developed features
 
 - API for checking server online stats;
-- Server ping check;
+- TCP-port availability checks with configurable retries (1–5 attempts);
 - Dark/snow mode;
 - Reload stats button;
 - Supporting mobile devices;
@@ -78,6 +78,12 @@ Tests: `npm test -- --watch=false --browsers=ChromeHeadless`.
 History shows currently configured devices only: removing a device hides its
 past observations and outages from the API/UI without deleting stored samples.
 Paused devices remain visible; new devices initially show no measurements.
+
+The admin page configures per-attempt TCP timeout and total attempts (default 3).
+Failed attempts wait 500 ms before retrying; successful checks stop immediately.
+Checks originate in `us-central1`, not the visitor's network. Historical isolated
+failures can be reviewed and reversibly excluded as gaps, never rewritten as
+successes; see [operator safeguards and preview/restore](docs/admin.md#reviewing-isolated-historical-failures).
 
 The outage log starts with five entries, offers ten more at a time, and can be
 collapsed again. Live infrastructure alerts appear above both Dashboard and

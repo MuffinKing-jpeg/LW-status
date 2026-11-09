@@ -9,10 +9,12 @@ const historyForInventory = (samples, servers) => {
   const currentIds = new Set(equipment.map((server) => server.id));
   return {
     equipment,
+    excludedChecks: samples.reduce((count, sample) => count + (sample.equipment || [])
+        .filter((server) => currentIds.has(server.id) && server.excludedFromStats === true).length, 0),
     samples: samples.map((sample) => ({
       ...sample,
       equipment: sample.equipment === null ? null :
-        sample.equipment.filter((server) => currentIds.has(server.id)),
+        sample.equipment.filter((server) => currentIds.has(server.id) && server.excludedFromStats !== true),
     })),
   };
 };

@@ -53,6 +53,10 @@ const validateConfiguration = (body) => {
       body.settings.timeout < 100 || body.settings.timeout > 10000) {
     throw httpError(400, 'Timeout must be an integer from 100 to 10000 ms');
   }
+  if (body.settings.checkAttempts !== undefined && (!Number.isInteger(body.settings.checkAttempts) ||
+      body.settings.checkAttempts < 1 || body.settings.checkAttempts > 5)) {
+    throw httpError(400, 'Connection attempts must be an integer from 1 to 5');
+  }
   const ids = new Set();
   const endpoints = new Set();
   body.servers.forEach((server) => {
@@ -72,7 +76,7 @@ const validateConfiguration = (body) => {
   });
   return {
     revision: body.revision,
-    settings: body.settings,
+    settings: {...body.settings, checkAttempts: body.settings.checkAttempts === undefined ? 3 : body.settings.checkAttempts},
     servers: body.servers.map((server) => ({...editableServer(server), name: server.name.trim()})),
   };
 };

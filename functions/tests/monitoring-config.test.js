@@ -77,3 +77,14 @@ test('normalizes legacy string ports without changing their history seed', () =>
   assert.equal(server.port, 443);
   assert.equal(server.id, 'example.net:443');
 });
+test('validates configurable attempt counts and defaults legacy settings to three', () => {
+  assert.equal(validateConfiguration(configuration()).settings.checkAttempts, 3);
+  for (const attempts of [1, 5]) {
+    const body = configuration(); body.settings.checkAttempts = attempts;
+    assert.equal(validateConfiguration(body).settings.checkAttempts, attempts);
+  }
+  for (const attempts of [0, 6, 1.5, '3', null]) {
+    const body = configuration(); body.settings.checkAttempts = attempts;
+    assert.throws(() => validateConfiguration(body), {status: 400});
+  }
+});

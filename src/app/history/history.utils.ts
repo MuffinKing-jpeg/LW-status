@@ -35,7 +35,7 @@ export function summarizeHistory(data: HistoryResponse) {
     }));
     const counts = cells.map(() => ({online: 0, total: 0}));
     data.samples.forEach(sample => {
-      const status = sample.equipment?.find(item => item.id === server.id);
+      const status = sample.equipment?.find(item => item.id === server.id && item.excludedFromStats !== true);
       // Do not join outages across unobserved intervals.
       if (active && (!status || sample.timestamp - previous > data.interval * 1.5)) {
         incidents.push(active);

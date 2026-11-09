@@ -154,4 +154,17 @@ describe('History calculations', () => {
     expect(row.enabled).toBeFalse();
     expect(row.uptime).toBe(100);
   });
+  it('does not include operator-excluded failures in outage or uptime statistics', () => {
+    const first = equipment('Online');
+    const failed = equipment('Offline').map(device => ({...device, excludedFromStats: true}));
+    const result = summarizeHistory(response([
+      {timestamp: interval, equipment: first, players: 5},
+      {timestamp: interval * 2, equipment: failed, players: 7},
+      {timestamp: interval * 3, equipment: first, players: 9}
+    ]));
+    expect(result.incidents.length).toBe(0);
+    expect(result.uptime).toBe(100);
+    expect(result.rows[0].coverage).toBe(20);
+    expect(result.peak).toBe(9);
+  });
 });

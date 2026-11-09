@@ -121,7 +121,7 @@ test('saves atomically, retains unknown device fields and adds an audit record',
   assert.equal(state.data.get('config/config').preserved, 'setting');
   const event = state.writes.find(([path]) => path.startsWith('adminAudit/'))[1];
   assert.equal(event.uid, 'uid');
-  assert.deepEqual(event.settingsKeys, ['timeout']);
+  assert.deepEqual(event.settingsKeys, ['timeout', 'checkAttempts']);
   assert.deepEqual(event.changedDevices, ['server.example.net:443']);
 });
 

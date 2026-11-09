@@ -18,5 +18,6 @@ service cloud.firestore {
     match /adminAudit/{document=**} { allow read, write: if false; }
     match /adminAccessAudit/{document=**} { allow read, write: if false; }
     match /history/{document=**} { allow read, write: if false; }
+    match /historyCorrections/{document=**} { allow read, write: if false; }
   }
 }

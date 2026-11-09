@@ -18,7 +18,7 @@ export interface AdminAuditEvent {
 
 export interface AdminConfiguration {
   user: {uid: string; email: string};
-  settings: {timeout: number; [key: string]: unknown};
+  settings: {timeout: number; checkAttempts?: number; [key: string]: unknown};
   servers: MonitoredDevice[];
   revision: string;
   audit: AdminAuditEvent[];

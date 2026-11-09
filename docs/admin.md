@@ -3,7 +3,8 @@
 The `/admin` page manages the configuration currently used by monitoring:
 
 - `config/servers`: add, rename, edit host/port/icon, pause and remove equipment;
-- `config/config`: TCP timeout (100–10000 ms) and additional configuration JSON;
+- `config/config`: TCP timeout (100–10000 ms), total connection attempts (1–5,
+  default 3), and additional configuration JSON;
 - the latest 20 successful edits in the server-written `adminAudit` collection.
 
 Icons are selected from a visual, searchable Font Awesome gallery with a live
@@ -13,8 +14,8 @@ the current draft until **Save configuration** is pressed. Language is selected
 automatically from the device, with an optional override in the navigation menu.
 
 Unknown legacy fields on each device and on the `config/servers` document are
-retained. Existing settings appear in the JSON editor (excluding timeout, which
-has its own input). This is not a general-purpose Firestore document editor:
+retained. Existing settings appear in the JSON editor (excluding timeout and
+attempts, which have their own inputs). This is not a general-purpose Firestore document editor:
 news, raw history, admin membership and unrelated collections are not editable.
 
 ## Authentication and permissions
@@ -149,6 +150,50 @@ point local development at a production write endpoint unintentionally.
   them. Search only filters the view; hidden devices are still saved.
 - Audit entries identify the authenticated author, changed device IDs and settings
   keys, without recording passwords, tokens or full configuration values.
+
+## TCP checks and retries
+
+Checks connect to the configured TCP port from `us-central1`; they are not ICMP,
+UDP or application-health checks. `checkAttempts` includes the initial attempt.
+Only failed connections are retried, with a 500 ms pause; success stops retries
+immediately. Timeout applies to each attempt, including DNS. Existing configs
+without `checkAttempts` use 3 without changing the saved timeout.
+Samples retain `attemptsUsed` and safe `failureReason` codes (for example
+`ETIMEDOUT`, `ECONNREFUSED`, `ENOTFOUND`). Final failures are logged without hosts.
+Status and history collection functions allow 90 seconds; the status client
+allows 75 seconds for up to five 10-second attempts plus pauses and overhead.
+
+## Reviewing isolated historical failures
+
+A short outage can be real. Never replace it with a successful measurement.
+The trusted operator tool defaults to a **read-only preview** over 30 days.
+It selects one legacy/single-attempt Offline observation bracketed by Online
+observations, each adjacent interval at most five minutes. Gaps, ongoing or
+consecutive failures, confirmed multi-attempt failures and removed devices are
+not selected. Five-minute sampling cannot prove the actual outage duration.
+
+Use Actions → **Review short history outages** on `main`. Pushes changing this
+tool run preview only. Review candidate counts before manually selecting `apply`
+with confirmation `EXCLUDE_SINGLE_FAILURES`. Record the reported backup run ID.
+Alternatively, with trusted Application Default Credentials and Node 22:
+
+```sh
+export GOOGLE_CLOUD_PROJECT=lw-status
+node functions/scripts/clean-short-outages.js preview --days 30
+# Only after reviewing the preview:
+node functions/scripts/clean-short-outages.js apply --days 30 --confirm EXCLUDE_SINGLE_FAILURES
+node functions/scripts/clean-short-outages.js restore --run-id BACKUP_RUN_ID --confirm RESTORE_SINGLE_FAILURES
+```
+
+Apply rechecks neighbors transactionally and atomically saves original equipment
+arrays under private `historyCorrections/<runId>/samples/<sampleId>`. It marks
+selected observations `excludedFromStats`, leaving Offline, player measurements
+and other devices unchanged. The API/UI treat exclusions as gaps and disclose
+their count; they do not count them as successes. Restore requires an unchanged
+equipment fingerprint and never recreates expired/deleted samples. Backups are
+private and retained separately from normal 30-day history expiration. Partial
+runs remain restorable using the reported run ID. The workflow uses the existing
+Firebase secret and requires Firestore read/write IAM permissions for changes.
 
 ## Checks
 

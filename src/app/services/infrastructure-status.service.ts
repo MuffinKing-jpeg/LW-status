@@ -24,7 +24,8 @@ export class InfrastructureStatusService {
   private readonly refreshRequests = new Subject<void>();
   readonly state$ = merge(timer(0, 60000), this.refreshRequests).pipe(
     exhaustMap(() => this.http.get<ServerStatusInterface[]>(environment.API_URL, {params: {_check: Date.now()}}).pipe(
-      timeout(15000),
+      // Up to five 10-second attempts, four pauses and request overhead.
+      timeout(75000),
       map(devices => {
         if (!Array.isArray(devices) || devices.some(device => !device || typeof device.name !== 'string' ||
           typeof device.icon !== 'string' || !['Online', 'Offline'].includes(device.available))) throw new Error('Invalid monitoring response');

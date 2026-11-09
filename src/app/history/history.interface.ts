@@ -6,6 +6,7 @@ export interface EquipmentInfo {
 }
 
 export interface EquipmentSample extends EquipmentInfo {
+  excludedFromStats?: boolean;
   available: 'Online' | 'Offline';
   latency: number | null;
 }
@@ -22,5 +23,6 @@ export interface HistoryResponse {
   interval: number;
   // Optional during rolling deployment: old APIs only supplied samples.
   equipment?: EquipmentInfo[];
+  excludedChecks?: number;
   samples: HistorySample[];
 }

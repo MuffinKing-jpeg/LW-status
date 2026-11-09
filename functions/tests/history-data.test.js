@@ -66,3 +66,13 @@ test('inventory metadata never exposes host, port or internal device IDs', () =>
 test('missing inventory is a service error, not a false empty device list', () => {
   assert.throws(() => historyForInventory([], undefined), /unavailable/);
 });
+test('operator-excluded failures become gaps, not successful equipment checks', () => {
+  const samples = [{timestamp: 1, players: 5, equipment: [
+    {...observation(router, 'Offline'), excludedFromStats: true}, observation(deleted),
+  ]}];
+  const result = historyForInventory(samples, [router, deleted]);
+  assert.equal(result.excludedChecks, 1);
+  assert.deepEqual(result.samples[0].equipment.map(device => device.id), [publicDevice(deleted).id]);
+  assert.equal(result.samples[0].players, 5);
+  assert.equal(samples[0].equipment[0].available, 'Offline');
+});

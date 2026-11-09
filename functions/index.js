@@ -1,10 +1,10 @@
 const functions = require('firebase-functions/v1');
-const isPortReachable = require('is-port-reachable');
 const admin = require('firebase-admin');
 const https = require('https');
 const {createAdminHandler} = require('./admin-api');
 const {publicDevice} = require('./monitoring-config');
 const {historyForInventory} = require('./history-data');
+const {checkTcpWithRetries} = require('./tcp-monitor');
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -27,14 +27,13 @@ const checkServers = async () => {
     throw new Error('No equipment configured');
   }
   return Promise.all(servers.filter((server) => server.enabled !== false).map(async (server) => {
-    const started = Date.now();
-    const available = await isPortReachable(server.port, {
-      host: server.host, timeout: config.timeout || 1000,
+    const result = await checkTcpWithRetries(server, config);
+    if (result.available === 'Offline') functions.logger.warn('Equipment unreachable after TCP retries', {
+      id: publicDevice(server).id, attempts: result.attemptsUsed, reason: result.failureReason,
     });
     return {
       ...publicDevice(server),
-      available: available ? 'Online' : 'Offline',
-      latency: available ? Date.now() - started : null,
+      ...result,
     };
   }));
 };
@@ -69,7 +68,7 @@ const checkPlayers = () => new Promise((resolve, reject) => {
   request.on('error', reject);
 });
 
-exports.status = functions.https.onRequest(async (request, response) => {
+exports.status = functions.runWith({timeoutSeconds: 90}).https.onRequest(async (request, response) => {
   response.set('Access-Control-Allow-Origin', '*');
   try {
     response.send(await checkServers());
@@ -79,7 +78,7 @@ exports.status = functions.https.onRequest(async (request, response) => {
   }
 });
 
-exports.collectHistory = functions.pubsub.schedule('every 5 minutes')
+exports.collectHistory = functions.runWith({timeoutSeconds: 90}).pubsub.schedule('every 5 minutes')
     .onRun(async (context) => {
       const timestamp = Math.floor(
           (context.timestamp ? Date.parse(context.timestamp) : Date.now()) /

@@ -67,6 +67,14 @@ describe('AdminComponent editing', () => {
     expect(auth.save).not.toHaveBeenCalled();
     expect(component.error).toContain('JSON object');
   });
+  it('defaults and saves the configurable connection-attempt count', async () => {
+    await component.signIn();
+    expect(component.checkAttempts).toBe(3);
+    component.checkAttempts = 5;
+    await component.save();
+    expect(auth.save.calls.mostRecent().args[0].settings.checkAttempts).toBe(5);
+    expect(JSON.parse(component.extraSettings)['checkAttempts']).toBeUndefined();
+  });
 
   it('confirms before discarding unsaved changes', () => {
     component.dirty = true;
