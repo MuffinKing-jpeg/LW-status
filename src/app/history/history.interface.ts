@@ -7,6 +7,7 @@ export interface EquipmentInfo {
 
 export interface EquipmentSample extends EquipmentInfo {
   excludedFromStats?: boolean;
+  correction?: {reason: string; originalAvailable: 'Offline'; runId: string; correctedAt: number};
   available: 'Online' | 'Offline';
   latency: number | null;
 }

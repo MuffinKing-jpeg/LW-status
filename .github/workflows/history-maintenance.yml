@@ -12,7 +12,7 @@ on:
       mode:
         description: Preview is read-only; apply requires explicit confirmation
         type: choice
-        options: [preview, apply, restore]
+        options: [preview, apply, mark-online, restore]
         default: preview
       days:
         description: Days to inspect (1–30, ignored for restore)
@@ -22,6 +22,12 @@ on:
         default: ''
       run_id:
         description: Backup run ID (restore only)
+        default: ''
+      to:
+        description: Reviewed cutoff timestamp in milliseconds (required for mark-online)
+        default: ''
+      expected_checks:
+        description: Reviewed candidate count (required for mark-online)
         default: ''
 
 permissions:
@@ -44,6 +50,15 @@ jobs:
       HISTORY_RUN_ID: ${{ inputs.run_id }}
     steps:
       - uses: actions/checkout@v4
+      # One explicitly authorized correction, restricted to the original preview
+      # ending at 16:40 UTC. Every other push remains read-only.
+      - name: Select the user-authorized historical correction
+        if: github.event_name == 'push' && github.event.head_commit.message == 'Apply requested historical Online corrections (2026-11-09)'
+        run: |
+          echo 'HISTORY_MODE=mark-online' >> "$GITHUB_ENV"
+          echo 'HISTORY_CONFIRMATION=MARK_REVIEWED_FAILURES_ONLINE' >> "$GITHUB_ENV"
+          echo 'HISTORY_TO=1794242400000' >> "$GITHUB_ENV"
+          echo 'HISTORY_EXPECTED_CHECKS=30' >> "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -61,7 +76,14 @@ jobs:
       - name: Show operator identity (no secrets)
         run: node .github/scripts/deploy-identity.cjs
       - name: Review or apply the explicitly selected operation
+        env:
+          INPUT_TO: ${{ inputs.to }}
+          INPUT_EXPECTED_CHECKS: ${{ inputs.expected_checks }}
         run: |
           args=("$HISTORY_MODE" --days "$HISTORY_DAYS" --confirm "$HISTORY_CONFIRMATION")
           if [ -n "$HISTORY_RUN_ID" ]; then args+=(--run-id "$HISTORY_RUN_ID"); fi
+          cutoff="${HISTORY_TO:-$INPUT_TO}"
+          expected="${HISTORY_EXPECTED_CHECKS:-$INPUT_EXPECTED_CHECKS}"
+          if [ -n "$cutoff" ]; then args+=(--to "$cutoff"); fi
+          if [ -n "$expected" ]; then args+=(--expected-checks "$expected"); fi
           node functions/scripts/clean-short-outages.js "${args[@]}"

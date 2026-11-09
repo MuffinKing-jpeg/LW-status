@@ -24,6 +24,7 @@ export function summarizeHistory(data: HistoryResponse) {
   const incidents: Incident[] = [];
   let totalChecks = 0;
   let onlineChecks = 0;
+  let correctedChecks = 0;
   const rows = Array.from(equipment.values()).map(server => {
     let checked = 0;
     let online = 0;
@@ -43,6 +44,7 @@ export function summarizeHistory(data: HistoryResponse) {
       }
       if (!status) return;
       checked++;
+      if (status.correction?.reason === 'operator-requested-online') correctedChecks++;
       const isOnline = status.available === 'Online';
       if (isOnline) online++;
       const index = Math.min(59, Math.max(0,
@@ -76,6 +78,7 @@ export function summarizeHistory(data: HistoryResponse) {
   });
   const players = data.samples.filter(sample => sample.players !== null);
   return {
+    correctedChecks,
     rows, incidents: incidents.sort((a, b) => b.from - a.from),
     uptime: totalChecks ? onlineChecks / totalChecks * 100 : null,
     peak: players.length ? Math.max(...players.map(sample => sample.players!)) : null,

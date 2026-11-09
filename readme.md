@@ -82,8 +82,9 @@ Paused devices remain visible; new devices initially show no measurements.
 The admin page configures per-attempt TCP timeout and total attempts (default 3).
 Failed attempts wait 500 ms before retrying; successful checks stop immediately.
 Checks originate in `us-central1`, not the visitor's network. Historical isolated
-failures can be reviewed and reversibly excluded as gaps, never rewritten as
-successes; see [operator safeguards and preview/restore](docs/admin.md#reviewing-isolated-historical-failures).
+failures can be reviewed and reversibly excluded as gaps, or explicitly marked
+Online as disclosed administrative corrections with originals retained;
+see [operator safeguards and preview/restore](docs/admin.md#reviewing-isolated-historical-failures).
 
 The outage log starts with five entries, offers ten more at a time, and can be
 collapsed again. Live infrastructure alerts appear above both Dashboard and

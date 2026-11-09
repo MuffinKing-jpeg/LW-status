@@ -10,6 +10,14 @@ const response = (samples: HistorySample[], to = interval * 10): HistoryResponse
 });
 
 describe('History calculations', () => {
+  it('counts explicitly corrected Online observations and discloses their number', () => {
+    const corrected = equipment('Online').map(device => ({...device,
+      correction: {reason: 'operator-requested-online', originalAvailable: 'Offline' as const, runId: 'run', correctedAt: 1}}));
+    const result = summarizeHistory(response([{timestamp: interval, equipment: corrected, players: 5}]));
+    expect(result.uptime).toBe(100);
+    expect(result.correctedChecks).toBe(1);
+    expect(result.incidents.length).toBe(0);
+  });
   it('does not treat absent measurements as zero players or successful checks', () => {
     const result = summarizeHistory(response([
       {timestamp: interval, equipment: null, players: null}

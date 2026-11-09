@@ -63,6 +63,30 @@ test('rechecks neighbors transactionally instead of applying stale preview assum
   assert.equal(await applyCorrection(db, 'test-run', entry), 0);
   assert.equal(db.data.has('historyCorrections/test-run/samples/two'), false);
 });
+test('explicit Online correction preserves original evidence and is reversible', async () => {
+  const source = records();
+  source[1].data.equipment[0].failureReason = 'ETIMEDOUT';
+  source[1].data.equipment.push({id: 'other', available: 'Offline', latency: null});
+  const db = database(source);
+  const entry = planCorrections(source, ids)[0];
+  assert.equal(await applyCorrection(db, 'online-run', entry, 123, 'mark-online'), 1);
+  const current = db.data.get('history/two');
+  assert.equal(current.equipment[0].available, 'Online');
+  assert.equal(current.equipment[0].latency, null);
+  assert.equal(current.equipment[0].failureReason, 'ETIMEDOUT');
+  assert.equal(current.equipment[0].correction.originalAvailable, 'Offline');
+  assert.equal(current.equipment[0].correction.reason, 'operator-requested-online');
+  assert.deepEqual(current.equipment[1], source[1].data.equipment[1]);
+  assert.equal(current.players, 17);
+  assert.equal(await applyCorrection(db, 'online-run', entry, 123, 'mark-online'), 0);
+  assert.equal(await restoreCorrection(db, 'online-run', 'two'), 1);
+  assert.deepEqual(db.data.get('history/two'), source[1].data);
+});
+test('manually corrected neighbors cannot justify additional corrections', () => {
+  const source = records();
+  source[0].data.equipment[0].correction = {reason: 'operator-requested-online'};
+  assert.equal(planCorrections(source, ids).length, 0);
+});
 test('restoration does not overwrite subsequent modifications or recreate expired samples', async () => {
   const source = records();
   const db = database(source);
@@ -81,4 +105,7 @@ test('maintenance is read-only by default and requires explicit confirmation for
   assert.equal(parseOptions(['apply', '--confirm', 'EXCLUDE_SINGLE_FAILURES']).mode, 'apply');
   assert.throws(() => parseOptions(['preview', '--days', '31']));
   assert.throws(() => parseOptions(['restore', '--run-id', '../../config', '--confirm', 'RESTORE_SINGLE_FAILURES']));
+  assert.throws(() => parseOptions(['mark-online']), /requires/);
+  assert.throws(() => parseOptions(['mark-online', '--confirm', 'MARK_REVIEWED_FAILURES_ONLINE']), /requires/);
+  assert.equal(parseOptions(['mark-online', '--confirm', 'MARK_REVIEWED_FAILURES_ONLINE', '--to', '1794242400000', '--expected-checks', '30']).expectedChecks, 30);
 });

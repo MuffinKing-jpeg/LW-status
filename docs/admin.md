@@ -165,7 +165,7 @@ allows 75 seconds for up to five 10-second attempts plus pauses and overhead.
 
 ## Reviewing isolated historical failures
 
-A short outage can be real. Never replace it with a successful measurement.
+A short outage can be real. An administrative override is not a measured success.
 The trusted operator tool defaults to a **read-only preview** over 30 days.
 It selects one legacy/single-attempt Offline observation bracketed by Online
 observations, each adjacent interval at most five minutes. Gaps, ongoing or
@@ -185,11 +185,23 @@ node functions/scripts/clean-short-outages.js apply --days 30 --confirm EXCLUDE_
 node functions/scripts/clean-short-outages.js restore --run-id BACKUP_RUN_ID --confirm RESTORE_SINGLE_FAILURES
 ```
 
-Apply rechecks neighbors transactionally and atomically saves original equipment
+The default `apply` mode excludes observations. An explicit `mark-online` mode
+is available only with confirmation `MARK_REVIEWED_FAILURES_ONLINE`, a fixed
+`--to` cutoff timestamp in milliseconds, and `--expected-checks` matching the
+reviewed preview. It marks selected observations Online with `correction`
+metadata retaining the original Offline, leaves latency null and diagnostics
+unchanged, and counts them in uptime. The UI discloses the number of administrative
+overrides. Corrected observations cannot be used as evidence for further cleanup.
+For the user-authorized 2026-11-09 correction only, the exact commit message
+`Apply requested historical Online corrections (2026-11-09)` selects this mode
+on push, bounded to the original 16:40 UTC cutoff and exactly 30 candidates.
+Other pushes remain preview-only; a count mismatch refuses all changes.
+
+Both modes recheck neighbors transactionally and atomically save original equipment
 arrays under private `historyCorrections/<runId>/samples/<sampleId>`. It marks
-selected observations `excludedFromStats`, leaving Offline, player measurements
+selected observations `excludedFromStats` in exclusion mode, leaving Offline, player measurements
 and other devices unchanged. The API/UI treat exclusions as gaps and disclose
-their count; they do not count them as successes. Restore requires an unchanged
+their count; excluded observations do not count as successes. Restore requires an unchanged
 equipment fingerprint and never recreates expired/deleted samples. Backups are
 private and retained separately from normal 30-day history expiration. Partial
 runs remain restorable using the reported run ID. The workflow uses the existing

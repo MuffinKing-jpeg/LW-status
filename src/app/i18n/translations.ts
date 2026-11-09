@@ -1,4 +1,5 @@
 const rows = [
+  ['{count} isolated failures were manually marked Online. These are administrative corrections, not measured successes.', 'Одиночные сбои вручную отмечены Online: {count}. Это ручные корректировки, а не измеренные успешные подключения.', 'Поодинокі збої вручну позначено Online: {count}. Це ручні коригування, а не виміряні успішні підключення.'],
   ['{count} isolated failed checks were excluded after operator review. They are gaps, not successful checks.', 'Оператор исключил одиночные неудачные проверки: {count}. Они считаются пропусками, а не успешными проверками.', 'Оператор виключив одиночні невдалі перевірки: {count}. Вони вважаються пропусками, а не успішними перевірками.'],
   ['Connection attempts', 'Количество попыток', 'Кількість спроб'],
   ['1–5 attempts, including the first. Successful checks stop immediately; failed attempts wait 0.5 seconds before retrying.', 'От 1 до 5 попыток, включая первую. После успеха проверка завершается; перед повтором неудачной проверки — пауза 0,5 секунды.', 'Від 1 до 5 спроб, включно з першою. Після успіху перевірка завершується; перед повтором невдалої перевірки — пауза 0,5 секунди.'],

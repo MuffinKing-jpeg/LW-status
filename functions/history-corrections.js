@@ -13,11 +13,11 @@ const isIsolatedFailure = (before, current, after, id) => {
   return Boolean(current.timestamp > before.timestamp && after.timestamp > current.timestamp &&
     current.timestamp - before.timestamp <= CHECK_INTERVAL &&
     after.timestamp - current.timestamp <= CHECK_INTERVAL &&
-    previous && previous.available === 'Online' && previous.excludedFromStats !== true &&
+    previous && previous.available === 'Online' && !previous.correction && previous.excludedFromStats !== true &&
     failed && failed.available === 'Offline' && failed.excludedFromStats !== true &&
     // Repeated, confirmed failures must not be dismissed as single-probe noise.
     (failed.attemptsUsed === undefined || failed.attemptsUsed === 1) &&
-    recovered && recovered.available === 'Online' && recovered.excludedFromStats !== true);
+    recovered && recovered.available === 'Online' && !recovered.correction && recovered.excludedFromStats !== true);
 };
 
 const planCorrections = (records, currentIds) => {
@@ -40,7 +40,8 @@ const canonical = (value) => Array.isArray(value) ? value.map(canonical) : value
   Object.fromEntries(Object.keys(value).sort().map((key) => [key, canonical(value[key])])) : value;
 const fingerprint = (equipment) => crypto.createHash('sha256').update(JSON.stringify(canonical(equipment))).digest('hex');
 
-const applyCorrection = async (db, runId, entry, now = Date.now()) => {
+const applyCorrection = async (db, runId, entry, now = Date.now(), mode = 'exclude') => {
+  if (!['exclude', 'mark-online'].includes(mode)) throw new Error('Unsupported correction mode');
   const target = db.doc(`history/${entry.documentId}`);
   const backup = db.doc(`historyCorrections/${runId}/samples/${entry.documentId}`);
   return db.runTransaction(async (transaction) => {
@@ -52,10 +53,13 @@ const applyCorrection = async (db, runId, entry, now = Date.now()) => {
     const ids = entry.deviceIds.filter((id) => isIsolatedFailure(before.data(), current.data(), after.data(), id));
     if (!ids.length) return 0;
     const original = current.data().equipment;
-    const changed = original.map((device) => ids.includes(device.id) ? {...device, excludedFromStats: true,
-      exclusion: {reason: 'operator-reviewed-isolated-failure', runId, correctedAt: now}} : device);
-    // Save the exact original array atomically. Never turn Offline into Online,
-    // delete a shared player sample, or overwrite another device's observation.
+    const changed = original.map((device) => !ids.includes(device.id) ? device : mode === 'mark-online' ?
+      {...device, available: 'Online', latency: null,
+        correction: {reason: 'operator-requested-online', originalAvailable: device.available, runId, correctedAt: now}} :
+      {...device, excludedFromStats: true,
+        exclusion: {reason: 'operator-reviewed-isolated-failure', runId, correctedAt: now}});
+    // Preserve originals atomically, including diagnostics. Administrative Online
+    // overrides have provenance and no invented latency; other devices stay intact.
     transaction.create(backup, {timestamp: entry.timestamp, deviceIds: ids,
       beforeEquipment: original, afterHash: fingerprint(changed), createdAt: new Date(now)});
     transaction.update(target, {equipment: changed});

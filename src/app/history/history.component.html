@@ -35,6 +35,7 @@
         <div class="panel-heading"><div><h3>{{'Equipment stability' | t}}</h3><p>{{'Currently configured devices. Each segment represents part of the selected period.' | t}}</p></div></div>
         <div class="legend"><span><b class="online"></b>{{'Online' | t}}</span><span><b class="mixed"></b>{{'Partial / gaps' | t}}</span><span><b class="offline"></b>{{'Offline' | t}}</span><span><b class="unknown"></b>{{'No data' | t}}</span></div>
         <p *ngIf="data.excludedChecks" class="note">{{'{count} isolated failed checks were excluded after operator review. They are gaps, not successful checks.' | t:{count: data.excludedChecks} }}</p>
+        <p *ngIf="summary.correctedChecks" class="note">{{'{count} isolated failures were manually marked Online. These are administrative corrections, not measured successes.' | t:{count: summary.correctedChecks} }}</p>
         <p *ngIf="!summary.rows.length">{{'No infrastructure devices configured.' | t}}</p>
         <div *ngFor="let row of summary.rows" class="equipment">
           <div class="equipment-heading"><span><i [class]="row.icon" aria-hidden="true"></i> {{row.name}}<small *ngIf="row.enabled === false"> · {{'Paused' | t}}</small></span>

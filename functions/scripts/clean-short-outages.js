@@ -4,20 +4,27 @@ const {planCorrections, applyCorrection, restoreCorrection} = require('../histor
 
 const parseOptions = (args) => {
   const [mode = 'preview', ...flags] = args;
-  if (!['preview', 'apply', 'restore'].includes(mode) || flags.length % 2) throw new Error('Use preview|apply|restore with --days, --confirm or --run-id');
+  if (!['preview', 'apply', 'mark-online', 'restore'].includes(mode) || flags.length % 2) throw new Error('Use preview|apply|mark-online|restore with --days, --confirm or --run-id');
   const values = {};
   for (let index = 0; index < flags.length; index += 2) {
-    if (!['--days', '--confirm', '--run-id'].includes(flags[index]) || values[flags[index]] !== undefined) throw new Error('Invalid or duplicate argument');
+    if (!['--days', '--confirm', '--run-id', '--to', '--expected-checks'].includes(flags[index]) || values[flags[index]] !== undefined) throw new Error('Invalid or duplicate argument');
     values[flags[index]] = flags[index + 1];
   }
   const days = Number(values['--days'] || 30);
   if (mode !== 'restore' && values['--run-id'] !== undefined) throw new Error('--run-id is only supported for restore');
   if (!Number.isInteger(days) || days < 1 || days > 30) throw new Error('Days must be between 1 and 30');
   if (mode === 'apply' && values['--confirm'] !== 'EXCLUDE_SINGLE_FAILURES') throw new Error('Apply requires --confirm EXCLUDE_SINGLE_FAILURES after reviewing a preview');
+  const to = values['--to'] === undefined ? undefined : Number(values['--to']);
+  const expectedChecks = values['--expected-checks'] === undefined ? undefined : Number(values['--expected-checks']);
+  if (to !== undefined && (!Number.isSafeInteger(to) || to <= 0 || to > Date.now())) throw new Error('Invalid historical cutoff');
+  if (expectedChecks !== undefined && (!Number.isSafeInteger(expectedChecks) || expectedChecks < 0)) throw new Error('Invalid expected count');
+  if (mode === 'mark-online' && (values['--confirm'] !== 'MARK_REVIEWED_FAILURES_ONLINE' || to === undefined || expectedChecks === undefined)) {
+    throw new Error('Mark-online requires --confirm MARK_REVIEWED_FAILURES_ONLINE, --to and --expected-checks from the reviewed preview');
+  }
   if (mode === 'restore' && (values['--confirm'] !== 'RESTORE_SINGLE_FAILURES' || !/^[a-z\d_-]{10,80}$/i.test(values['--run-id'] || ''))) {
     throw new Error('Restore requires --run-id and --confirm RESTORE_SINGLE_FAILURES');
   }
-  return {mode, days, runId: values['--run-id']};
+  return {mode, days, runId: values['--run-id'], to, expectedChecks};
 };
 
 const concurrent = async (items, callback) => {
@@ -69,7 +76,7 @@ async function main() {
       publish();
       return;
     }
-    const to = Date.now();
+    const to = options.to ?? Date.now();
     const from = to - options.days * 86400000;
     const [history, inventory] = await Promise.all([
       db.collection('history').where('timestamp', '>=', from).where('timestamp', '<=', to).orderBy('timestamp').limit(10000).get(),
@@ -83,21 +90,22 @@ async function main() {
     report.scannedDocuments = history.size;
     report.candidateDocuments = plan.length;
     report.candidateChecks = plan.reduce((count, entry) => count + entry.deviceIds.length, 0);
+    if (options.expectedChecks !== undefined && report.candidateChecks !== options.expectedChecks) throw new Error('Candidate count differs from reviewed preview; refusing changes');
     if (options.mode === 'preview' || !plan.length) { publish(); return; }
     run = db.collection('historyCorrections').doc();
     await run.create({createdAt: new Date(), from, to, actor: process.env.GITHUB_ACTOR || 'trusted-project-operator',
-      sourceRun: process.env.GITHUB_RUN_ID || null, status: 'running', candidateChecks: report.candidateChecks});
+      sourceRun: process.env.GITHUB_RUN_ID || null, mode: options.mode, status: 'running', candidateChecks: report.candidateChecks});
     report.runId = run.id;
     console.log(`Backup run: ${run.id}`);
     await concurrent(plan, async (entry) => {
-      const changed = await applyCorrection(db, run.id, entry);
+      const changed = await applyCorrection(db, run.id, entry, Date.now(), options.mode === 'mark-online' ? 'mark-online' : 'exclude');
       report.changedChecks += changed;
       report.skippedChecks += entry.deviceIds.length - changed;
     });
     await run.update({status: 'completed', completedAt: new Date(), changedChecks: report.changedChecks, skippedChecks: report.skippedChecks});
     publish();
   } catch (error) {
-    if (run && options.mode === 'apply') await run.update({status: 'failed', changedChecks: report.changedChecks}).catch(() => {});
+    if (run && ['apply', 'mark-online'].includes(options.mode)) await run.update({status: 'failed', changedChecks: report.changedChecks}).catch(() => {});
     publish();
     throw error;
   }
